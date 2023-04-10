@@ -1,0 +1,334 @@
+static bool DebugCheats_Initialized;
+static trigger DebugCheats; 
+
+fixed gv_Debug_Gamespeed = 0.0625;
+// unitgroup UnitCopyPasteGroup;
+bool gv_unitTurnMode = false;
+
+// void DebugCheatsInitialize(){
+//     if(!DebugCheats_Initialized){
+//         DebugCheats_Initialized = true;
+//         DebugCheats = TriggerCreate("DebugCheats_Func");
+//         TriggerAddEventGeneric(DebugCheats, ge_Tracking_MouseClicked_String);
+//         TriggerAddEventGeneric(DebugCheats, ge_Tracking_KeyPressed_String);
+//         TriggerAddEventGeneric(DebugCheats, ge_Tracking_MouseWheel_String);
+//         TriggerAddEventGeneric(DebugCheats, ge_Tracking_MouseMoved_String);
+//         TriggerEnable(DebugCheats, false);
+//     }
+// }
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Debug Cheats
+//--------------------------------------------------------------------------------------------------
+bool DebugCheats_Func (bool testConds, bool runActions) {
+    int key = GenericEventKey();
+    int button = GenericEventMouseButton();
+    int state = GenericEventInputState();
+    int player = GenericEventPlayer();
+    int owner;
+    string s = "";
+    fixed spin = 0.0;
+    fixed diff = 0.0;
+    point moveVectorOrig = gv_plyr[player].mouseUI_MoveVector;
+    point moveVector = moveVectorOrig;
+    playergroup pg = PlayerGroupSingle(player);
+    trigger dummyTrigger;
+    unitgroup selected;
+    int i;
+    unit tmp_unit;
+    bool alt = gv_plyr[player].keyDown[c_keyAlt];
+    bool ctrl = gv_plyr[player].keyDown[c_keyControl];
+    bool shift = gv_plyr[player].keyDown[c_keyShift];
+    bool altCtrl = (alt && ctrl);
+    bool ctrlShift = (ctrl && shift);
+    bool altShift = (alt && shift);
+    point plyrMousePoint;
+    if(!DEBUG_MODE || !gv_DebugCheats[player].isEnabled){ return false; }
+    selected = UnitGroupSelected(player);
+    plyrMousePoint = plyr_getMouseWorldPoint(player);
+    if(UnitGroupCount(selected, c_unitCountAlive) > 0){
+        owner = UnitGetOwner(UnitGroupUnit(selected,1));
+    }
+    if(EventGenericName() == ge_Tracking_MouseWheel_String){
+        spin = GenericEventWheelSpin();
+    }
+    // else if (ctrlShift && button == c_mouseButtonXButton2 && state == ge_InputType_Down) {
+    //     UISetDragSelectEnabled(pg, false);
+    //     UISetSelectionTypeEnabled(pg, c_localSelectionTypeWorldPanel, false);
+    // }
+    // else if (button == c_mouseButtonXButton2 && state == ge_InputType_Up){
+    //     UISetDragSelectEnabled(pg, true);
+    //     UISetSelectionTypeEnabled(pg, c_localSelectionTypeWorldPanel, true);
+    // }
+
+    // else if (altCtrl && (key == c_keyAlt || key == c_keyControl) && state == ge_InputType_Down) {
+    //     UISetCommandAllowed(pg, c_uiCommandAllowPings, false);
+    // }
+
+    // else if(!altCtrl && (key == c_keyAlt || key == c_keyControl) && state == ge_InputType_Up){
+    //     UISetCommandAllowed(pg, c_uiCommandAllowPings, true);
+    // }
+
+    // else if(ctrlShift && (spin != 0.0)){
+    //     gv_Debug_Gamespeed = ClampF(0.03125, 10, gv_Debug_Gamespeed + spin * 0.0625 );
+    //     Dbg(FixedToString(gv_Debug_Gamespeed, -1));
+    //     // ConsoleCommand(("Speed " + FixedToString(gv_Debug_Gamespeed, -1)), true, true);
+    // }
+
+    else if(state == ge_InputType_Down){
+        if(owner != player){
+            s = " " + IntToString(owner);
+            // Dbg(s);
+        } else { s = " " + IntToString(player); }
+        if (alt && !ctrl && key == c_keyY) {
+            ConsoleCommand("god" + s, true, true);
+        }
+        else if (alt && !ctrl && key == c_keyU) {
+            ConsoleCommand("free" + s, true, true);
+        }
+        else if (alt && !ctrl && key == c_keyI) {
+            ConsoleCommand("Cooldown" + s, true, true);
+        }
+        else if (alt && !ctrl && key == c_keyO) {
+            ConsoleCommand("TechTree" + s, true, true);
+        }
+        else if (alt && !ctrl && key == c_keyF) {
+            ConsoleCommand("FastBuild" + s, true, true);
+        }
+        // else if (gv_plyr[player].keyDown[c_keyO] && 
+        //     (key==c_key0||key==c_key1||key==c_key2||key==c_key3||key==c_key4||key==c_key5||key==c_key6||key==c_key7||key==c_key8||key==c_key9||key==c_keyMinus)) {
+        //     if(key == c_keyMinus){ i = 15; }
+        //     else{ for (i = 0; i <= 9; i += 1) { if(i == key-3 ){ break; } } }
+        //     ConsoleCommand("Owner " + IntToString(i) , false, false);
+        // }
+        else {}
+    }
+    // else if(state == ge_InputType_Repeat){
+    //     if (UnitGroupCount(selected, c_unitCountAlive) > 0){
+    //         if (ctrl && key == c_keyV) {
+    //             for (i = 1; i <= UnitGroupCount(UnitCopyPasteGroup, c_unitCountAll); i += 1) {
+    //                 tmp_unit = UnitGroupUnit(UnitCopyPasteGroup, i);
+    //                 UnitCreate(1, UnitGetType(tmp_unit), c_unitCreateIgnorePlacement, UnitGetOwner(tmp_unit), plyr_getMouseWorldPoint(player), UnitGetFacing(tmp_unit));
+    //             }
+    //         }
+    //     }
+    // }
+
+    else if (true) {
+    }
+    // Wait(0.0, c_timeReal);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+
+bool DebugCheat_UnitMoving(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup selected;
+    int i;
+    unit tmp_unit;
+    point plyrMousePoint;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    plyrMousePoint = plyr_getMouseWorldPoint(player);
+    selected = UnitGroupSelected(player);
+    if(plyrMousePoint == null || UnitGroupCount(selected, c_unitCountAlive) <= 0){
+        TrigKillSelf();
+        return false;
+    }
+    for (i = 1; i <= UnitGroupCount(selected, c_unitCountAll); i += 1) {
+        tmp_unit = UnitGroupUnit(selected, i);
+        UnitSetPosition(tmp_unit, plyrMousePoint, false);
+    }
+    TrigKillSelf();
+    return true;
+}
+
+
+bool DebugCheat_UnitTurning(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup selected;
+    int i;
+    unit tmp_unit;
+    point plyrMousePoint;
+    bool turningMode;
+    string dataTableName;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false;}
+    dataTableName = "$INTERNAL_"+"DebugTurningMode"+IntToString(player);
+    plyrMousePoint = plyr_getMouseWorldPoint(player);
+    selected = UnitGroupSelected(player);
+    if(plyrMousePoint == null || UnitGroupCount(selected, c_unitCountAlive) <= 0){
+        TrigKillSelf();
+        return false;
+    }
+    for (i = 1; i <= UnitGroupCount(selected, c_unitCountAll); i += 1) {
+        tmp_unit = UnitGroupUnit(selected, i);
+        if(DataTableValueExists(true, dataTableName)){
+            turningMode = DataTableGetBool(true, dataTableName);
+        }
+        if (turningMode == true){
+            UnitIssueOrder(tmp_unit, OrderTargetingPoint(AbilityCommand("move", 4), plyrMousePoint), c_orderQueueReplace);
+        }
+        else { UnitSetFacing(tmp_unit, AngleBetweenPoints(UnitGetPosition(tmp_unit), plyrMousePoint), 0.0); }
+    }
+    TrigKillSelf();
+    return true;
+}
+
+bool DebugCheat_UnitTurningMode(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    string dataTableName;
+    bool turnMode;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    dataTableName = "$INTERNAL_"+"DebugTurningMode"+IntToString(player);
+    if(DataTableValueExists(true, dataTableName)){
+        turnMode = DataTableGetBool(true, dataTableName);
+    }
+    if(turnMode){
+        Dbg("Turn Mode: Instant");
+        DataTableSetBool(true, dataTableName, false);
+    }
+    else{
+        Dbg("Turn Mode: Turning");
+        DataTableSetBool(true, dataTableName, true);
+    }
+    TrigKillSelf();
+    return true;
+}
+
+bool DebugCheat_UnitHeight(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup selected;
+    int i;
+    unit tmp_unit;
+    point plyrMousePoint;
+    point moveVector;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    plyrMousePoint = plyr_getMouseWorldPoint(player);
+    selected = UnitGroupSelected(player);
+    moveVector = gv_plyr[player].mouseUI_MoveVector;
+    moveVector = Vector3f_Clamp(-1, 1, Vector2f_Scale(moveVector, 0.05));
+    if(plyrMousePoint == null || UnitGroupCount(selected, c_unitCountAlive) <= 0){
+        TrigKillSelf();
+        return false;
+    }
+    for (i = 1; i <= UnitGroupCount(selected, c_unitCountAll); i += 1) {
+        tmp_unit = UnitGroupUnit(selected, i);
+        UnitSetHeight(tmp_unit, UnitGetHeight(tmp_unit) - PointGetY(moveVector), 0.0625);
+    }
+    TrigKillSelf();
+    return true;
+}
+
+bool DebugCheat_UnitCopy(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup selected;
+    int i;
+    string dataTableName;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    selected = UnitGroupSelected(player);
+    if(UnitGroupCount(selected, c_unitCountAlive) <= 0){ TrigKillSelf(); return false; }
+    dataTableName = "$INTERNAL_"+"DebugUnitCopyGroup"+IntToString(player);
+    DataTableSetUnitGroup(true, dataTableName, selected);
+    TrigKillSelf();
+    return true;
+}
+
+bool DebugCheat_UnitPaste(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup ug;
+    int i;
+    unit tmp_unit;
+    string dataTableName;
+    point plyrMousePoint;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    dataTableName = "$INTERNAL_"+"DebugUnitCopyGroup"+IntToString(player);
+    if(!DataTableValueExists(true, dataTableName)){ TrigKillSelf(); return false; }
+    ug = DataTableGetUnitGroup(true, dataTableName);
+    if(UnitGroupCount(ug, c_unitCountAlive) > 0){  
+        plyrMousePoint = plyr_getMouseWorldPoint(player);
+        for (i = 1; i <= UnitGroupCount(ug, c_unitCountAll); i += 1) {
+            tmp_unit = UnitGroupUnit(ug, i);
+            UnitCreate(1, UnitGetType(tmp_unit), c_unitCreateIgnorePlacement, UnitGetOwner(tmp_unit), plyrMousePoint, UnitGetFacing(tmp_unit));
+        }
+    }
+    TrigKillSelf();
+    return true;
+}
+
+// bool DebugCheat_UnitCut(bool test_conds, bool run_actions){
+//     int player = GenericEventPlayer();
+//     unitgroup selected;
+//     int i;
+//     string dataTableValue;
+//     if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ return false; }
+//     selected = UnitGroupSelected(player);
+//     if(UnitGroupCount(selected, c_unitCountAlive) <= 0){ return false; }
+//     dataTableValue = "$INTERNAL_"+"DebugUnitCopyGroup"+IntToString(player);
+//     DataTableSetUnitGroup(true, dataTableValue, selected);
+
+//     //Remove units
+//     return true;
+// }
+
+
+bool DebugCheat_UnitKill(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    unitgroup selected;
+    int i;
+    unit tmp_unit;
+    string dataTableName;
+    string killEffect;
+    int index;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); return false; }
+    selected = UnitGroupSelected(player);
+    if(UnitGroupCount(selected, c_unitCountAlive) <= 0){ TrigKillSelf(); return false; }
+    index = GetLastHotkeyIndex(player);
+    dataTableName = "$INTERNAL_"+"DebugUnitKillEffect"+IntToString(player);
+    if(StringIsValid(gv_HotkeyManager[player-1].hotkey[index].parameter[0])){
+        killEffect = gv_HotkeyManager[player-1].hotkey[index].parameter[0];
+        if(killEffect == "None"){
+            Dbg("Cleared Kill Effect");
+            DataTableValueRemove(true,  dataTableName);
+        }
+        else{
+            Dbg("Kill Effect>"+killEffect);
+            DataTableSetString(true, dataTableName, killEffect);
+        }
+    }
+    if(DataTableValueExists(true, dataTableName)){
+        killEffect = DataTableGetString(true, dataTableName);
+        for (i = 1; i <= UnitGroupCount(selected, c_unitCountAll); i += 1) {
+            tmp_unit = UnitGroupUnit(selected, i);
+            UnitDamage(tmp_unit, killEffect, tmp_unit, 10000);
+        }
+    }
+    else{
+        for (i = 1; i <= UnitGroupCount(selected, c_unitCountAll); i += 1) {
+            tmp_unit = UnitGroupUnit(selected, i);
+            UnitKill(tmp_unit);
+        }
+    }
+    TrigKillSelf();
+    return true;
+}
+
+bool DebugCheat_ConsoleCommand(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    int index;
+    string param;
+    if(!DEBUG_MODE){ TrigKillSelf(); return false; }
+    // if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_unitCheats]){ TrigKillSelf(); }
+    index = GetLastHotkeyIndex(player);
+    param = gv_HotkeyManager[player-1].hotkey[index].parameter[0];
+    if(StringIsValid(param)){
+        if(param == "TrigDebug"){
+            ConsoleCommand("TrigDebug", true, true);
+        }
+        else if(param == "ActorInfoDisplay"){
+            ConsoleCommand("ActorInfoDisplay", true, true);
+        }
+    }
+    TrigKillSelf();
+    return true;
+}

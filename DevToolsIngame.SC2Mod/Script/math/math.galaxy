@@ -1,6 +1,5 @@
 const fixed c_PI = 3.141592653589793;
 const fixed c_FIXED_MAX = 524287;
-const fixed c_INTEGER_MAX = 65535;
 const fixed c_EPSILON = 0.001;
 
 fixed Sqr( fixed a ) { return a * a; }

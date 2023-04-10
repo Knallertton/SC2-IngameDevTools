@@ -1,0 +1,265 @@
+// DEBUG CHAT RECORDER // 
+static const int c_DCR_MAXCOUNT = 30;
+static const string c_DCR_DATATABLE = "$INTERNAL_CR_";
+static trigger DebugChatRecorder;
+static trigger DebugChatTracker;
+// static trigger DebugInsertChat;
+static string[16] DebugChatRecorder_CurrentEditValue;
+static int DebugChatRecorder_ChatBar_EditBox;
+static int DebugChatRecorder_ChatBar_DebugEditBox;
+static bool DebugChatRecorder_Initialized;
+static bool[16] DebugChatRecorder_CameraWasLocked;
+bool[16] DebugChatRecorder_Active;
+trigger DebugChatRecorderChatBarGainedFocus_t;
+
+void DebugChatRecorderInitialize() {
+    if(!DebugChatRecorder_Initialized){
+        DebugChatRecorder_Initialized = true;
+        DebugChatRecorder_ChatBar_EditBox = DialogControlHookupStandard(c_triggerControlTypeEditBox, "UIContainer/FullscreenUpperContainer/ChatBar/ChatEditBox");
+        DebugChatRecorder_ChatBar_DebugEditBox = DialogControlHookupStandard(c_triggerControlTypeEditBox, "UIContainer/FullscreenUpperContainer/ChatBar/DebugEditBox");
+        
+        DebugChatTracker = TriggerCreate("DebugChat_EditBoxTracker_Func");
+        TriggerAddEventDialogControl(DebugChatTracker, c_playerAny, DebugChatRecorder_ChatBar_EditBox, c_triggerControlEventTypeTextChanged);
+        TriggerEnable(DebugChatTracker, true);
+    
+        DebugChatRecorder = TriggerCreate("DebugChatRecorder_Func");
+        TriggerAddEventDialogControl(DebugChatRecorder, c_playerAny, DebugChatRecorder_ChatBar_DebugEditBox, c_triggerControlEventTypeTextChanged);
+        // TriggerAddEventChatMessage(gt_DebugChatRecorder, c_playerAny, "", false);
+    
+        DebugChatRecorderChatBarGainedFocus_t = TriggerCreate("DebugChatRecorderChatBarGainedFocus");
+        TriggerAddEventGeneric(DebugChatRecorderChatBarGainedFocus_t, "plyr_ChatBarGainedFocus");
+
+        // DebugInsertChat = TriggerCreate("DebugInsertChat_Func");
+        // TriggerAddEventGeneric(DebugInsertChat, ge_Tracking_KeyPressed_String);
+    
+    }
+    return;
+}
+
+static void DebugChatRecorder_StoreValue(int player){
+    string current; string last;
+    int i; int k;
+    string chatString = DebugChatRecorder_CurrentEditValue[player];
+    int currCount;
+    string table = null;
+    string tableLast = null;
+    bool stringExists = false;
+    if(!StringIsValid(chatString)){
+        return;
+    }
+    if(DataTableValueExists(true, c_DCR_DATATABLE + IntToString(player)+ "_" + "Count")){
+        currCount = DataTableGetInt(true, c_DCR_DATATABLE + IntToString(player)+ "_" + "Count");
+    } else{ currCount = 0; }
+    
+    for (i = currCount; i > 0; i -= 1) {
+        table = c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(i);
+        current = DataTableGetString(true, table);
+        if (current == chatString){
+            k = i-1;
+            stringExists = true;
+            break;
+        }
+    }
+
+    if (stringExists){
+        // Dbg("String already existed in the table");
+
+        current = null;
+        last = null;
+        for (i = k; i > 0; i -= 1) {
+            table = c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(i);
+            tableLast = c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(i + 1);
+            current = DataTableGetString(true, table);
+            // Dbg(IntToString(i)+"> "+current);
+            DataTableSetString(true, tableLast, current);
+        }
+
+        DataTableSetString(true, c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(1), chatString);
+    }
+    else{
+        // Dbg("Saving>"+chatString);
+        currCount = MinI(currCount + 1, c_DCR_MAXCOUNT);
+        // Dbg("Curr> "+IntToString(currCount));
+        // Shift all strings to make new for the newest.
+        current = null;
+        last = null;
+        for (i = currCount; i > 0; i -= 1) {
+            table = c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(i);
+            tableLast = c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(i + 1);
+            current = DataTableGetString(true, table);
+            // Dbg(IntToString(i)+"> "+current);
+            DataTableSetString(true, tableLast, current);
+        }
+    
+        DataTableSetString(true, c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(1), chatString);
+        DataTableSetInt(true, c_DCR_DATATABLE + IntToString(player)+ "_" + "Count", currCount);
+    }
+
+    DebugChatRecorder_CurrentEditValue[player] = "";
+    DialogControlSendAnimationEvent(DebugChatRecorder_ChatBar_DebugEditBox, PlayerGroupSingle(player), "Handled");
+}
+
+bool DebugChat_EditBoxTracker_Func(bool test_conds, bool run_actions) {
+    int player = EventPlayer();
+    if(!DEBUG_MODE || !gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_chatRecorder]) { return false; }
+    DebugChatRecorder_CurrentEditValue[EventPlayer()] = DialogControlGetPropertyAsString(DebugChatRecorder_ChatBar_EditBox, c_triggerControlPropertyEditText, EventPlayer());
+    // Dbg(libNtve_gf_ConvertBooleanToString(StringIsValid(DebugChatRecorder_CurrentEditValue[EventPlayer()])));
+    DialogControlSetAnimationState(DebugChatRecorder_ChatBar_DebugEditBox, PlayerGroupSingle(EventPlayer()), "HasData", libNtve_gf_ConvertBooleanToString(StringIsValid(DebugChatRecorder_CurrentEditValue[EventPlayer()])));
+    // Dbg(">"+editValue);
+    return true;
+}
+
+bool DebugChatRecorder_Func(bool test_conds, bool run_actions) {
+    int player = EventPlayer();
+    string trigValue;
+    if(!DEBUG_MODE || !gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_chatRecorder]) { return false; }
+    trigValue = DialogControlGetPropertyAsString(DebugChatRecorder_ChatBar_DebugEditBox, c_triggerControlPropertyEditText, player);
+    if(!trigValue == "1"){ 
+        return false;
+    }
+    DebugChatRecorder_StoreValue(EventPlayer());
+    return true;
+}
+
+bool DebugChatRecorderChatBarGainedFocus(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    string style = "<s val=\"DebugCommands_Small\">";
+    if(!DEBUG_MODE || !gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_chatRecorder]) { return false; }
+    if(DebugChatRecorder_Active[player]){
+        UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(style+"Turned chat history navigation off..</s>"));
+        if(DebugChatRecorder_CameraWasLocked[player] == true){
+            plyr_CameraLockInput(player, false);
+        }
+        DebugChatRecorder_Active[player] = false;
+        HotkeyToggleChildren(gv_HotkeyManager[player-1], gv_HotkeyManager[player-1].hotkey[HotkeyIndexFromId(gv_HotkeyManager[player-1], "ChatRecorderHistoryToggle")]);
+        return true;
+    }
+    return false;
+}
+
+bool DebugChatRecorderToggle(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    int count;
+    int index;
+    string value;
+    string style = "<s val=\"DebugCommands_Small\">";
+    string table;
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_chatRecorder]){ TriggerDestroy(TriggerGetCurrent()); return false; }
+    if(!DataTableValueExists(true, c_DCR_DATATABLE + IntToString(player)+ "_" + "Count")){
+        UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(style+"Can't toggle history, no chat history recorded</s>"));
+        HotkeyToggleChildren(gv_HotkeyManager[player-1], gv_HotkeyManager[player-1].hotkey[GetLastHotkeyIndex(player)]);
+        TriggerDestroy(TriggerGetCurrent());
+        return false;
+    }
+    
+    if(DebugChatRecorder_Active[player] == false){
+        UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(style+"Turned chat history navigation on..</s>"));
+        DebugChatRecorder_Active[player] = true;
+        plyr_CameraLockInput(player, true);
+        DebugChatRecorder_CameraWasLocked[player] = gv_plyr[player].cameraInputLocked;
+
+        table = c_DCR_DATATABLE + IntToString(player)+ "_" + "IndexCounter";
+        if(DataTableValueExists(true, table)){
+            index = DataTableGetInt(true, table);
+        } else { index = 1; }
+        value = DataTableGetString(true, c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(index));
+        if(StringIsValid(value)){
+            DialogControlSendAnimationEvent(DebugChatRecorder_ChatBar_EditBox, PlayerGroupSingle(player), "ForceShow");
+            DialogControlSetPropertyAsString(DebugChatRecorder_ChatBar_EditBox, c_triggerControlPropertyEditText, PlayerGroupSingle(player), value);
+        }
+
+    } else { 
+        UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(style+"Turned chat history navigation off..</s>"));
+        plyr_CameraLockInput(player, false);
+        DebugChatRecorder_CameraWasLocked[player] = false;
+        DebugChatRecorder_Active[player] = false;
+    }
+
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+
+bool DebugInsertChat(bool test_conds, bool run_actions){
+    int index;
+    int maxCount;
+    int player =    DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Player"));
+    int key =       DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Key"));
+    int state =     DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "State"));
+    // fixed spin =    DataTableGetFixed(false, TriggerEventParamName(EventGenericName(), "Spin"));
+    string table;
+    string value;
+    bool shift;
+    string param;
+    int paramIndex = -1;
+    string style = "<s val=\"DebugCommands_Small\">";
+    if(!DEBUG_MODE || !gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_chatRecorder] || !DebugChatRecorder_Active[player]) { TriggerDestroy(TriggerGetCurrent()); return false; }
+
+    param = gv_HotkeyManager[player-1].hotkey[GetLastHotkeyIndex(player)].parameter[0];
+    if(param == "Up"){
+        paramIndex = 0;
+        // Dbg("Up");
+    }
+    else if(param == "Down"){
+        paramIndex = 1;
+        // Dbg("Down");
+    }
+    else if(param == "Exit"){
+        paramIndex = 2;
+    }
+    shift = gv_plyr[player].keyDown[c_keyShift];
+    table = c_DCR_DATATABLE + IntToString(player)+ "_" + "IndexCounter";
+    maxCount = DataTableGetInt(true, c_DCR_DATATABLE + IntToString(player)+ "_" + "Count");
+    if(!DataTableValueExists(true, table)){
+        DataTableSetInt(true, table, 0);
+    }
+    index = DataTableGetInt(true, table);
+    // DbgI(maxCount);
+    // Dbg("State>"+IntToString(state));
+    if(paramIndex == 0){
+        if(shift){
+            index = maxCount;
+        }
+        else{
+            if(StringIsValid(DebugChatRecorder_CurrentEditValue[player])){
+                index = ClampI(1, maxCount, index + 1);
+            }
+        }
+        // Dbg(IntToString(index));
+        value = DataTableGetString(true, c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(index));
+        DialogControlSendAnimationEvent(DebugChatRecorder_ChatBar_EditBox, PlayerGroupSingle(player), "ForceShow");
+        DialogControlSetPropertyAsString(DebugChatRecorder_ChatBar_EditBox, c_triggerControlPropertyEditText, PlayerGroupSingle(player), value);
+    }
+    else if(paramIndex == 1){
+        if(shift){
+            index = 1;
+        }
+        else{
+            if(StringIsValid(DebugChatRecorder_CurrentEditValue[player])){
+                index = ClampI(1, maxCount, index - 1);
+            }
+        }
+        // Dbg(IntToString(index));
+        value = DataTableGetString(true, c_DCR_DATATABLE + IntToString(player)+ "_" + IntToString(index));
+        if(StringIsValid(value)){
+            DialogControlSendAnimationEvent(DebugChatRecorder_ChatBar_EditBox, PlayerGroupSingle(player), "ForceShow");
+            DialogControlSetPropertyAsString(DebugChatRecorder_ChatBar_EditBox, c_triggerControlPropertyEditText, PlayerGroupSingle(player), value);
+        }
+    }
+    else if(paramIndex == 2 && state != ge_InputType_Repeat){
+        index = 1;
+        if(DebugChatRecorder_CameraWasLocked[player] == true){
+            plyr_CameraLockInput(player, false);
+        }
+        DebugChatRecorder_Active[player] = false;
+        HotkeyToggleChildren(gv_HotkeyManager[player-1], gv_HotkeyManager[player-1].hotkey[HotkeyIndexFromId(gv_HotkeyManager[player-1], "ChatRecorderHistoryToggle")]);
+        UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(style+"Turned chat history navigation off..</s>"));
+    }
+    else{
+        TriggerDestroy(TriggerGetCurrent());
+        return false;
+    }
+    DataTableSetInt(true, table, index);
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}

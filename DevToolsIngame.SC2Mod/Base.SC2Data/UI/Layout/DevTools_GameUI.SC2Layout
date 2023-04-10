@@ -3,9 +3,25 @@
 	<Frame type="Frame" name="GameUI/UIContainer/ConsoleUIContainer" file="GameUI">
 		<Frame type="ToggleControl" name="DevToolsMenuContainer" template="DevTools_MenuBar/NavigationContainer">
 			<Shortcut val="Control+Shift+M"/>
+			<Visible val="False"/>
 			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
 			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
 			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Frame type="EditBox" name="EventHandler">
+				<RenderType val="Offscreen"/>
+				<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
+				<Height val="20"/>
+				<Width val="20"/>
+				<AcceptsMouse val="false"/>
+				<RejectsFocus val="true"/>
+				<Animation name="Animation">
+					<Event event="OnShown" action="Play" frame="$parent"/>
+					<Controller type="Property" end="Pause" frame="$this" property="Text">
+						<Key type="Property" time="0.0" value="1"/>
+					</Controller>
+				</Animation>
+			</Frame>
 		</Frame>
 		<!--
 		<Frame type="ToggleControl" name="PortViewerContainer" template="PortView/PortViewerContainer">

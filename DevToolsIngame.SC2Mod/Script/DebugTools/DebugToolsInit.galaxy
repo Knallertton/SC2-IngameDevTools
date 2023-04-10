@@ -1,0 +1,38 @@
+include "TriggerLibs/NativeLib"
+include "Script/StringSupport"
+include "Script/UnitSupport"
+include "Script/GeneralSupport"
+include "Script/math/math"
+include "Script/DebugTools/debug"
+include "Script/DebugTools/Player"
+include "Script/DebugTools/FreeCam"
+include "Script/DebugTools/MeasuringTool"
+include "Script/DebugTools/DebugChatRecorder"
+include "Script/DebugTools/DebugUI"
+include "Script/DebugTools/DebugCheats"
+include "Script/DebugTools/DebugCommands"
+
+void DebugToolsInit(){
+    
+    if(DEBUG_MODE){
+        // Knalle's debug tools
+        DebugCreateUI();
+        DebugChatRecorderInitialize();
+        SetupGlobalEventManager();
+
+        plyr_InitVariables();
+        plyr_Initialize(PlayerGroupSingle(1), true, true, true, false, true);
+
+        MeasuringToolInitialize();
+        FreeCamInitialize();
+
+        plyr_TrackingTrigger_OnOff(1, ge_TrackType_Keyboard, true);
+        plyr_TrackingTrigger_OnOff(1, ge_TrackType_MouseClick, true);
+        plyr_TrackingTrigger_OnOff(1, ge_TrackType_MouseMove, true);
+        plyr_TrackingTrigger_OnOff(1, ge_TrackType_MouseWheel, true);
+    }
+
+    DebugCommandsInitialize();
+
+    return;
+}

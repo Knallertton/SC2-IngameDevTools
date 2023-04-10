@@ -14,4 +14,6 @@
     <Include path="UI/Layout/DataEditor.SC2Layout"/>
     <Include path="UI/Layout/DevTools_MiscMenu.SC2Layout"/>
     <Include path="UI/Layout/DevTools_GameUI.SC2Layout"/>
+    <Include path="UI/Layout/DebugToolsTemplates.SC2Layout"/>
+    <Include path="UI/Layout/DebugTools.SC2Layout"/>
 </Desc>

@@ -1,0 +1,1625 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+	<Frame type="EditBox" name="MathBoxTemplate">
+		<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
+		<Width val="150"/>
+		<Height val="70"/>
+		<!-- <Visible val="false"/> -->
+	</Frame>
+
+	<Frame type="AspectRatioFrame" name="AspectRatioListener_Template">
+		<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
+		<Width val="1"/>
+		<Height val="1"/>
+	</Frame>
+
+	<Frame type="Button" name="DebugFrameTemplate">
+		<AcceptsMouse val="true"/>
+		<Anchor side="Top" relative="TopBoundary" pos="Max" offset="0"/>
+		<Anchor side="Left" relative="LeftBoundary" pos="Max" offset="0"/>
+		<Anchor side="Bottom" relative="BottomBoundary" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="RightBoundary" pos="Min" offset="0"/>
+
+		<HitTestFrame val="HitTestFrame"/>
+		<RenderPriority val="1000"/>
+		<DragCursor val="GripClosed"/>
+		<DragHoverCursor val="GripOpen"/>
+		<DragConstraintFrame val="ConstraintFrame"/>
+		<StateGroup name="Draggable">
+			<State name="False">
+				<When type="Property" frame="$this" Hovering="False"/>
+				<When type="Property" frame="$this" Dragging="False"/>
+			</State>
+			<State name="True">
+				<When type="Property" frame="$this" Hovering="True"/>
+				<Action type="SetProperty" frame="$this" Draggable="true"/>
+			</State>
+		</StateGroup>
+
+		<Frame type="Frame" name="HitTestFrame">
+			<Height val="20"/>
+			<Anchor side="Top" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Container" pos="Max" offset="0"/>
+			<RenderPriority val="1000"/>
+		</Frame>
+
+		<Frame type="Frame" name="LeftConstraint">
+			<Anchor side="Top" relative="$parent/TopResize" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomResize" pos="Max" offset="0"/>
+
+			<Anchor side="Right" relative="$parent/RightResize" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/ConstraintFrame" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="RightConstraint">
+			<Anchor side="Top" relative="$parent/TopResize" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomResize" pos="Max" offset="0"/>
+
+			<Anchor side="Left" relative="$parent/LeftResize" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/ConstraintFrame" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="TopConstraint">
+			<Anchor side="Top" relative="$parent/ConstraintFrame" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomResize" pos="Max" offset="0"/>
+
+			<Anchor side="Left" relative="$parent/LeftResize" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/RightResize" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="BottomConstraint">
+			<Anchor side="Top" relative="$parent/TopResize" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/ConstraintFrame" pos="Max" offset="0"/>
+
+			<Anchor side="Left" relative="$parent/LeftResize" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/RightResize" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Control" name="LeftResize">
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="-250"/>
+			<Anchor side="Top" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/Container" pos="Max" offset="0"/>
+			<Width val="13"/>
+			<Draggable val="False"/>
+			<DragConstraintFrame val="$parent/LeftConstraint"/>
+			<DragCursor val="ResizeHorizontal"/>
+			<DragHoverCursor val="ResizeHorizontal"/>
+			<Enabled val="true"/>
+			<RenderPriority val="1000"/>
+			<DragMoveSlop val="10"/>
+			<Unclipped val="True"/>
+			<StateGroup name="Draggable">
+				<State name="False">
+					<When type="Property" frame="$this" Hovering="False"/>
+					<When type="Property" frame="$this" Dragging="False"/>
+				</State>
+				<State name="True">
+					<When type="Property" frame="$this" Hovering="True"/>
+					<Action type="SetProperty" frame="$this" Draggable="true"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="Control" name="RightResize">
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="250"/>
+			<Anchor side="Top" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/Container" pos="Max" offset="0"/>
+			<Width val="13"/>
+			<Draggable val="false"/>
+			<DragConstraintFrame val="$parent/RightConstraint"/>
+			<DragCursor val="ResizeHorizontal"/>
+			<DragHoverCursor val="ResizeHorizontal"/>
+			<Enabled val="true"/>
+			<RenderPriority val="1000"/>
+			<DragMoveSlop val="10"/>
+			<Unclipped val="True"/>
+			<StateGroup name="Draggable">
+				<State name="False">
+					<When type="Property" frame="$this" Hovering="False"/>
+					<When type="Property" frame="$this" Dragging="False"/>
+				</State>
+				<State name="True">
+					<When type="Property" frame="$this" Hovering="True"/>
+					<Action type="SetProperty" frame="$this" Draggable="true"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="Control" name="TopResize">
+			<Anchor side="Bottom" relative="$parent" pos="Mid" offset="-300"/>
+			<Anchor side="Left" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Container" pos="Max" offset="0"/>
+			<Height val="13"/>
+			<Draggable val="false"/>
+			<DragConstraintFrame val="$parent/TopConstraint"/>
+			<DragCursor val="ResizeVertical"/>
+			<DragHoverCursor val="ResizeVertical"/>
+			<Enabled val="true"/>
+			<RenderPriority val="1000"/>
+			<DragMoveSlop val="10"/>
+			<Unclipped val="True"/>
+			<StateGroup name="Draggable">
+				<State name="False">
+					<When type="Property" frame="$this" Hovering="False"/>
+					<When type="Property" frame="$this" Dragging="False"/>
+				</State>
+				<State name="True">
+					<When type="Property" frame="$this" Hovering="True"/>
+					<Action type="SetProperty" frame="$this" Draggable="true"/>
+				</State>
+			</StateGroup>
+		</Frame>	
+
+		<Frame type="Control" name="BottomResize">
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="300"/>
+			<Anchor side="Left" relative="$parent/Container" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Container" pos="Max" offset="0"/>
+			<Height val="13"/>
+			<Draggable val="false"/>
+			<DragConstraintFrame val="$parent/BottomConstraint"/>
+			<DragCursor val="ResizeVertical"/>
+			<DragHoverCursor val="ResizeVertical"/>
+			<Enabled val="true"/>
+			<RenderPriority val="1000"/>
+			<DragMoveSlop val="10"/>
+			<Unclipped val="True"/>
+			<StateGroup name="Draggable">
+				<State name="False">
+					<When type="Property" frame="$this" Hovering="False"/>
+					<When type="Property" frame="$this" Dragging="False"/>
+				</State>
+				<State name="True">
+					<When type="Property" frame="$this" Hovering="True"/>
+					<Action type="SetProperty" frame="$this" Draggable="true"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="Frame" name="Container">
+			<Anchor side="Top" relative="$parent/TopResize" pos="Mid" offset="0"/>
+			<Anchor side="Left" relative="$parent/LeftResize" pos="Mid" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomResize" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent/RightResize" pos="Mid" offset="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="TopBoundary">
+			<Anchor side="Top" relative="$parent/$parent" pos="Min" offset="25"/>
+			<Anchor side="Left" relative="$parent/$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/$parent" pos="Max" offset="0"/>
+			<Height val="0"/>
+			
+		</Frame>
+		<Frame type="Frame" name="LeftBoundary">
+			<Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/$parent" pos="Min" offset="25"/>
+			<Anchor side="Bottom" relative="$parent/$parent" pos="Max" offset="0"/>
+			<Width val="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="RightBoundary">
+			<Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/$parent" pos="Max" offset="-25"/>
+			<Anchor side="Bottom" relative="$parent/$parent" pos="Max" offset="0"/>
+			<Width val="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="BottomBoundary">
+			<Anchor side="Bottom" relative="$parent/$parent" pos="Max" offset="-25"/>
+			<Anchor side="Left" relative="$parent/$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/$parent" pos="Max" offset="0"/>
+			<Height val="0"/>
+		</Frame>
+
+		<Frame type="Frame" name="ConstraintFrame">
+			<Anchor side="Top" relative="$parent/TopBoundary" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/LeftBoundary" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomBoundary" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/RightBoundary" pos="Max" offset="0"/>
+		</Frame>
+
+	</Frame>
+
+	<Frame type="Frame" name="CutsceneTabTemplate">
+		<Frame type="ListBox" name="CutsceneListBox" template="StandardTemplates/StandardListBoxTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-50"/>
+		</Frame>
+
+		<Frame type="Button" name="ConfirmButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="0"/>
+			<Width val="0"/>
+			<Text val="Play Cutscene"/>
+			<Anchor side="Top" relative="$parent/CutsceneListBox" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<!-- <Anchor side="Right" relative="$parent/$parent/BorderRight" pos="Min" offset="-5"/> -->
+		</Frame>
+	</Frame>
+
+	<Frame type="Frame" name="MapTabTemplate">
+		<Frame type="CheckBox" name="CheckBox_00" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_01" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_02" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_03" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_04" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+		</Frame>
+
+		<!--Frame type="CheckBox" name="CheckBox_05" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_06" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_07" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_08" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_09" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+		</Frame-->
+
+		<Frame type="Label" name="CheckBoxLabel_00" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_00" pos="Max" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_01" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_01" pos="Max" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_02" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_02" pos="Max" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_03" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_03" pos="Max" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_04" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_04" pos="Max" offset="0"/>
+		</Frame>
+
+		<!--Frame type="Label" name="CheckBoxLabel_05" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_05" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_06" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_06" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_07" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_07" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_08" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_08" pos="Max" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_09" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_09" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_09" pos="Max" offset="0"/>
+		</Frame-->
+
+		<!--Frame type="Button" name="ConfirmButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Text val="Confirm"/>
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+
+		<Frame type="Pulldown" name="PulldownMenu" template="DebugToolsTemplates/DebugPulldownTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Anchor side="Top" relative="$parent/ConfirmButton" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+
+		</Frame-->
+
+	</Frame>
+
+	<Frame type="Frame" name="UnlocksTabTemplate">
+		<Frame type="Button" name="HeroButton0" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="30"/>
+			<Width val="0"/>
+			<Text val="Moloch"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="1"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="2"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="-1"/>
+			<Color val="0,255,255"/>
+		</Frame>
+		<Frame type="Button" name="HeroButton1" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="30"/>
+			<Width val="0"/>
+			<Text val="Haley"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="1"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="1"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-2"/>
+			<Color val="EDEF00"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_00" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/HeroButton0" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_01" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_02" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_03" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_04" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_05" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_06" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_07" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_08" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_09" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_10" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_09" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_11" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_10" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_10" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_00" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_00" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_01" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_01" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_02" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_02" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_03" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_03" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_04" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_04" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_05" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_05" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_06" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_06" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_07" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_07" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_08" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_08" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_09" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_09" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_09" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_10" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_10" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_10" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_10" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_11" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_11" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_11" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_11" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/MiddleDivider" pos="Min" offset="0"/>
+		</Frame>
+
+		<!-- Right Side Checkboxes -->
+		<Frame type="CheckBox" name="CheckBox_12" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/MiddleDivider" pos="Max" offset="5"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_13" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_12" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_12" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_14" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_13" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_13" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_15" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_14" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_14" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_16" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_15" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_15" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_17" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_16" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_16" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_18" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_17" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_17" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_19" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_18" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_18" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_20" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_19" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_19" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_21" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_20" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_20" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_22" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_21" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_21" pos="Min" offset="0"/>
+		</Frame>
+		<Frame type="CheckBox" name="CheckBox_23" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_22" pos="Max" offset="#DebugUnlocksCheckBoxOffset"/>
+			<Anchor side="Left" relative="$parent/CheckBox_22" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_12" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_12" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_12" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_12" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_13" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_13" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_13" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_13" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_14" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_14" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_14" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_14" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_15" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_15" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_15" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_15" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_16" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_16" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_16" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_16" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_17" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_17" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_17" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_17" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_18" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_18" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_18" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_18" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_19" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_19" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_19" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_19" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_20" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_20" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_20" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_20" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_21" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_21" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_21" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_21" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_22" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_22" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_22" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_22" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+		<Frame type="Label" name="CheckBoxLabel_23" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_23" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_23" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_23" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+		</Frame>
+
+		<Frame type="Image" name="Divider">
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-58"/>
+			<Anchor side="Left" relative="$DebugMenu/BorderLeft" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$DebugMenu/BorderRight" pos="Min" offset="0"/>
+			<Height val="6"/>
+			<DesaturateOnDisable val="False"/>
+			<Color val="#Greybox_Color_ContainerStandardBorder_ExtraLarge"/>
+		</Frame>
+
+		<Frame type="Image" name="MiddleDivider">
+			<Anchor side="Top" relative="$parent/HeroButton0" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/Divider" pos="Min" offset="0"/>
+			<Width val="3"/>
+			<DesaturateOnDisable val="False"/>
+			<Color val="#Greybox_Color_ContainerStandardBorder_ExtraLarge"/>
+			<Visible val="{$parent/CheckBox_12/@Visible}"/>
+			<CollapseLayout val="true"/>
+			<Alpha val="0"/>
+		</Frame>
+
+		<Frame type="Button" name="ConfirmButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="48"/>
+			<Width val="0"/>
+			<Text val="Confirm"/>
+			<Anchor side="Top" relative="$parent/Divider" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="3"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="-2"/>
+			<Color val="26,228,194"/>
+			<Frame type="Label" name="Label">
+				<DisabledAlpha val="50"/>
+			</Frame>
+			<AcceptsMouse val="{$this/@Enabled}"/>
+			<!-- <Anchor side="Right" relative="$parent/$parent/BorderRight" pos="Min" offset="-5"/> -->
+		</Frame>
+
+		<Frame type="Button" name="ResetButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="48"/>
+			<Width val="0"/>
+			<Text val="Reset"/>
+			<Anchor side="Top" relative="$parent/ConfirmButton" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="2"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-2"/>
+			<Color val="255,138,21,21"/>
+			<Frame type="Label" name="Label">
+				<DisabledAlpha val="50"/>
+			</Frame>
+			<AcceptsMouse val="{$this/@Enabled}"/>
+			<!-- <Anchor side="Right" relative="$parent/$parent/BorderRight" pos="Min" offset="-5"/> -->
+		</Frame>
+
+	</Frame>
+
+	<Frame type="CheckBox" name="DebugCheatsCheckBoxTemplate" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+		<StateGroup name="EnabledState">
+			<DefaultState val="Disabled"/>
+			<State name="Enabled">
+				<When type="Property" frame="$parent/DebugCheckbox" Checked="True"/>
+				<Action type="SetProperty" frame="$this" Enabled="True"/>
+			</State>
+			<State name="Disabled">
+				<Action type="SetProperty" frame="$this" Enabled="False"/>
+			</State>
+		</StateGroup>
+	</Frame>
+	
+	<Frame type="Frame" name="DebugCheatsTemplate">
+
+		<Frame type="Image" name="Background">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<RenderPriority val="511"/>
+			<Alpha val="200"/>
+			<Color val="15,15,15"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="DebugCheckbox" template="DebugToolsTemplates/DebugCheckBoxMediumTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_00" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/DebugCheckbox" pos="Max" offset="10"/>
+			<Anchor side="Left" relative="$parent/DebugCheckbox" pos="Min" offset="25"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_01" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+			<StateGroup name="EnabledState">
+				<State name="Enabled">
+					<When type="Property" frame="$parent/DebugCheckbox" Checked="True"/>
+					<When type="Property" frame="$parent/CheckBox_00" Checked="True"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_02" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+			<StateGroup name="EnabledState">
+				<State name="Enabled">
+					<When type="Property" frame="$parent/DebugCheckbox" Checked="True"/>
+					<When type="Property" frame="$parent/CheckBox_00" Checked="True"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_03" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+			<StateGroup name="EnabledState">
+				<State name="Enabled">
+					<When type="Property" frame="$parent/DebugCheckbox" Checked="True"/>
+					<When type="Property" frame="$parent/CheckBox_00" Checked="True"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_04" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+			<StateGroup name="EnabledState">
+				<State name="Enabled">
+					<When type="Property" frame="$parent/DebugCheckbox" Checked="True"/>
+					<When type="Property" frame="$parent/CheckBox_00" Checked="True"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<!--Frame type="CheckBox" name="CheckBox_05" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_06" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_07" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_08" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+		</Frame>
+
+		<Frame type="CheckBox" name="CheckBox_09" template="DebugTools/DebugCheatsCheckBoxTemplate">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+		</Frame-->
+
+		<Frame type="Label" name="DebugCheckBoxLabel" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/DebugCheckbox" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/DebugCheckbox" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/DebugCheckbox" pos="Max" offset="0"/>
+			<Text val="Debug Tools"/>
+			<Style val="AIPlayerButtonText"/>
+			<Enabled val="{$parent/DebugCheckbox/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_00" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_00" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_00" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_00" pos="Max" offset="0"/>
+			<Text val="Player Input Handler"/>
+			<Enabled val="{$parent/CheckBox_00/@Enabled}"/>
+		</Frame>
+		
+		<Frame type="Label" name="CheckBoxLabel_01" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_01" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_01" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_01" pos="Max" offset="0"/>
+			<Text val="Chat Recorder"/>
+			<Enabled val="{$parent/CheckBox_01/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_02" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_02" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_02" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_02" pos="Max" offset="0"/>
+			<Text val="Free Cam"/>
+			<Enabled val="{$parent/CheckBox_02/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_03" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_03" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_03" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_03" pos="Max" offset="0"/>
+			<Text val="Measuring Tool"/>
+			<Enabled val="{$parent/CheckBox_03/@Enabled}"/>
+		</Frame>
+		
+		<Frame type="Label" name="CheckBoxLabel_04" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_04" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_04" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_04" pos="Max" offset="0"/>
+			<Text val="Unit Cheats"/>
+			<Enabled val="{$parent/CheckBox_04/@Enabled}"/>
+		</Frame>
+
+		<!--Frame type="Label" name="CheckBoxLabel_05" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_05" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_05" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_05" pos="Max" offset="0"/>
+			<Enabled val="{$parent/CheckBox_05/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_06" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_06" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_06" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_06" pos="Max" offset="0"/>
+			<Enabled val="{$parent/CheckBox_06/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_07" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_07" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_07" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_07" pos="Max" offset="0"/>
+			<Enabled val="{$parent/CheckBox_07/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_08" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_08" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_08" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_08" pos="Max" offset="0"/>
+			<Enabled val="{$parent/CheckBox_08/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Label" name="CheckBoxLabel_09" template="DebugToolsTemplates/DebugCheckboxLabel">
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/CheckBox_09" pos="Max" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/CheckBox_09" pos="Max" offset="0"/>
+			<Enabled val="{$parent/CheckBox_09/@Enabled}"/>
+		</Frame>
+
+		<Frame type="Button" name="ConfirmButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Text val="Confirm"/>
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+
+		<Frame type="Pulldown" name="PulldownMenu" template="DebugToolsTemplates/DebugPulldownTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Anchor side="Top" relative="$parent/ConfirmButton" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+
+		</Frame-->
+
+	</Frame>
+
+	<Constant name="HotkeyGroupButtonOffset" val="4"/>
+
+	<Frame type="Frame" name="HotkeyEditorTemplate">
+
+		<!-- <Frame type="Image" name="Background">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<RenderPriority val="511"/>
+			<Alpha val="200"/>
+			<Color val="15,15,15"/>
+		</Frame> -->
+
+
+
+		<Frame type="ScrollableFrame" name="HotkeyEditorScrollable">
+			<!-- <Style val="@Greybox_StandardTextPulldownMedium"/> -->
+			<!-- <HighlightOnHover val="true"/> -->
+			<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="-2"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BottomContainer" pos="Min" offset="0"/>
+			<Frame type="Frame" name="ContainerFrame">
+				<Handle val="HotkeyEditorContainer"/>
+				<CollapseLayout val="true"/>
+				<!-- <AcceptsMouse val="False"/> -->
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="-3"/>
+				<Anchor side="Right" relative="$parent/ScrollBar" pos="Min" offset="-3"/>
+				<Anchor side="Bottom" relative="HotkeyGroup10" pos="Max" offset="0"/>
+
+				<Frame type="Button" name="HotkeyGroup0Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent" pos="Min" offset="2"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup0" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup0Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup0Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup0Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup0Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup1Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup0" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup1" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup1Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup1Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup1Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup1Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup2Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup1" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup2" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup2Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup2Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup2Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup2Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup3Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup2" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup3" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup3Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup3Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup3Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup3Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup4Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup3" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup4" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup4Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup4Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup4Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup4Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup5Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup4" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup5" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup5Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup5Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup5Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup5Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup6Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup5" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup6" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup6Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup6Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup6Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup6Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup7Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup6" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup7" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup7Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup7Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup7Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup7Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup8Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup7" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup8" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup8Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup8Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup8Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup8Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup9Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup8" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup9" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup9Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup9Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup9Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup9Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+				<Frame type="Button" name="HotkeyGroup10Button" template="DebugToolsTemplates/HotkeyGroupButtonTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup9" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyGroup10" template="DebugToolsTemplates/HotkeyGroupFrameTemplate">
+					<Anchor side="Top" relative="$parent/HotkeyGroup10Button" pos="Max" offset="#HotkeyGroupButtonOffset"/>
+					<Anchor side="Left" relative="$parent/HotkeyGroup10Button" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/HotkeyGroup10Button" pos="Max" offset="0"/>
+					<Frame type="Frame" name="List">
+						<Visible val="{$parent/$parent/HotkeyGroup10Button/@Toggled}"/>
+					</Frame>
+				</Frame>
+
+			</Frame>
+			<Frame type="Image" name="BackgroundImage">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Color val="25,25,25"/>
+				<RenderPriority val="508"/>
+				<Alpha val="255"/>
+			</Frame>
+			<!-- <Frame type="Image" name="BackgroundImage" template="StandardGreyboxTemplates/StandardPulldownMenuBackground"/> -->
+			<!-- <Frame type="Image" name="SelectedImage" template="StandardGreyboxTemplates/StandardPulldownMenuSelected"/>
+			<Frame type="Image" name="HoverImage" template="StandardGreyboxTemplates/StandardPulldownMenuHover"/> -->
+			<Frame type="ScrollBar" name="ScrollBar" template="DebugToolsTemplates/ScrollBarTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Orientation val="Vertical"/>
+				<Width val="18"/>
+				<StepValue val="28"/>
+				<Continuous val="true"/>
+				<CollapseLayout val="true"/>
+				<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+			</Frame>
+		</Frame>
+
+		<Frame type="Frame" name="BottomContainer">
+			<Anchor side="Top" relative="$parent" pos="68%" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<CollapseLayout val="true"/>
+			<Visible val="{HotkeyEditorConfig/@Visible}"/>
+
+			<Frame type="Image" name="Background" template="StandardGreyboxTemplates/StandardContainerBackgroundTemplate">
+				<Anchor relative="$parent" offset="0"/>
+				<RenderPriority val="590"/>
+			</Frame>
+
+			<Frame type="Frame" name="HotkeyEditorConfig" template="DebugToolsTemplates/HotkeyEditorConfigTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<RenderPriority val="600"/>
+				<Handle val="HotkeyEditorConfig"/>
+				<Visible val="False"/>
+
+				<Frame type="CheckBox" name="CheckBox_0" template="StandardTemplates/StandardCheckBoxTemplate">
+					<Anchor side="Top" relative="$parent/Undo" pos="Max" offset="5"/>
+					<Anchor side="Right" relative="$parent/Undo" pos="Max" offset="-1"/>
+				</Frame>
+				<Frame type="Label" name="CheckBoxLabel_0" template="GraphicsOptionsPanel/GraphicsLabelTemplate">
+					<Anchor side="Top" relative="$parent/CheckBox_0" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/CheckBox_0" pos="Min" offset="-5"/>
+					<Anchor side="Bottom" relative="$parent/CheckBox_0" pos="Max" offset="0"/>
+					<Text val="On 'Up'"/>
+				</Frame>
+
+				<Frame type="CheckBox" name="CheckBox_1" template="StandardTemplates/StandardCheckBoxTemplate">
+					<Anchor side="Top" relative="$sibling-1" pos="Max" offset="1"/>
+					<Anchor side="Right" relative="$sibling-1" pos="Max" offset="0"/>
+				</Frame>
+				<Frame type="Label" name="CheckBoxLabel_1" template="GraphicsOptionsPanel/GraphicsLabelTemplate">
+					<Anchor side="Top" relative="$parent/CheckBox_1" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/CheckBox_1" pos="Min" offset="-5"/>
+					<Anchor side="Bottom" relative="$parent/CheckBox_1" pos="Max" offset="0"/>
+					<Text val="On 'Down'"/>
+				</Frame>
+
+				<Frame type="CheckBox" name="CheckBox_2" template="StandardTemplates/StandardCheckBoxTemplate">
+					<Anchor side="Top" relative="$sibling-1" pos="Max" offset="1"/>
+					<Anchor side="Right" relative="$sibling-1" pos="Max" offset="0"/>
+				</Frame>
+				<Frame type="Label" name="CheckBoxLabel_2" template="GraphicsOptionsPanel/GraphicsLabelTemplate">
+					<Anchor side="Top" relative="$parent/CheckBox_2" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/CheckBox_2" pos="Min" offset="-5"/>
+					<Anchor side="Bottom" relative="$parent/CheckBox_2" pos="Max" offset="0"/>
+					<Text val="On 'Repeat'"/>
+				</Frame>
+
+			</Frame>
+
+
+		</Frame>
+	
+
+		<!-- <Frame type="Button" name="ConfirmButton" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Text val="Confirm"/>
+			<Anchor side="Top" relative="$parent/CheckBox_09" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+		</Frame>
+
+		<Frame type="Pulldown" name="PulldownMenu" template="DebugToolsTemplates/DebugPulldownTemplate">
+			<Height val="50"/>
+			<Width val="200"/>
+			<Anchor side="Top" relative="$parent/ConfirmButton" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="5"/>
+
+		</Frame> -->
+
+	</Frame>
+
+	<Frame type="Frame" name="DebugMenuTemplate" template="StandardGreyboxTemplates/StandardBorderExtraLargeTemplate">
+		<RenderPriority val="600"/>
+		<Frame type="Image" name="Background" template="StandardGreyboxTemplates/StandardContainerBackgroundTemplate">
+			<RenderPriority val="510"/>
+			<Visible val="false"/>
+		</Frame>
+		<Frame type="Image" name="BorderTop">
+
+			<Height val="20"/>
+		</Frame>
+
+		<Frame type="TabControl" name="DebugTabControl">
+			<Anchor side="Top" relative="$parent/BorderTop" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/BorderLeft" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/BorderRight" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/BorderBottom" pos="Min" offset="0"/>
+
+			<TabListItem val="$this/TabContainer/TabButton1"/>
+			<TabListItem val="$this/TabContainer/TabButton2"/>
+			<TabListItem val="$this/TabContainer/TabButton3"/>
+			<PanelListItem val="$this/PanelContainer/DebugCheatsTab"/>
+			<PanelListItem val="$this/PanelContainer/HotkeyEditorTab"/>
+			<!-- <PanelListItem val="$this/PanelContainer/UnlocksTab"/> -->
+			<AcceptsMouse val="True"/>
+			
+			<Frame type="Frame" name="TabContainer" template="StandardGreyboxTemplates/StandardContainerInnerTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Height val="38"/>
+
+				<Frame type="Button" name="TabButton1" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+					<Text val="Debug Tools"/>
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="0"/>
+					<Anchor side="Left" relative="$parent/Border/BorderLeft" pos="Max" offset="0"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent" pos="0.33" offset="0"/>
+					<Width val="0"/>
+					<Height val="0"/>
+					<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+				</Frame>
+
+				<Frame type="Button" name="TabButton2" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+					<Text val="Hotkeys"/>
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="0"/>
+					<Anchor side="Left" relative="$parent" pos="0.33" offset="0"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent" pos="0.66" offset="0"/>
+
+					<Width val="0"/>
+					<Height val="0"/>
+					<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+				</Frame>
+
+				<Frame type="Button" name="TabButton3" template="StandardGreyboxTemplates/StandardTextButtonMediumTemplate">
+					<Text val="Map Switcher"/>
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="0"/>
+					<Anchor side="Left" relative="$parent/TabButton2" pos="Max" offset="0"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/Border/BorderRight" pos="Min" offset="0"/>
+
+					<Width val="0"/>
+					<Height val="0"/>
+					<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+				</Frame>
+
+			</Frame>
+
+			<Frame type="Frame" name="PanelContainer" template=	"StandardGreyboxTemplates/StandardContainerInnerTemplate">
+				<Frame type="Image" name="Background">
+					<Alpha val="225"/>
+				</Frame>
+				<Anchor side="Top" relative="$parent/TabContainer" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/TabContainer" pos="Max" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Frame type="Frame" name="DebugCheatsTab" template="DebugTools/DebugCheatsTemplate">
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="0"/>
+					<Anchor side="Left" relative="$parent/Border/BorderLeft" pos="Max" offset="0"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/Border/BorderRight" pos="Min" offset="0"/>
+				</Frame>
+				<Frame type="Frame" name="HotkeyEditorTab" template="DebugTools/HotkeyEditorTemplate">
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="0"/>
+					<Anchor side="Left" relative="$parent/Border/BorderLeft" pos="Max" offset="0"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="0"/>
+					<Anchor side="Right" relative="$parent/Border/BorderRight" pos="Min" offset="0"/>
+				</Frame>
+				<!-- <Frame type="Frame" name="UnlocksTab" template="DebugTools/UnlocksTabTemplate">
+					<Anchor side="Top" relative="$parent/Border/BorderTop" pos="Max" offset="-2"/>
+					<Anchor side="Left" relative="$parent/Border/BorderLeft" pos="Max" offset="-2"/>
+					<Anchor side="Bottom" relative="$parent/Border/BorderBottom" pos="Min" offset="2"/>
+					<Anchor side="Right" relative="$parent/Border/BorderRight" pos="Min" offset="2"/>
+					<Animation name="Shown">
+						<Event event="OnShown" action="Play" frame="$this"/>
+						<Controller type="Property" end="Pause" property="Text" frame="$GlobalEventSender">
+							<Key type="Property" time="0.0" value="UnlocksShown"/>
+						</Controller>
+					</Animation>
+				</Frame> -->
+			</Frame>
+
+		</Frame>
+
+	</Frame>
+
+	<Frame type="GameUI" name="GameUI" file="GameUI">
+
+		<Frame type="Frame" name="UIContainer">
+			<Frame type="EditBox" name="GlobalEventSender" template="DebugToolsTemplates/ListenerBoxTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Width val="5"/>
+				<Height val="5"/>
+				<Visible val="true"/>
+				<Handle val="GlobalEventSender"/>
+				<Text val=""/>
+				<RenderType val="Offscreen"/>
+				<Style val="DebugTiny"/>
+			</Frame>
+			<Frame type="Frame" name="KeyManager" template="DebugToolsTemplates/KeyManagerTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Width val="1"/>
+				<Height val="1"/>
+				<Handle val="KeyManager"/>
+			</Frame>
+			<Frame type="Frame" name="FullscreenUpperContainer">
+				<Frame type="LogMessagePanel" name="LogMessagePanel">
+					<Height val="0"/>
+					<Frame type="ListBox" name="ListBox">
+						<Anchor side="Bottom" relative="$parent" pos="Max" offset="-45"/>
+					</Frame>
+					<Anchor side="Bottom" relative="ResizeControl" pos="Max" offset="30"/>
+					<Frame type="Frame" name="ResizeDragConstraint">
+						<Anchor side="Top" relative="$parent" pos="Min" offset="100"/>
+						<Anchor side="Right" relative="$parent/ListBox" pos="Max" offset="0"/>
+						<Anchor side="Bottom" relative="$parent/$parent" pos="Mid" offset="0"/>
+						<Width val="600"/>
+					</Frame>
+					<Frame type="Control" name="ResizeControl">
+						<Anchor side="Top" relative="$parent/$parent" pos="Min" offset="260"/>
+						<Anchor side="Right" relative="$parent/ListBox" pos="Max" offset="0"/>
+						<Width val="600"/>
+						<Height val="20"/>
+						<DragCursor val="ResizeVertical"/>
+						<DragHoverCursor val="ResizeVertical"/>
+						<Unclipped val="true"/>
+						<DragConstraintFrame val="$parent/ResizeDragConstraint"/>
+						<Visible val="{$parent/ListBox/@Visible}"/>
+
+						<Draggable val="{ResizerImage/@Visible}"/>
+						<AcceptsMouse val="{ResizerImage/@Visible}"/>
+
+						<Animation name="Visibility" flags="NoEventsWhileHidden">
+							<!-- <Event event="OnShown" action="DirectionReverse,Play" frame="$this"/> -->
+							<Event event="OnHidden" action="DirectionReverse,Play" frame="$this"/>
+							<Event event="KeyDown" action="DirectionForward,Play" frame="$KeyManager/1"/>
+							<Event event="KeyUp" action="DirectionReverse,Play" frame="$KeyManager/1"/>
+							<Controller type="Visibility" end="Pause" frame="ResizerImage">
+								<Key type="Bool" time="0.0" value="false"/>
+								<Key type="Bool" time="0.001" value="true"/>
+							</Controller>
+						</Animation>
+
+						<Frame type="Image" name="ResizerImage">
+							<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+							<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+							<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+							<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+							<Texture val="Assets\Textures\ui_battlenet_glue_coop_mutators_backgroundarrow.dds"/>
+							<Color val="121,235,18,18"/>
+							<SubpixelRendering val="true"/>
+							<Visible val="False"/>
+						</Frame>
+					</Frame>
+				</Frame>
+				<Frame type="Frame" name="MenuBarConsoleAnchor">
+					<Width val="345"/>
+				</Frame>
+				<Frame type="Frame" name="MenuBarFullscreenAnchor">
+					<Width val="345"/>
+				</Frame>
+				<Frame type="MenuBar" name="MenuBar">
+
+					<Frame type="Image" name="MenuBarExtendedBackgroundImage">
+						<Anchor side="Right" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="6"/>
+						<Anchor side="Top" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="0"/>
+			
+						<Texture val="@@@UI/Game_Console_MenuBar_Background"/>
+						<TextureCoords top="0" left="0" bottom="1" right="0.23236"/>
+						<SubpixelRendering val="True"/>
+						<Width val="54"/>
+					</Frame>
+
+					<!-- 2nd button background -->
+					<!-- <Frame type="Image" name="MenuBarExtendedBackgroundImage2">
+						<Anchor side="Right" relative="$parent/MenuBarExtendedBackgroundImage" pos="Min" offset="5"/>
+						<Anchor side="Top" relative="$parent/MenuBarExtendedBackgroundImage" pos="Min" offset="0"/>
+			
+						<Texture val="@@@UI/Game_Console_MenuBar_Background"/>
+						<TextureCoords top="0" left="0" bottom="1" right="0.23236"/>
+						<SubpixelRendering val="True"/>
+						<Width val="54"/>
+					</Frame> -->
+
+					<Frame type="Button" name="DebugButton" template="DebugToolsTemplates/MenuBarButtonTemplate">
+						<!-- As 1st button offsets -->
+						<Anchor side="Left" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="-40"/>
+						<Anchor side="Top" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="9"/>
+						<!-- As 2nd button offsets -->
+						<!-- <Anchor side="Left" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="-89"/>
+						<Anchor side="Top" relative="$parent/MenuBarBackgroundImage" pos="Min" offset="9"/> -->
+						<Handle val="MenuBar_DebugButton"/>
+						<AcceptsMouse val="{$DebugMenu/DebugTabControl/@AcceptsMouse}"/>
+						<Frame type="Image" name="Icon">
+							<Anchor relative="$parent" offset="-1"/>
+							<!--Desaturated val="{$DebugMenu/@Visible}"/-->
+							<Texture val="Assets\Textures\btn-ability-terran-decloak.dds"/>
+							<ColorAdjustMode val="Colorize"/>
+							<AdjustmentColor val="230,186,74"/>
+							<StateGroup name="Desaturate">
+								<DefaultState val="False"/>
+								<State name="True">
+									<When type="Property" frame="$DebugMenu" operator="Equal" Visible="True"/>
+									<Action type="SetProperty" frame="$this" AdjustmentColor="225,225,225"/>
+								</State>
+								<State name="False">
+									<Action type="SetProperty" frame="$this" AdjustmentColor="230,186,74"/>
+								</State>
+							</StateGroup>
+							<!-- <Texture val="Assets\Textures\ui-editoricon-triggercategories_debug.dds"/> -->
+							
+						</Frame>
+					</Frame>
+
+				</Frame>
+
+				<Frame type="ChatBar" name="ChatBar">
+					<Frame type="EditBox" name="ChatEditBox">
+						<Animation name="Animation">
+							<Event event="ForceShow" action="Reset,Play" frame="$this"/>
+							<Controller type="Visibility" end="Pause" frame="$parent">
+								<Key type="Bool" time="0.0" value="true"/>
+							</Controller>
+						</Animation>
+						<Animation name="OnEnterPressed">
+							<Event event="OnEnterPressed" action="Reset,Play" frame="$this"/>
+							<Controller type="State" end="Pause" frame="$ChatBar_DebugEditBox" stateGroup="Trigger">
+								<Key type="Identifier" time="0.0" value="Yes"/>
+								<Key type="Identifier" time="0.01" value="No"/>
+							</Controller>
+						</Animation>
+						<Animation name="FocusGained">
+							<Event event="OnFocusGained" action="Reset,Play" frame="$this"/>
+							<Controller type="State" end="Pause" frame="$parent/plyr_clearInputsTriggerBox" stateGroup="Trigger">
+								<Key type="Identifier" time="0.0" value="Yes"/>
+							</Controller>
+						</Animation>
+					</Frame>
+					
+					<Frame type="EditBox" name="plyr_clearInputsTriggerBox">
+						<Anchor side="Top" relative="$parent/ChatEditBox" pos="Max" offset="0"/>
+						<Anchor side="Left" relative="$parent/ChatEditBox" pos="Min" offset="0"/>
+						<Anchor side="Right" relative="$parent/ChatEditBox" pos="Max" offset="0"/>
+						<Height val="20"/>
+						<Width val="20"/>
+						<AcceptsMouse val="false"/>
+						<RejectsFocus val="true"/>
+						<RenderType val="Offscreen"/>
+						<Style val="DebugTiny"/>
+						<Animation name="Handled">
+							<Event event="Handled" action="Reset,Play" frame="$this"/>
+							<Controller type="State" end="Pause" frame="$this" stateGroup="Trigger">
+								<Key type="Identifier" time="0.0" value="No"/>
+							</Controller>
+						</Animation>
+						<StateGroup name="Trigger">
+							<DefaultState val="No"/>
+							<State name="Yes">
+								<Action type="SetProperty" frame="$this" Text="1" undo="False"/>
+							</State>
+							<State name="No">
+								<Action type="SetProperty" frame="$this" Text="" undo="False"/>
+							</State>
+						</StateGroup>
+					</Frame>
+
+					<Frame type="EditBox" name="DebugEditBox">
+						<Handle val="ChatBar_DebugEditBox"/>
+						<Anchor side="Top" relative="$parent/ChatEditBox" pos="Max" offset="-100"/>
+						<Anchor side="Left" relative="$parent/ChatEditBox" pos="Min" offset="0"/>
+						<Anchor side="Right" relative="$parent/ChatEditBox" pos="Max" offset="0"/>
+						<Height val="20"/>
+						<Width val="20"/>
+						<AcceptsMouse val="false"/>
+						<RejectsFocus val="true"/>
+						<RenderType val="Offscreen"/>
+						<Style val="DebugTiny"/>
+						<Animation name="Handled">
+							<Event event="Handled" action="Reset,Play" frame="$this"/>
+							<Controller type="State" end="Pause" frame="$this" stateGroup="Trigger">
+								<Key type="Identifier" time="0.0" value="No"/>
+							</Controller>
+						</Animation>
+						<StateGroup name="Trigger">
+							<DefaultState val="No"/>
+							<State name="Yes">
+							</State>
+							<State name="No">
+							</State>
+						</StateGroup>				
+						<StateGroup name="ForwardTrigger">
+							<DefaultState val="Default"/>
+							<State name="Forward">
+								<When type="AnimationState" frame="$this" operator="Equal" HasData="True" />
+								<When type="StateGroup" frame="$this" operator="Equal" Trigger="Yes"/>
+								<When type="Property" frame="$parent/ChatEditBox" operator="Equal" Focused="False"/>
+								<Action type="SetProperty" frame="$this" Text="1" undo="False"/>
+							</State>
+							<State name="Default">
+								<Action type="SetProperty" frame="$this" Text="" undo="False"/>
+							</State>
+						</StateGroup>
+					</Frame>
+				</Frame>
+
+				<Constant name="DebugMenuOffsetY" val="275"/>
+				<Constant name="DebugMenuWidth" val="620"/>
+				<Constant name="DebugMenuHeight" val="600"/>
+				<Frame type="Control" name="DebugMenuDragControl">
+					<Anchor side="Top" relative="$parent" pos="Min" offset="#DebugMenuOffsetY"/>
+					<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+					<Width val="#DebugMenuWidth"/>
+					<Visible val="{$parent/DebugMenu/@Visible}"/>
+					<Height val="20"/>
+					<DragCursor val="GripClosed"/>
+					<DragHoverCursor val="GripOpen"/>
+					<Draggable val="true"/>
+					<DragConstraintFrame val="$parent"/>
+					<RenderPriority val="600"/>
+
+					<StateGroup name="AspectRatioState">
+						<DefaultState val="16x9"/>
+						<State name="4x3">
+							<When type="Property" frame="AspectRatioListener_4x3" Visible="True"/>
+							<Action type="SetAnchor" frame="$this" side="Top" relative="$parent" pos="Min" offset="#DebugMenuOffsetY"/>
+							<Action type="SetAnchor" frame="$this" side="Right" relative="$parent" pos="Max" offset="-0"/>
+						</State>
+			
+						<State name="16x10">
+							<When type="Property" frame="AspectRatioListener_16x10" Visible="True"/>
+							<Action type="SetAnchor" frame="$this" side="Top" relative="$parent" pos="Min" offset="#DebugMenuOffsetY"/>
+							<Action type="SetAnchor" frame="$this" side="Right" relative="$parent" pos="Max" offset="0"/>
+						</State>
+						
+						<State name="16x9">
+							<When type="Property" frame="AspectRatioListener_16x9" Visible="True"/>
+							<Action type="SetAnchor" frame="$this" side="Top" relative="$parent" pos="Min" offset="#DebugMenuOffsetY"/>
+							<Action type="SetAnchor" frame="$this" side="Right" relative="$parent" pos="Max" offset="-0"/>
+						</State>
+						<State name="5x4">
+							<When type="Property" frame="AspectRatioListener_5x4" Visible="True"/>
+							<Action type="SetAnchor" frame="$this" side="Top" relative="$parent" pos="Min" offset="#DebugMenuOffsetY"/>
+							<Action type="SetAnchor" frame="$this" side="Right" relative="$parent" pos="Max" offset="-0"/>
+						</State>
+					</StateGroup>
+
+					<Frame type="AspectRatioFrame" name="AspectRatioListener_16x9" template="DebugTools/AspectRatioListener_Template">
+						<MinVisibleAspectRatio val="1.77"/>
+					</Frame>
+					
+					<Frame type="AspectRatioFrame" name="AspectRatioListener_16x10" template="DebugTools/AspectRatioListener_Template">
+						<MaxVisibleAspectRatio val="1.76"/>
+						<MinVisibleAspectRatio val="1.6"/>
+					</Frame>
+					
+					<Frame type="AspectRatioFrame" name="AspectRatioListener_4x3" template="DebugTools/AspectRatioListener_Template">
+						<MinVisibleAspectRatio val="1.33"/>
+						<MaxVisibleAspectRatio val="1.51"/>
+					</Frame>
+	
+					<Frame type="AspectRatioFrame" name="AspectRatioListener_5x4" template="DebugTools/AspectRatioListener_Template">
+						<MinVisibleAspectRatio val="1"/>
+						<MaxVisibleAspectRatio val="1.25"/>
+					</Frame>
+
+				</Frame>
+
+				<Frame type="Button" name="DebugMenuCloseButton" template="StandardBattlenetTemplates/BattlenetIconButtonTemplate">
+					<Anchor side="Top" relative="$parent/DebugMenuDragControl" pos="Min" offset="-2"/>
+					<Anchor side="Right" relative="$parent/DebugMenuDragControl" pos="Max" offset="2"/>
+					<Width val="24"/>
+					<Height val="24"/>
+					<Visible val="{$parent/DebugMenu/@Visible}"/>
+					<RenderPriority val="605"/>
+					<Muted val="true"/>
+					<AcceptsMouse val="{$DebugMenu/DebugTabControl/@AcceptsMouse}"/>
+
+					<NormalImage val="NormalImage"/>
+					<HoverImage val="HoverImage"/>
+					<Frame type="Image" name="NormalImage">
+						<Texture val="@UI/Glues_Icons_CloseButton" layer="0"/>
+						<ColorAdjustMode val="Colorize"/>
+						<AdjustmentColor val="150,165,165,150"/>
+					</Frame>
+					
+					<Frame type="Image" name="HoverImage">
+						<Texture val="@UI/Glues_Icons_CloseButtonHover" layer="0"/>
+						<ColorAdjustMode val="Colorize"/>
+						<AdjustmentColor val="150,215,215,200"/>
+					</Frame>
+
+					<Animation name="Click">
+						<Event event="OnClick" action="Reset,Play" frame="$this"/>
+						<Controller type="Event" end="Pause" frame="$MenuBar_DebugButton">
+							<Key type="Event" time="0.0" event="ControlClickRequest"/>
+						</Controller>
+					</Animation>
+				</Frame>
+
+				<Frame type="Frame" name="DebugMenu" template="DebugTools/DebugMenuTemplate">
+					<Anchor side="Top" relative="$parent/DebugMenuDragControl" pos="Min" offset="0"/>
+					<Anchor side="Left" relative="$parent/DebugMenuDragControl" pos="Mid" offset="0"/>
+					<Anchor side="Right" relative="$parent/DebugMenuDragControl" pos="Mid" offset="0"/>
+					<Anchor side="Bottom" relative="$this" pos="Min" offset="0"/>
+					<Width val="#DebugMenuWidth"/>
+					<Height val="#DebugMenuHeight"/>
+					<Handle val="DebugMenu"/>
+					<Visible val="false"/>
+					<Frame type="Image" name="Background">
+						<Alpha val="200"/>
+					</Frame>
+					<Frame type="Image" name="BorderTop">
+						<StateGroup name="Dragging">
+							<DefaultState val="False"/>
+							<State name="True">
+								<When type="Property" frame="$parent/$parent/DebugMenuDragControl" Dragging="True"/>
+								<Action type="SetAnimationProperty" frame="$this" animation="Highlight" enabled="False"/>
+							</State>
+							<State name="False">
+								<When type="Property" frame="$parent/$parent/DebugMenuDragControl" Dragging="False"/>
+								<Action type="SetAnimationProperty" frame="$this" animation="Highlight" enabled="True"/>
+							</State>
+						</StateGroup>
+						<Animation name="Highlight">
+							<Event event="OnMouseEnter" action="Reset,Play" frame="$parent/$parent/DebugMenuDragControl"/>
+							<Event event="OnMouseExit" action="Stop" frame="$parent/$parent/DebugMenuDragControl"/>
+							<Event event="OnHidden" action="Stop" frame="$this"/>
+							<Controller type="Color" end="PingPong" frame="$this">
+								<Key type="Curve" time="0.0" value="55,55,55"/>
+								<Key type="Curve" time="1.0" value="75,75,75"/>
+							</Controller>
+						</Animation>
+					</Frame>
+				</Frame>
+			</Frame>
+		</Frame>
+	</Frame>
+</Desc>

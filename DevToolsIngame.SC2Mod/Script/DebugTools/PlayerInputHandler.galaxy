@@ -1,0 +1,377 @@
+include "Script/math/Vector2f"
+include "Script/math/Vector3f"
+
+static trigger plyr_TriggerTurnOnOff_t = null;
+static fixed plyr_TriggerTurnOnOff_lp_time;
+static int plyr_TriggerTurnOnOff_lp_timeType;
+static trigger plyr_TriggerTurnOnOff_lp_t;
+static bool plyr_TriggerTurnOnOff_lp_onOff;
+
+static void plyr_TriggerTurnOnOff (fixed time, int timeType, trigger trig, bool onOff) {
+    plyr_TriggerTurnOnOff_lp_time = time;
+    plyr_TriggerTurnOnOff_lp_timeType = timeType;
+    plyr_TriggerTurnOnOff_lp_t = trig;
+    plyr_TriggerTurnOnOff_lp_onOff = onOff;
+
+    if (plyr_TriggerTurnOnOff_t == null) {
+        plyr_TriggerTurnOnOff_t = TriggerCreate("plyr_TriggerTurnOnOff_Func");
+    }
+
+    TriggerExecute(plyr_TriggerTurnOnOff_t, false, false);
+}
+
+bool plyr_TriggerTurnOnOff_Func (bool testConds, bool runActions) {
+    fixed time = plyr_TriggerTurnOnOff_lp_time;
+    int timeType = plyr_TriggerTurnOnOff_lp_timeType;
+    trigger trig = plyr_TriggerTurnOnOff_lp_t;
+    bool onOff = plyr_TriggerTurnOnOff_lp_onOff;
+    if(time > 0.0) {
+        Wait(time, timeType);
+    }
+    TriggerEnable(trig, onOff);
+    return true;
+}
+
+static trigger plyr_InputsButtonRepeat_Trigger = null;
+static int plyr_InputsButtonRepeat_player;
+static int plyr_InputsButtonRepeat_button;
+
+static void plyr_InputsButtonRepeat (int player, int button) {
+    plyr_InputsButtonRepeat_player = player;
+    plyr_InputsButtonRepeat_button = button;
+
+    if (plyr_InputsButtonRepeat_Trigger == null) {
+        plyr_InputsButtonRepeat_Trigger = TriggerCreate("plyr_InputsForwardButtonRepeat_Func");
+    }
+
+    TriggerExecute(plyr_InputsButtonRepeat_Trigger, false, false);
+}
+
+bool plyr_InputsForwardButtonRepeat_Func (bool testConds, bool runActions) {
+    int p = plyr_InputsButtonRepeat_player;
+    int input = plyr_InputsButtonRepeat_button;
+    timer t;
+    structref<gs_Player> plyr;    
+    plyr = gv_plyr[p];
+    p = p;
+    t = TimerCreate();
+    TimerStart(t, c_KEY_REPEAT_DELAY, false, c_timeReal);
+    while (TimerGetRemaining(t) > 0.0) {
+        if (!plyr.mouseButtonDown[input]) {
+            return false;
+        }
+        Wait(0.0, c_timeReal);
+    }
+    if(plyr.mouseButtonRepeating[input]){
+        return false;
+    }
+    plyr.mouseButtonRepeating[input] = true;
+    while (plyr.mouseButtonDown[input] && plyr.mouseButtonRepeating[input] && TriggerIsEnabled(plyr.mouseClicked_t[input][ge_InputType_Up])) {
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "Player"), p);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "Button"), input);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "State"), ge_InputType_Repeat);
+        TriggerSendEvent(ge_Tracking_MouseClicked_String);
+        Wait(c_KEY_REPEAT_TICK, c_timeReal);
+    }
+    plyr.mouseButtonRepeating[input] = false;
+    return true;
+}
+
+static trigger InputsKeyRepeat_t = null;
+static int plyr_InputsKeyRepeat_player;
+static int plyr_InputsKeyRepeat_key;
+
+static void plyr_InputsKeyRepeat (int player, int key) {
+    plyr_InputsKeyRepeat_player = player;
+    plyr_InputsKeyRepeat_key = key;
+    if (InputsKeyRepeat_t == null) {
+        InputsKeyRepeat_t = TriggerCreate("plyr_InputsForwardKeyRepeat_Func");
+    }
+    TriggerExecute(InputsKeyRepeat_t, false, false);
+}
+
+bool plyr_InputsForwardKeyRepeat_Func (bool testConds, bool runActions) {
+    int p = plyr_InputsKeyRepeat_player;
+    int input = plyr_InputsKeyRepeat_key;
+    timer t;
+    structref<gs_Player> plyr;    
+    plyr = gv_plyr[p];
+    t = TimerCreate();
+    TimerStart(t, c_KEY_REPEAT_DELAY, false, c_timeReal);
+    while (TimerGetRemaining(t) > 0.0) {
+        if (!plyr.keyDown[input]) {
+            return false;
+        }
+        Wait(0.0, c_timeReal);
+    }
+    if(plyr.keyRepeating[input]){
+        return false;
+    }
+    plyr.keyRepeating[input] = true;
+    while (plyr.keyDown[input] && plyr.keyRepeating[input] && TriggerIsEnabled(plyr.keyPressed_t[input][ge_InputType_Up])) {
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Player"), p);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Key"), input);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "State"), ge_InputType_Repeat);
+        TriggerSendEvent(ge_Tracking_KeyPressed_String);
+        Wait(c_KEY_REPEAT_TICK, c_timeReal);
+    }
+    plyr.keyRepeating[input] = false;
+    return true;
+}
+
+static void plyr_InputsForwardEventKeyPressed (int p, bool upDownOption) {
+    int type;
+    int index = EventKeyPressed();
+
+    if (index >= 0 && index <= c_INPUT_KEY_COUNT) {
+        if (upDownOption) {
+            type = 1;
+            gv_plyr[p].keyDown[index] = true;
+        }
+        else {
+            type = 0;
+            gv_plyr[p].keyDown[index] = false;
+        }
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Player"), p);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Key"), index);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "State"), type);
+        TriggerSendEvent(ge_Tracking_KeyPressed_String);
+        plyr_InputsKeyRepeat(p, index);
+    }
+
+}
+
+static void plyr_InputsForwardEventMouseClicked (int p, bool upDownOption) {
+    int type;
+    int index = EventMouseClickedButton();
+    structref<gs_Player> plyr;    
+    plyr = gv_plyr[p];
+
+    if (index >= 1 && index <= c_MOUSE_BUTTON_COUNT) {
+        if (upDownOption) {
+            type = 1;
+            plyr.mouseButtonDown[index] = true;
+        }
+        else {
+            type = 0;
+            plyr.mouseButtonDown[index] = false;
+            if (plyr.mouseTrack_WorldLoc) {
+                plyr.mouseWorld_Click[index] = PointFromXYZ(EventMouseClickedPosXWorld(),
+                                                            EventMouseClickedPosYWorld(),
+                                                            EventMouseClickedPosZWorld());
+            }
+            if (plyr.mouseTrack_UILoc) {
+                plyr.mouseUI_Click[index] = Point(  EventMouseClickedPosXUI(),
+                                                    EventMouseClickedPosYUI());
+            }
+        }
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "Player"), p);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "Button"), index);
+        DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseClicked_String, "State"), type);
+        TriggerSendEvent(ge_Tracking_MouseClicked_String);
+        plyr_InputsButtonRepeat(p, index);
+    }
+
+}
+
+static void plyr_InputsForwardEventMouseWheel(int p) {
+    DataTableSetInt(false,   TriggerEventParamName(ge_Tracking_MouseWheel_String, "Player"), p);
+    DataTableSetFixed(false, TriggerEventParamName(ge_Tracking_MouseWheel_String, "Spin"), EventMouseWheelSpin());
+    gv_plyr[p].lastMouseSpin = EventMouseWheelSpin();
+    TriggerSendEvent(ge_Tracking_MouseWheel_String);
+}
+
+static trigger plyr_InputsTranslateMouse_t = null;
+static trigger plyr_InputsTranslateMouseCallback_t;
+static int plyr_InputsTranslateMouse_player;
+
+static void plyr_InputsTranslateMouse (trigger trig, int p) {
+    plyr_InputsTranslateMouseCallback_t = trig;
+    plyr_InputsTranslateMouse_player = p;
+
+    if (plyr_InputsTranslateMouse_t == null) {
+        plyr_InputsTranslateMouse_t = TriggerCreate("plyr_InputsTranslateMouse_Func");
+    }
+
+    TriggerExecute(plyr_InputsTranslateMouse_t, false, false);
+}
+
+bool plyr_InputsTranslateMouse_Func (bool testConds, bool runActions) {
+    trigger trig = plyr_InputsTranslateMouseCallback_t;
+    int p = plyr_InputsTranslateMouse_player;
+    point newPoint;
+    point temp;
+
+    structref<gs_Player> plyr;
+    plyr = gv_plyr[p];
+    
+    TriggerEnable(trig, false);
+    if (plyr.mouseTrack_WorldLoc) {
+        newPoint = PointFromXYZ(EventMouseMovedPosXWorld(), EventMouseMovedPosYWorld(), EventMouseMovedPosZWorld());
+        if(plyr.mouseWorld_Move != null){
+            if(plyr.reverseMouse){ temp = Vector3f_getVectorBetweenPoints(newPoint, plyr.mouseWorld_Move); }
+            else{ temp = Vector3f_getVectorBetweenPoints(plyr.mouseWorld_Move, newPoint); }
+            plyr.mouseWorld_MoveVector = temp;
+        }
+        plyr.mouseWorld_Move = newPoint;
+
+    }
+    if (plyr.mouseTrack_UILoc) {
+        newPoint = Point(EventMouseMovedPosXUI(), EventMouseMovedPosYUI());
+        if(plyr.mouseUI_Move != null){
+            if(plyr.reverseMouse){ temp = Vector2f_getVectorBetweenPoints(newPoint, plyr.mouseUI_Move); }
+            else { temp = Vector2f_getVectorBetweenPoints(plyr.mouseUI_Move, newPoint); }
+            plyr.mouseUI_MoveVector = temp;
+        }
+        plyr.mouseUI_Move = newPoint;
+    }
+    DataTableSetInt(false, TriggerEventParamName(ge_Tracking_MouseMoved_String, "Player"), p);
+    TriggerSendEvent(ge_Tracking_MouseMoved_String);
+
+    plyr_TriggerTurnOnOff(0.0, c_timeGame, trig, true);
+    return true;
+}
+
+static void plyr_InputsSelected (int p, unit u) {
+    structref<gs_Player> plyr = gv_plyr[p];
+    plyr.canSelect = false;
+    plyr.unitSelected = u;
+    DataTableSetInt(false, TriggerEventParamName(ge_Tracking_UnitSelect_String, "Player"), p);
+    TriggerSendEvent(ge_Tracking_UnitSelect_String);
+
+}
+
+static void plyr_InputsDeselected (int p) {
+    structref<gs_Player> plyr = gv_plyr[p];
+    DataTableSetInt(false, TriggerEventParamName(ge_Tracking_UnitDeselect_String, "Player"), p);
+    TriggerSendEvent(ge_Tracking_UnitDeselect_String);
+    Wait(0.0, c_timeGame);
+    plyr.canSelect = true;
+    plyr.unitSelected = null;
+}
+
+bool plyr_InputsMouseMove_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_MouseMove;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    if(plyr.eventSuppression[trackType]){
+        TriggerEnable(TriggerGetCurrent(), false);
+        plyr_InputsTranslateMouse(TriggerGetCurrent(), EventPlayer());
+        Wait(0.0,c_timeReal);
+        TriggerEnable(TriggerGetCurrent(), true);
+    }
+    else{ 
+        plyr_InputsTranslateMouse(TriggerGetCurrent(), EventPlayer());
+    }
+
+    return true;
+}
+
+bool plyr_InputsKeyDown_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_Keyboard;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    if(plyr.eventSuppression[trackType]){
+        TriggerEnable(TriggerGetCurrent(), false);
+        plyr_InputsForwardEventKeyPressed(EventPlayer(), true);
+        Wait(0.0,c_timeReal);
+        TriggerEnable(TriggerGetCurrent(), true);
+    }
+    else{ 
+        plyr_InputsForwardEventKeyPressed(EventPlayer(), true);
+    }
+    return true;
+}
+
+bool plyr_InputsKeyUp_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_Keyboard;
+    int runCount;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    if(plyr.eventSuppression[trackType]){
+        TriggerEnable(TriggerGetCurrent(), false);
+        plyr_InputsForwardEventKeyPressed(EventPlayer(), false);
+        Wait(0.0,c_timeReal);
+        TriggerEnable(TriggerGetCurrent(), true);
+    }
+    else{ 
+        plyr_InputsForwardEventKeyPressed(EventPlayer(), false);
+    }
+    return true;
+}
+
+bool plyr_InputsMouseClickedUp_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_MouseClick;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    plyr_InputsForwardEventMouseClicked(EventPlayer(), false);
+    return true;
+}
+
+bool plyr_InputsMouseClickedDown_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_MouseClick;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    if(plyr.eventSuppression[trackType]){
+        TriggerEnable(TriggerGetCurrent(), false);
+        plyr_InputsForwardEventMouseClicked(EventPlayer(), true);
+        Wait(0.0,c_timeReal);
+        TriggerEnable(TriggerGetCurrent(), true);
+    }
+    else{ 
+        plyr_InputsForwardEventMouseClicked(EventPlayer(), true);
+    }
+    return true;
+}
+
+bool plyr_InputsMouseWheel_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_MouseWheel;
+    if (!plyr.isTrackingType[trackType]){
+        return false;
+    }
+    if(plyr.eventSuppression[trackType]){
+        TriggerEnable(TriggerGetCurrent(), false);
+        plyr_InputsForwardEventMouseWheel(EventPlayer());
+        Wait(0.0,c_timeReal);
+        TriggerEnable(TriggerGetCurrent(), true);
+    }
+    else{ 
+        plyr_InputsForwardEventMouseWheel(EventPlayer());
+    }
+    return true;
+}
+
+bool plyr_InputsUnitSelected_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_Selection;
+    if (!plyr.isTrackingType[trackType] || !plyr.canSelect) {
+        return false;
+    }
+    TriggerEnable(TriggerGetCurrent(), false);
+    plyr_InputsSelected(EventPlayer(), EventUnit());
+    TriggerEnable(plyr.unitDeselected_t, true);
+    return true;
+}
+
+bool plyr_InputsUnitDeselected_Func (bool testConds, bool runActions) {
+    structref<gs_Player> plyr = gv_plyr[EventPlayer()];
+    int trackType = ge_TrackType_Selection;
+    if (!plyr.isTrackingType[trackType] || !plyr.canSelect) {
+        return false;
+    }
+    TriggerEnable(TriggerGetCurrent(), false);
+    plyr_InputsDeselected(EventPlayer());
+    TriggerEnable(plyr.unitSelected_t, true);
+    return true;
+}

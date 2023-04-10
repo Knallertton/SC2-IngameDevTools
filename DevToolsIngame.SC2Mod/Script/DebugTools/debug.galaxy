@@ -1,0 +1,123 @@
+const int c_DEBUG_TYPE_MAIN = 10;
+// Debug Variable
+bool DEBUG_MODE = false;
+int dbg_gv_WorldCoverDlg;
+void Dbg(string message);
+void DbgSetOnOff( bool set);
+bool IsDebugOn();
+
+void Dbg(string message) {
+    TriggerDebugOutput(c_DEBUG_TYPE_MAIN, StringToText(message), DEBUG_MODE);
+    return;
+}
+
+void DbgF(fixed x, int precision) {
+    TriggerDebugOutput(c_DEBUG_TYPE_MAIN, FixedToText(x, precision), DEBUG_MODE);
+    return;
+}
+
+void DbgI(int x) {
+    TriggerDebugOutput(c_DEBUG_TYPE_MAIN, IntToText(x), DEBUG_MODE);
+    return;
+}
+
+void Err(string message) {
+    if(DEBUG_MODE) {
+        UIDisplayMessage(PlayerGroupActive(), c_messageAreaError, StringToText(message));
+    }
+    return;
+}
+
+void UIMsg (int area, text message){
+    UIDisplayMessage(PlayerGroupActive(), area, message);
+}
+
+void DbgSetOnOff( bool set) {
+    DEBUG_MODE = set;
+    return;
+}
+
+bool IsDebugOn(){
+    if(DEBUG_MODE){ return true; }
+    return false;
+}
+
+void DebugPoint2 (point lp_point, fixed lp_radius);
+void DebugFlashUnit (unit lp_unit);
+void CreateDebugPoint (point p, bool fading, fixed fadeStart);
+
+void DebugPoint2 (point lp_point, fixed lp_radius) {
+    CatalogFieldValueSet(c_gameCatalogEffect, "DebugPointCircle", "AreaArray[" + IntToString(0) + "].Radius", 0, FixedToString(lp_radius, c_fixedPrecisionAny));
+    PlayerCreateEffectPoint(0, "DebugPointCircle", lp_point);
+}
+
+void DebugUnitRectangle (unit u, fixed width, fixed height) {
+    CatalogFieldValueSet(c_gameCatalogEffect, "DebugUnitRectangle", "AreaArray[" + IntToString(0) + "].RectangleWidth", 0, FixedToString(width, c_fixedPrecisionAny));
+    CatalogFieldValueSet(c_gameCatalogEffect, "DebugUnitRectangle", "AreaArray[" + IntToString(0) + "].RectangleHeight", 0, FixedToString(height, c_fixedPrecisionAny));
+    PlayerCreateEffectUnit(0, "DebugUnitRectangle", u);
+}
+
+void DebugFlashUnit (unit lp_unit) {
+    libNtve_gf_SendActorMessageToUnit(lp_unit, "SetTintColor 255,0,0");
+    libNtve_gf_SendActorMessageToUnit(lp_unit, "SetTintColor 255,255,255 1.000000");
+}
+
+void CreateDebugPoint (point p, bool fading, fixed fadeStart) {
+    if(DEBUG_MODE == false){ return; }
+    ActorCreate(null, "PointNormal", null, null, null);
+    ActorSend(libNtve_gf_ActorLastCreated(), libNtve_gf_SetPosition(PointGetX(p), PointGetY(p), PointGetHeight(p)));
+    
+    if (fading == true) {
+        ActorSend(libNtve_gf_ActorLastCreated(), libNtve_gf_TimerSet(fadeStart, "Fade"));
+    }
+}
+
+void CreateDebugSphere (point p, bool fading, fixed fadeStart, bool setHeight) {
+    if(DEBUG_MODE == false){ return; }
+    ActorCreate(null, "DebugSphere", null, null, null);
+    ActorSend(libNtve_gf_ActorLastCreated(), libNtve_gf_SetPosition2D(PointGetX(p), PointGetY(p)));
+    
+    if (fading == true) {
+        ActorSend(libNtve_gf_ActorLastCreated(), libNtve_gf_TimerSet(fadeStart, "Fade"));
+    }
+    
+    if(setHeight){
+        ActorSend(libNtve_gf_ActorLastCreated(), libNtve_gf_SetZ(PointGetHeight(p)));
+    }
+}
+
+void SetDebugPointText( actor a, string s){
+    actor textActor = ActorFromScope(ActorScopeFromActor(a), "_Text");
+    ActorSend(textActor, "SetText "+ s);
+}
+void CreateDebugPointName (point p, bool fading, fixed fadeStart, string name) {
+    if(DEBUG_MODE == false){ return; }
+    CreateDebugPoint(p, fading, fadeStart);
+    SetDebugPointText(ActorLastCreated(), name);
+}
+
+void ShowHideWorldCover (bool lp_showHide, fixed lp_transparency) {
+    if ((dbg_gv_WorldCoverDlg == c_invalidDialogId)) {
+        if ((lp_showHide == true)) {
+            DialogCreate(500, 400, c_anchorCenter, 0, 0, true);
+            dbg_gv_WorldCoverDlg = DialogLastCreated();
+            DialogSetFullscreen(DialogLastCreated(), true);
+            DialogSetImageVisible(DialogLastCreated(), false);
+            DialogControlCreate(DialogLastCreated(), c_triggerControlTypeImage);
+            libNtve_gf_SetDialogItemAcceptMouse(DialogControlLastCreated(), true, PlayerGroupAll());
+            DialogControlSetFullDialog(DialogControlLastCreated(), PlayerGroupAll(), true);
+            libNtve_gf_SetDialogItemImage(DialogControlLastCreated(), "Assets\\Textures\\white32.dds", PlayerGroupAll());
+            libNtve_gf_SetDialogItemColor(DialogControlLastCreated(), Color(0.00, 0.00, 0.00), PlayerGroupAll());
+            libNtve_gf_SetDialogItemRenderPriority(DialogControlLastCreated(), 1, PlayerGroupAll());
+        }
+        else {
+            return ;
+        }
+    }
+
+    if ((lp_showHide == true)) {
+        DialogSetTransparency(dbg_gv_WorldCoverDlg, lp_transparency);
+    }
+
+    DialogSetVisible(dbg_gv_WorldCoverDlg, PlayerGroupAll(), lp_showHide);
+}

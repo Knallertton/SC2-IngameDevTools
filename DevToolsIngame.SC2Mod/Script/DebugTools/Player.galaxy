@@ -1,0 +1,395 @@
+include "Script/DebugTools/Player_h"
+include "Script/DebugTools/PlayerInputHandler"
+include "Script/DebugTools/HotkeyManager"
+
+static bool plyr_Initialized;
+static trigger plyr_ClearKeys_t;
+static trigger plyr_BankBackup_t;
+
+void plyr_InitVariables(){
+    int i;
+    int k;
+    structref<gs_Player> plyr;
+    if(!plyr_Initialized){
+        plyr_Initialized = true;
+        for (i = 0; i <= c_MAX_PLAYERS; i += 1) {
+            plyr = gv_plyr[i];
+            plyr.mouseUI_MoveVector = Vector2f_Empty();
+            plyr.mouseWorld_MoveVector = Vector3f_Empty();
+            plyr.reverseMouse = false;
+            plyr.mouseSensitivity = 0.1;
+            plyr.cameraInputLocked = false;
+            plyr.cameraInputCanOverride = true;
+            for (k = 0; k <= c_TRACKING_TYPE_COUNT; k += 1) {
+                plyr.eventSuppression[k] = c_EVENT_SUPPRESSION;
+            }
+        }
+        
+        if(plyr_BankBackup_t == null){
+            plyr_BankBackup_t = TriggerCreate("plyr_BankBackup_Func");
+            TriggerAddEventGeneric(plyr_BankBackup_t, c_plyrBankBackupEvent);
+        }
+        
+        HotkeyManagerInitialize();
+    }
+}
+
+int GenericEventPlayer () {
+    return DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Player"));
+}
+
+int GenericEventKey () {
+    if(DataTableValueExists(false, TriggerEventParamName(EventGenericName(), "Key"))){
+        return DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Key"));
+    }
+    return -1;
+}
+
+int GenericEventMouseButton () {
+    return DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Button"));
+}
+
+int GenericEventInputState () {
+    return DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "State"));
+}
+
+fixed GenericEventWheelSpin () {
+    return DataTableGetFixed(false, TriggerEventParamName(EventGenericName(), "Spin"));
+}
+
+string ConvertTrackingTypeToString(int type){
+         if(type == ge_Tracking_UnitSelect)     { return ge_Tracking_UnitSelect_String;}
+    else if(type == ge_Tracking_UnitDeselect)   { return ge_Tracking_UnitDeselect_String;}
+    else if(type == ge_Tracking_KeyPressed)     { return ge_Tracking_KeyPressed_String;}
+    else if(type == ge_Tracking_MouseClicked)   { return ge_Tracking_MouseClicked_String;}
+    else if(type == ge_Tracking_MouseMoved)     { return ge_Tracking_MouseMoved_String;}
+    else if(type == ge_Tracking_MouseWheel)     { return ge_Tracking_MouseWheel_String;}
+    else{   
+        Dbg("'ConvertTrackingTypeToString' couldn't return valid string");
+        return null;
+    }
+}
+
+int ConvertStringToTrackingType(string s){
+         if(s == ge_Tracking_UnitSelect_String)     { return ge_Tracking_UnitSelect;}
+    else if(s == ge_Tracking_UnitDeselect_String)   { return ge_Tracking_UnitDeselect;}
+    else if(s == ge_Tracking_KeyPressed_String)     { return ge_Tracking_KeyPressed;}
+    else if(s == ge_Tracking_MouseClicked_String)   { return ge_Tracking_MouseClicked;}
+    else if(s == ge_Tracking_MouseMoved_String)     { return ge_Tracking_MouseMoved;}
+    else if(s == ge_Tracking_MouseWheel_String)     { return ge_Tracking_MouseWheel;}
+    else{   
+        Dbg("'ConvertStringToTrackingType' couldn't return valid value");
+        return -1;
+    }
+}
+
+void plyr_SetMouseTrackType (int p, int trackType, bool onOff) {
+    bool b = false;
+    if (onOff) { b = true; }
+    if (trackType == ge_MouseTrackType_World) {
+        gv_plyr[p].mouseTrack_WorldLoc = b;
+    }
+    if (trackType == ge_MouseTrackType_UI) {
+        gv_plyr[p].mouseTrack_UILoc = b;
+    }
+    if (gv_plyr[p].mouseTrack_WorldLoc || gv_plyr[p].mouseTrack_UILoc) {
+        TriggerEnable(gv_plyr[p].mouseMove_t, true);
+    }
+    else {
+        TriggerEnable(gv_plyr[p].mouseMove_t, false);
+    }
+}
+
+bool plyr_IsTracked (int p) {
+    if (p >= 1 && p <= c_MAX_PLAYERS) { return true; }
+    return false;
+}
+
+point plyr_getMouseWorldPoint (int p) {
+    return gv_plyr[p].mouseWorld_Move;   
+}
+
+point plyr_getMouseClickPoint (int p, int button) {
+    return gv_plyr[p].mouseWorld_Click[button];
+}
+
+bool plyr_CanSelect (int p) {
+    if (gv_plyr[p].canSelect) { return true; }
+    return false;
+}
+
+void plyr_Initialize (playergroup pg,   bool trackMouseMovement,
+                                    bool trackMouseClicks,
+                                    bool trackKeyboard,
+                                    bool trackSelection,
+                                    bool trackMouseWheel) {
+    int p;
+    int i;
+    int k;
+    trigger trig;
+    trigger t;
+    structref<gs_Player> plyr;
+
+    while (true) {
+        p = PlayerGroupNextPlayer(pg, p);
+        if (p < 0) { break; }
+        if (plyr_IsTracked(p) && (PlayerType(p) == c_playerTypeUser) && (PlayerStatus(p) == c_playerStatusActive)) {
+            plyr = gv_plyr[p];
+
+            if(plyr_clearInputs_t == null){
+                plyr_clearInputs_t = TriggerCreate("plyr_clearInputs_Func");
+            }
+            if(plyr_clearInputsTriggerBox == 0){
+                plyr_clearInputsTriggerBox = DialogControlHookupStandard(c_triggerControlTypeEditBox, "UIContainer/FullscreenUpperContainer/ChatBar/plyr_clearInputsTriggerBox");
+            }
+            TriggerAddEventDialogControl(plyr_clearInputs_t, p, plyr_clearInputsTriggerBox, c_triggerControlEventTypeTextChanged);
+            
+            if (trackMouseMovement) {
+                plyr.isTrackingType[ge_TrackType_MouseMove] = true;
+                t = TriggerCreate("plyr_InputsMouseMove_Func");
+                TriggerEnable(t, false);
+                TriggerAddEventMouseMoved(t,p);
+                plyr.mouseMove_t = t;
+                plyr_SetMouseTrackType(p, ge_MouseTrackType_World, true);
+                plyr_SetMouseTrackType(p, ge_MouseTrackType_UI, true);
+            }
+            if (trackMouseClicks) {
+                plyr.isTrackingType[ge_TrackType_MouseClick] = true;
+                for (k = 1; k <= c_MOUSE_BUTTON_COUNT; k += 1) {
+                    if (plyr.mouseClicked_t[k][ge_InputType_Down] == null) {
+                        t = TriggerCreate("plyr_InputsMouseClickedDown_Func");
+                        plyr.mouseClicked_t[k][ge_InputType_Down] = t;
+                        TriggerEnable(t, false);
+                        TriggerAddEventMouseClicked(t, p, k, true);
+                    }
+                    if (plyr.mouseClicked_t[k][ge_InputType_Up] == null) {
+                        t = TriggerCreate("plyr_InputsMouseClickedUp_Func");
+                        plyr.mouseClicked_t[k][ge_InputType_Up] = t;
+                        TriggerEnable(t, false);
+                        TriggerAddEventMouseClicked(t, p, k, false);
+                    }
+                }
+
+            }
+            if (trackKeyboard) {
+                plyr.isTrackingType[ge_TrackType_Keyboard] = true;
+                for (k = 0; k <= c_INPUT_KEY_COUNT; k += 1) {
+                    if (plyr.keyPressed_t[k][ge_InputType_Down] == null) {
+                        t = TriggerCreate("plyr_InputsKeyDown_Func");
+                        plyr.keyPressed_t[k][ge_InputType_Down] = t;
+                        TriggerEnable(t, false);
+                        TriggerAddEventKeyPressed(t, p, k, true, c_keyModifierStateIgnore, c_keyModifierStateIgnore, c_keyModifierStateIgnore);
+                    }
+                    if (plyr.keyPressed_t[k][ge_InputType_Up] == null) {
+                        t = TriggerCreate("plyr_InputsKeyUp_Func");
+                        plyr.keyPressed_t[k][ge_InputType_Up] = t;
+                        TriggerEnable(t, false);
+                        TriggerAddEventKeyPressed(t, p, k, false, c_keyModifierStateIgnore, c_keyModifierStateIgnore, c_keyModifierStateIgnore);
+                    }
+                }
+
+            }
+            if (trackSelection) {              
+                plyr.isTrackingType[ge_TrackType_Selection] = true;
+                t = TriggerCreate("plyr_InputsUnitSelected_Func");
+                plyr.unitSelected_t = t;
+                TriggerAddEventUnitSelected(t, null, p, true);
+
+                t = TriggerCreate("plyr_InputsUnitDeselected_Func");
+                plyr.unitDeselected_t = t;
+                TriggerAddEventUnitSelected(t, null, p, false);
+                TriggerEnable(plyr.unitSelected_t, false);
+                TriggerEnable(plyr.unitDeselected_t, false);
+                plyr.canSelect = true;
+            }
+            if (trackMouseWheel) {
+                plyr.isTrackingType[ge_TrackType_MouseWheel] = true;
+                t = TriggerCreate("plyr_InputsMouseWheel_Func");
+                plyr.mouseWheel_t = t;
+                TriggerAddEventMouseWheel(t, p);
+            }
+        }
+
+    }
+}
+
+
+bool plyr_InitPlayer (int player, string options){
+    int player_type = PlayerType(player);
+    // Check that player is active and within 1 & c_MAX_PLAYER_COUNT
+    if ((player > 0 && player <= c_MAX_PLAYER_COUNT) && (PlayerStatus(player) == c_playerStatusActive)) {
+        if (player_type == c_playerTypeUser ) {
+            plyr_Initialize(PlayerGroupSingle(player),  libNtve_gf_ConvertStringToBoolean(StringWord(options, 1)), 
+                                                        libNtve_gf_ConvertStringToBoolean(StringWord(options, 2)),
+                                                        libNtve_gf_ConvertStringToBoolean(StringWord(options, 3)),
+                                                        libNtve_gf_ConvertStringToBoolean(StringWord(options, 4)),
+                                                        libNtve_gf_ConvertStringToBoolean(StringWord(options, 5)));
+            return true;
+        }
+        else if (player_type == c_playerTypeComputer) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void plyr_InitGroup(playergroup players, string options) {
+    int i;
+    int tmp_player;
+    int counter;
+    for (i = 1; i <= PlayerGroupCount(players); i += 1) {
+        tmp_player = PlayerGroupPlayer(players, i);
+        if (plyr_InitPlayer(tmp_player, options)){
+            counter += 1;
+        }
+    }
+    // Dbg("Initialized " + IntToString(counter) +" players.");
+    return;
+}
+
+
+void plyr_CameraLockInput(int player, bool lock){
+    if(gv_plyr[player].cameraInputCanOverride){
+        gv_plyr[player].cameraInputLocked = lock;
+        CameraLockInput(player, lock);
+    }
+}
+
+void plyr_CameraLockInputSetOverride(int player, bool override){
+    gv_plyr[player].cameraInputCanOverride = override;
+}
+
+bool plyr_CameraLockInputGet(int player){
+    return gv_plyr[player].cameraInputLocked;
+}
+
+void plyr_TrackingTrigger_OnOff(int player, int type, bool turnOnOff){
+    structref<gs_Player> plyr;
+    int i;
+    if (plyr_IsTracked(player) && (PlayerType(player) == c_playerTypeUser) && (PlayerStatus(player) == c_playerStatusActive)) {
+        plyr = gv_plyr[player];
+        if(plyr.trackingForceAlwaysOn[type] == true) { turnOnOff = true;  }
+        if(plyr.isTrackingType[type]){
+
+            if(type == ge_TrackType_MouseMove){
+                TriggerEnable(plyr.mouseMove_t, turnOnOff);
+            }
+            else if(type == ge_TrackType_MouseClick){
+                for (i = 0; i <= c_MOUSE_BUTTON_COUNT; i += 1) {
+                    TriggerEnable(plyr.mouseClicked_t[i][ge_InputType_Up], turnOnOff);
+                    TriggerEnable(plyr.mouseClicked_t[i][ge_InputType_Down], turnOnOff);
+                }
+            }
+            else if(type == ge_TrackType_Keyboard){
+                for (i = 0; i <= c_INPUT_KEY_COUNT; i += 1) {
+                    TriggerEnable(plyr.keyPressed_t[i][ge_InputType_Up], turnOnOff);
+                    TriggerEnable(plyr.keyPressed_t[i][ge_InputType_Down], turnOnOff);
+                }
+            }
+            else if(type == ge_TrackType_Selection){
+                if(turnOnOff){
+                    if(plyr.canSelect == true){
+                        TriggerEnable(plyr.unitSelected_t, true);
+                        TriggerEnable(plyr.unitDeselected_t, false);
+                    }
+                    else{
+                        TriggerEnable(plyr.unitSelected_t, false);
+                        TriggerEnable(plyr.unitDeselected_t, true);
+                    }
+                }
+                else{
+                    TriggerEnable(plyr.unitSelected_t, false);
+                    TriggerEnable(plyr.unitDeselected_t, false);
+                }
+            }
+            else if(type == ge_TrackType_MouseWheel){
+                TriggerEnable(plyr.mouseWheel_t, turnOnOff);
+            }
+            else{}
+        }
+    }
+}
+
+void plyr_clearInputs(int player){
+    int i;
+    structref<gs_Player> plyr;
+    plyr = gv_plyr[player];
+    for (i = 0; i <= c_INPUT_KEY_COUNT; i += 1) {
+        plyr.keyDown[i] = false;
+    }
+    for (i = 1; i <= c_MOUSE_BUTTON_COUNT; i += 1) {
+        plyr.mouseButtonDown[i] = false;
+    }
+}
+
+bool plyr_clearInputs_Func(bool test_conds, bool run_actions){
+    int input;
+    DialogControlSendAnimationEvent(EventDialogControl(), PlayerGroupSingle(EventPlayer()), "Handled");
+    if(test_conds){
+        if(!StringIsValid(DialogControlGetPropertyAsString(EventDialogControl(), c_triggerControlPropertyEditText, EventPlayer()))){
+            return false;
+        }
+    }
+    DataTableSetInt(false, TriggerEventParamName("plyr_ChatBarGainedFocus", "Player"), EventPlayer());
+    TriggerSendEvent("plyr_ChatBarGainedFocus");
+    plyr_clearInputs(EventPlayer());
+    // Dbg("ClearedInputs");
+    return true;
+}
+
+bool plyr_BankBackup_Func(bool test_conds, bool run_actions){
+    int p = DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Player"));
+    BankBackupRemove(gv_plyr[p].Bank, 0, p);
+    BankBackup(gv_plyr[p].Bank, p);
+    return true;
+}
+
+void plyr_BankRestore(string name, int p){
+    bank b;
+    int i;
+    int count;
+    BankLoad(name, p);
+    b = BankLastCreated();
+    count = BankSectionCount(b);
+
+    // Dbg("Count>"+IntToString(count));
+    if(b != null){
+        for (i = 0; i < count; i += 1) {
+            // DbgI(i);
+            // Dbg(BankSectionName(b, 0));
+            BankSectionRemove(b, BankSectionName(b, 0));
+        }
+    }
+    BankSave(b);
+    BankRestore(b, p, 0);
+    BankSave(b);
+    BankLoad(name, p);
+    gv_plyr[p].Bank = BankLastCreated();
+    return;
+}
+
+void plyr_OptionsBankSaveValue(int p, string key, string value){
+    plyr_BankRestore(c_plyrBankName, p);
+    
+    if(!BankSectionExists(gv_plyr[p].Bank, c_plyrOptionBankSection)){
+        // if(BankValueGetAsFixed(gv_plyr[p].Bank, c_plyrOptionBankSection, "Version") != c_plyrOptionsVersion){
+        // }
+        BankValueSetFromFixed(gv_plyr[p].Bank, c_plyrOptionBankSection, "Version", c_plyrOptionsVersion);
+    }
+
+    BankValueSetFromString(gv_plyr[p].Bank, c_plyrOptionBankSection, key, value);
+
+    BankSave(gv_plyr[p].Bank);
+    DataTableSetInt(false, TriggerEventParamName(c_plyrBankBackupEvent, "Player"), p);
+    TriggerSendEvent(c_plyrBankBackupEvent);
+}
+
+bool plyr_OptionsBankLoadValueAsBool(int p, string key){
+    plyr_BankRestore(c_plyrBankName, p);
+    
+    if(!BankSectionExists(gv_plyr[p].Bank, c_plyrOptionBankSection)){
+        return false;
+    }
+
+    return IntToBool(StringToInt(BankValueGetAsString(gv_plyr[p].Bank, c_plyrOptionBankSection, key)));
+}

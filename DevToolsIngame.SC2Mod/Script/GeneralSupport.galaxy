@@ -1,0 +1,12 @@
+bool IntToBool(int i){
+    if(i == 1) { return true; }
+    return false;
+}
+
+point PointFromXYZ(fixed x, fixed y, fixed z){
+    return libNtve_gf_PointFromXYZ(x, y, z);
+}
+
+void TrigKillSelf(){
+    TriggerDestroy(TriggerGetCurrent());
+}

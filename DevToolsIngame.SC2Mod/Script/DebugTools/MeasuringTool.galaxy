@@ -1,0 +1,179 @@
+bool[16] MeasuringTool_Active;
+point[16] MeasuringTool_SourcePoint;
+int MeasuringTool_Player;
+
+static bool MeasuringToolInitialized;
+void MeasuringToolInitialize(){
+    int i;
+    if(!MeasuringToolInitialized){
+        MeasuringToolInitialized = true;
+        for (i = 0; i <= 15; i += 1) {
+            MeasuringTool_Active[i] = false;
+        }
+    }
+}
+
+bool MeasuringTool_Func(bool test_conds, bool run_actions){
+    int i;
+    int player = MeasuringTool_Player;
+    point[3] points;
+    actor[3] actors;
+    fixed real;
+    string distance;
+    int path;
+    int pathLinear;
+    int pathingCost;
+    string pathString;
+    playergroup pg = PlayerGroupSingle(player);
+    point dummyPoint;
+    unit sourceUnit = null;
+    unitgroup ug = UnitSubgroupSelected(player);
+    unit dummyUnit = null;
+
+    // Create Start Point
+    points[0] = MeasuringTool_SourcePoint[player];
+    CreateDebugPoint(points[0], false, 0.0);
+    actors[0] = ActorLastCreated();
+
+    // If we have unit selected use it as source
+    if(UnitGroupCount(ug, c_unitCountAlive) > 0){
+        sourceUnit = UnitGroupUnit(ug, 1);
+    }
+    if(!UnitIsValid(sourceUnit)){
+        // Wait for left click if no unit selected
+        while((MeasuringTool_Active[player] && DEBUG_MODE) && (MeasuringTool_SourcePoint[player] == points[0])){
+            Wait(0.0, c_timeGame);
+            dummyPoint = plyr_getMouseWorldPoint(player);
+            ActorSend(actors[0], libNtve_gf_SetPosition(PointGetX(dummyPoint), PointGetY(dummyPoint), PointGetHeight(dummyPoint)));
+        }
+        points[0] = MeasuringTool_SourcePoint[player];
+        ActorSend(actors[0], libNtve_gf_SetPosition(PointGetX(points[0]), PointGetY(points[0]), PointGetHeight(points[0])));
+    }
+    else{
+        points[0] = UnitGetPosition(sourceUnit);
+        ActorSend(actors[0], libNtve_gf_SetPosition(PointGetX(points[0]), PointGetY(points[0]), PointGetHeight(points[0])));
+    }
+
+
+    if(MeasuringTool_Active[player] && DEBUG_MODE ){
+        // Create End Point
+        points[1] = points[0];
+        CreateDebugPointName(points[1], false, 0.0, "{Line: 0"+ "</n>" + "Path: 0" + "}");
+        actors[1] = ActorLastCreated();
+        if(UnitGroupCount(ug, c_unitCountAlive) > 0){
+            sourceUnit = UnitGroupUnit(ug, 1);
+        }
+        if(UnitIsValid(sourceUnit)){
+            path = PathCreateForUnit(pg, sourceUnit);
+        }else{
+            path = PathCreateForUnitType(pg, "Zergling", player, points[0]);
+        }
+        pathLinear = PathCreateForUnitType(pg, "Mutalisk", player, points[0]);
+        PathSetDestinationPoint(path, points[1]);
+        PathSetDestinationPoint(pathLinear, points[1]);
+    }
+
+    while(MeasuringTool_Active[player] && DEBUG_MODE){
+        Wait(0.0, c_timeGame);
+        ug = UnitSubgroupSelected(player);
+        if(UnitGroupCount(ug, c_unitCountAlive) > 0){
+            sourceUnit = UnitGroupUnit(ug, 1);
+        } else{ sourceUnit = null; }
+        
+        if(UnitIsValid(sourceUnit)){
+            if(points[0] != UnitGetPosition(sourceUnit)){
+                points[0] = UnitGetPosition(sourceUnit);
+                ActorSend(actors[0], libNtve_gf_SetPosition(PointGetX(points[0]), PointGetY(points[0]), PointGetHeight(points[0])));
+                PathDestroy(pathLinear);
+                pathLinear = PathCreateForUnitType(pg, "Mutalisk", player, points[0]);
+            }
+            if(sourceUnit != dummyUnit){
+                dummyUnit = sourceUnit;
+                PathSetSourceUnit(path, sourceUnit);
+                // path = PathCreateForUnit(pg, sourceUnit);
+            }
+        }
+        else{
+            if(points[0] != MeasuringTool_SourcePoint[player]){
+                // Update source position if player left clicked
+                points[0] = MeasuringTool_SourcePoint[player];
+                ActorSend(actors[0], libNtve_gf_SetPosition(PointGetX(points[0]), PointGetY(points[0]), PointGetHeight(points[0])));
+                PathDestroy(path);
+                PathDestroy(pathLinear);
+    
+                dummyUnit = sourceUnit;
+                if(UnitIsValid(sourceUnit)){
+                    path = PathCreateForUnit(pg, sourceUnit);
+                }
+                else{
+                }
+                path = PathCreateForUnitType(pg, "Zergling", player, points[0]);
+                pathLinear = PathCreateForUnitType(pg, "Mutalisk", player, points[0]);
+            }
+        }
+
+        ActorSend(actors[0], "SetFacing "+ FixedToString(FacingToAngle(AngleBetweenPoints(points[0], points[1]) + 90), -1));
+        
+        points[1] = plyr_getMouseWorldPoint(player);
+        PathSetDestinationPoint(path, points[1]);
+        PathSetDestinationPoint(pathLinear, points[1]);
+        ActorSend(actors[1], libNtve_gf_SetPosition(PointGetX(points[1]), PointGetY(points[1]), PointGetHeight(points[1])));
+        pathingCost = PointPathingCost(points[0], points[1]);
+        if(pathingCost >= 65535 || pathingCost < 0.0 ){
+            pathString = "Path: None";
+        } else{
+            pathString = "Path: " + IntToString(PointPathingCost(points[0], points[1]));
+        }
+        distance = "{Line: "+FixedToString(DistanceBetweenPoints(points[0], points[1]), -1) + " ("+FixedToString(PointGetX(points[1] - points[0]), 2) + " "+FixedToString(PointGetY(points[1] - points[0]), 2) +")" + "</n>" + pathString + "}";
+        ActorSend(actors[1], "SetFacing "+ FixedToString(FacingToAngle(AngleBetweenPoints(points[1], points[0]) + 90), -1));
+        SetDebugPointText(actors[1], distance);
+    }
+
+    for (i = 0; i < 2; i += 1) {
+        ActorSend(actors[i], "Destroy");
+        actors[i] = null;
+    }
+    PathDestroy(path);
+    PathDestroy(pathLinear);
+
+    MeasuringTool_Active[player] = false;
+    MeasuringTool_SourcePoint[player] = null;
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+
+// bool MeasuringToolHandleInput(bool test_conds, bool run_actions){
+//     int key = GenericEventKey();
+//     int button = GenericEventMouseButton();
+//     int state = GenericEventInputState();
+//     int player = GenericEventPlayer();
+//     if(MeasuringTool_Active[player]){
+//         if (button == c_mouseButtonLeft){
+//             MeasuringTool_SourcePoint[player] = plyr_getMouseClickPoint(player, c_mouseButtonLeft);
+//         }
+//     }
+//     TriggerDestroy(TriggerGetCurrent());
+//     return true;
+// }
+
+bool MeasuringToolToggle(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_measuringTool]){ TriggerDestroy(TriggerGetCurrent()); return false; }
+    if(MeasuringTool_Active[player] == false){
+        MeasuringTool_Player = player;
+        MeasuringTool_Active[player] = true;
+        MeasuringTool_SourcePoint[player] = plyr_getMouseWorldPoint(player);
+        TriggerExecute(TriggerCreate("MeasuringTool_Func"), false, false);
+    } else { MeasuringTool_Active[player] = false; }
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+bool MeasuringToolClickEvent(bool test_conds, bool run_actions){
+    int player = GenericEventPlayer();
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_measuringTool]){ TriggerDestroy(TriggerGetCurrent()); return false; }
+    MeasuringTool_SourcePoint[player] = plyr_getMouseClickPoint(player, c_mouseButtonLeft);
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}

@@ -1,0 +1,1597 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+	<Constant name="DebugColor" val="0,128,128"/>
+	<Constant name="DebugHighlightColor" val="0,211,211"/>
+	<Constant name="DebugUnlocksCheckBoxOffset" val="3"/>
+	<Constant name="DebugUnlocksLabelRightOffset" val="-5"/>
+	<Constant name="SceneUIAnimationTime" val="1.0"/>
+
+	<Frame type="Label" name="SceneUILabel">
+		<!-- <Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+		<Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/> -->
+
+		<Width val="800"/>
+		<Height val="100"/>
+		<RenderType val="HDR"/>
+		<Unclipped val="true"/>
+		<BlendMode val="Add"/>
+		<Blur val="true"/>
+		<BlurAmount val="0"/>
+		<WriteOutText val="true"/>
+		<WriteOutTextDuration val="1000"/>
+		<UseAlternateTime val="true"/>
+		<ScaleText val="true"/>
+		<Animation name="Animation" speed="2.0">
+			<Event event="Create" action="DirectionForward,Play" frame="$this"/>
+			<Event event="Destroy" action="DirectionReverse,Play" frame="$this"/>
+			<Controller type="Fade" end="Pause" frame="$this">
+				<Key type="Curve" time="0.0" value="0"/>
+				<Key type="Curve" time="#SceneUIAnimationTime" value="255"/>
+			</Controller>
+			<Controller type="Blur" end="Pause" frame="$this">
+				<Key type="Curve" time="0.0" value="2"/>
+				<Key type="Curve" time="#SceneUIAnimationTime" value="0"/>
+			</Controller>
+		</Animation>
+	</Frame>
+
+	<Frame type="EditBox" name="ListenerBoxTemplate">
+		<Alpha val="0"/>
+		<AcceptsMouse val="false"/>
+		<RejectsFocus val="true"/>
+		<Style val="DebugTiny"/>
+		<Frame type="Label" name="Text">
+			<Visible val="false"/>
+			<Style val="DebugTiny"/>
+			<Alpha val="0"/>
+		</Frame>
+	</Frame>
+
+	<Frame type="Frame" name="KeyManagerKeyTemplate">
+		<Anchor relative="$parent"/>
+		<Visible val="false"/>
+		<!-- <Frame type="MathFrame" name="KeyIndex">
+			<Anchor relative="$parent"/>
+			<A val="-1"/>
+		</Frame>
+		<Frame type="Label" name="KeyString">
+			<Anchor relative="$parent"/>
+			<Text val=""/>
+		</Frame> -->
+	</Frame>
+	
+	<Frame type="Frame" name="KeyManagerTemplate">
+		<Visible val="true"/>
+		<Batch val="true"/>
+		<Frame type="Frame" name="0" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyShift	-->
+		<Frame type="Frame" name="1" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyControl	-->
+		<Frame type="Frame" name="2" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyAlt	-->
+		<Frame type="Frame" name="3" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key0	-->
+		<Frame type="Frame" name="4" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key1	-->
+		<Frame type="Frame" name="5" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key2	-->
+		<Frame type="Frame" name="6" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key3	-->
+		<Frame type="Frame" name="7" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key4	-->
+		<Frame type="Frame" name="8" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key5	-->
+		<Frame type="Frame" name="9" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key6	-->
+		<Frame type="Frame" name="10" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key7	-->
+		<Frame type="Frame" name="11" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key8	-->
+		<Frame type="Frame" name="12" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key9	-->
+		<Frame type="Frame" name="13" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyA	-->
+		<Frame type="Frame" name="14" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyB	-->
+		<Frame type="Frame" name="15" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyC	-->
+		<Frame type="Frame" name="16" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyD	-->
+		<Frame type="Frame" name="17" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyE	-->
+		<Frame type="Frame" name="18" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF	-->
+		<Frame type="Frame" name="19" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyG	-->
+		<Frame type="Frame" name="20" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyH	-->
+		<Frame type="Frame" name="21" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyI	-->
+		<Frame type="Frame" name="22" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyJ	-->
+		<Frame type="Frame" name="23" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyK	-->
+		<Frame type="Frame" name="24" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyL	-->
+		<Frame type="Frame" name="25" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyM	-->
+		<Frame type="Frame" name="26" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyN	-->
+		<Frame type="Frame" name="27" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyO	-->
+		<Frame type="Frame" name="28" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyP	-->
+		<Frame type="Frame" name="29" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyQ	-->
+		<Frame type="Frame" name="30" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyR	-->
+		<Frame type="Frame" name="31" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyS	-->
+		<Frame type="Frame" name="32" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyT	-->
+		<Frame type="Frame" name="33" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyU	-->
+		<Frame type="Frame" name="34" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyV	-->
+		<Frame type="Frame" name="35" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyW	-->
+		<Frame type="Frame" name="36" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyX	-->
+		<Frame type="Frame" name="37" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyY	-->
+		<Frame type="Frame" name="38" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyZ	-->
+		<Frame type="Frame" name="39" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySpace	-->
+		<Frame type="Frame" name="40" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyGrave	-->
+		<Frame type="Frame" name="41" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad0	-->
+		<Frame type="Frame" name="42" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad1	-->
+		<Frame type="Frame" name="43" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad2	-->
+		<Frame type="Frame" name="44" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad3	-->
+		<Frame type="Frame" name="45" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad4	-->
+		<Frame type="Frame" name="46" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad5	-->
+		<Frame type="Frame" name="47" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad6	-->
+		<Frame type="Frame" name="48" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad7	-->
+		<Frame type="Frame" name="49" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad8	-->
+		<Frame type="Frame" name="50" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad9	-->
+		<Frame type="Frame" name="51" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadPlus	-->
+		<Frame type="Frame" name="52" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMinus	-->
+		<Frame type="Frame" name="53" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMultiply	-->
+		<Frame type="Frame" name="54" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDivide	-->
+		<Frame type="Frame" name="55" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDecimal	-->
+		<Frame type="Frame" name="56" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEquals	-->
+		<Frame type="Frame" name="57" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyMinus	-->
+		<Frame type="Frame" name="58" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketOpen	-->
+		<Frame type="Frame" name="59" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketClose	-->
+		<Frame type="Frame" name="60" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSlash	-->
+		<Frame type="Frame" name="61" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySemiColon	-->
+		<Frame type="Frame" name="62" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyApostrophe	-->
+		<Frame type="Frame" name="63" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyComma	-->
+		<Frame type="Frame" name="64" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPeriod	-->
+		<Frame type="Frame" name="65" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySlash	-->
+		<Frame type="Frame" name="66" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEscape	-->
+		<Frame type="Frame" name="67" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnter	-->
+		<Frame type="Frame" name="68" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSpace	-->
+		<Frame type="Frame" name="69" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyTab	-->
+		<Frame type="Frame" name="70" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyLeft	-->
+		<Frame type="Frame" name="71" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyUp	-->
+		<Frame type="Frame" name="72" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyRight	-->
+		<Frame type="Frame" name="73" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDown	-->
+		<Frame type="Frame" name="74" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyInsert	-->
+		<Frame type="Frame" name="75" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDelete	-->
+		<Frame type="Frame" name="76" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyHome	-->
+		<Frame type="Frame" name="77" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnd	-->
+		<Frame type="Frame" name="78" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageUp	-->
+		<Frame type="Frame" name="79" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageDown	-->
+		<Frame type="Frame" name="80" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyCapsLock	-->
+		<Frame type="Frame" name="81" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumLock	-->
+		<Frame type="Frame" name="82" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyScrollLock	-->
+		<Frame type="Frame" name="83" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPause	-->
+		<Frame type="Frame" name="84" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrintScreen	-->
+		<Frame type="Frame" name="85" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNextTrack	-->
+		<Frame type="Frame" name="86" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrevTrack	-->
+		<Frame type="Frame" name="87" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF1	-->
+		<Frame type="Frame" name="88" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF2	-->
+		<Frame type="Frame" name="89" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF3	-->
+		<Frame type="Frame" name="90" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF4	-->
+		<Frame type="Frame" name="91" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF5	-->
+		<Frame type="Frame" name="92" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF6	-->
+		<Frame type="Frame" name="93" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF7	-->
+		<Frame type="Frame" name="94" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF8	-->
+		<Frame type="Frame" name="95" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF9	-->
+		<Frame type="Frame" name="96" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF10	-->
+		<Frame type="Frame" name="97" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF11	-->
+		<Frame type="Frame" name="98" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF12	-->
+	</Frame>
+
+    <Frame type="Button" name="MenuBarButtonTemplate">
+        <Width val="36"/>
+        <Height val="36"/>
+        <DisplayType val="ImageLayer"/>
+        <ClickSound val="@UI_ActionButtonSelect"/>
+
+
+        <Frame type="Image" name="NormalImage">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <LayerCount val="4"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Normal" layer="0"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Pressed" layer="1"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Selected" layer="2"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Disabled" layer="3"/>
+            <TextureType val="NineSlice" layer="0"/>
+            <TextureType val="NineSlice" layer="1"/>
+            <TextureType val="NineSlice" layer="2"/>
+            <TextureType val="NineSlice" layer="3"/>
+        </Frame>
+
+        <Frame type="Image" name="HoverImage">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <LayerCount val="4"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Hover" layer="0"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Pressed" layer="1"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Selected" layer="2"/>
+            <Texture val="@@@UI/Game_Console_Buttons_MenuBar_Disabled" layer="3"/>
+            <TextureType val="NineSlice" layer="0"/>
+            <TextureType val="NineSlice" layer="1"/>
+            <TextureType val="NineSlice" layer="2"/>
+            <TextureType val="NineSlice" layer="3"/>
+        </Frame>
+        
+        <Frame type="Image" name="Icon">
+            <Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+            <Width val="32"/>
+            <Height val="32"/>
+            <DesaturateOnDisable val="True"/>
+            <!-- Custom Icon Goes in Here -->
+            <Texture val="@UI/MenuBarIconAchievement"/>
+            <Color val="###ColorMenuButtonIcon"/>
+        </Frame>
+    </Frame>
+
+	<Frame type="Pulldown" name="DebugPulldownTemplate" template="StandardGreyboxTemplates/StandardPulldownTemplate">
+	</Frame>
+	<Frame type="Slider" name="SliderTemplate" template="StandardTemplates/StandardSliderTemplate">
+		<Frame type="Image" name="Background">
+			<TextureCoords top="0.0" left="0.2" bottom="1.0" right="1.0"/>
+			<Texture val="Assets\Textures\storm_standardslider_bg.dds"/>
+			<TextureType val="NineSlice"/>
+			<Tiled val="false"/>
+		</Frame>
+
+		<Frame type="Image" name="FillImage">
+			<TextureCoords top="0.0" left="0.2" bottom="1.0" right="1.0"/>
+			<Texture val="Assets\Textures\storm_standardslider_fill.dds"/>
+			<TextureType val="NineSlice"/>
+			<Tiled val="false"/>
+		</Frame>
+		
+		<Frame type="Button" name="Button">
+			<Width val="1"/>
+			<Frame type="Image" name="NormalImage">
+				<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+				<Unclipped val="true"/>
+				<TextureType val="Normal"/>
+				<StateCount val="1"/>
+				<LayerCount val="2"/>
+				<AutoSizeLayer val="1"/>
+				<TextureCoords val="-0.5, -0.5, 1.5, 1.5" layer="0"/>
+				<TextureCoords val="0, 0, 1, 1" layer="1"/>
+				<Texture val="Assets\Textures\storm_ui_ingame_button_style_circle_mask.dds" layer="0"/>
+				<Texture val="Assets\Textures\ui_genericglow64.dds" layer="1"/>
+				<Width val="36"/>
+				<Height val="36"/>
+			</Frame>
+			<Frame type="Image" name="HoverImage">
+				<Unclipped val="true"/>
+				<TextureType val="Normal"/>
+				<StateCount val="1"/>
+				<LayerCount val="2"/>
+				<AutoSizeLayer val="1"/>
+				<TextureCoords val="-0.5, -0.5, 1.5, 1.5" layer="0"/>
+				<TextureCoords val="0, 0, 1, 1" layer="1"/>
+				<Texture val="Assets\Textures\storm_ui_ingame_button_style_circle_mask.dds" layer="0"/>
+				<Texture val="Assets\Textures\ui_genericglow64.dds" layer="1"/>
+				<Width val="36"/>
+				<Height val="36"/>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Frame type="Frame" name="CutsceneAttachPointTemplate">
+		<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Width val="0"/>
+		<Height val="0"/>
+	</Frame>
+
+	<StateGroup name="HasFocusTemplate">
+		<DefaultState val="False"/>
+		<State name="False">
+		</State>
+		<State name="True">
+		</State>
+	</StateGroup>
+
+	<Frame type="Label" name="DebugLabelTemplate">
+		<Style val="AIPlayerButtonText"/>
+	</Frame>
+
+	<Frame type="CheckBox" name="DebugCheckBoxTemplate" template="StandardGreyboxTemplates/StandardCheckBoxTemplate">
+		<CollapseLayout val="true"/>
+		<Width val="34"/>
+		<Height val="34"/>
+		
+		<Frame type="Button" name="Button" template="StandardGreyboxTemplates/StandardCheckBoxButtonTemplate">
+			<Frame type="Frame" name="Border">
+				<Frame type="Image" name="BorderTop">
+					<DesaturateOnDisable val="True"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderBottom">
+					<DesaturateOnDisable val="True"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderLeft">
+					<DesaturateOnDisable val="True"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderRight">
+					<DesaturateOnDisable val="True"/>
+				</Frame>
+			</Frame>
+		</Frame>
+
+		<Frame type="Image" name="CheckImage">
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+			<Texture val="@UI/Glues_Battlenet_PageAssets_CheckMark"/>
+			<DesaturateOnDisable val="true"/>
+			<RenderPriority val="514"/>
+			<Alpha val="0"/>
+			
+			<Frame type="Image" name="Left">
+				<Anchor side="Top" relative="$parent" pos="Mid" offset="1"/>
+				<Anchor side="Bottom" relative="$parent" pos="Mid" offset="1"/>
+				<Anchor side="Left" relative="$parent" pos="Mid" offset="-4"/>
+				<Anchor side="Right" relative="$parent" pos="Mid" offset="-4"/>
+				<Width val="15"/>
+				<Height val="5"/>
+				<Rotation val="45"/>
+				<IgnoreParentAlpha val="True"/>
+				<Color val="255,255,255"/>
+			</Frame>
+			
+			<Frame type="Image" name="Right">
+				<Anchor side="Bottom" relative="$parent/Left" pos="Max" offset="-5"/>
+				<Anchor side="Left" relative="$parent/Left" pos="Max" offset="-8"/>
+				<Width val="25"/>
+				<Height val="5"/>
+				<Rotation val="315"/>
+				<IgnoreParentAlpha val="True"/>
+				<Color val="255,255,255"/>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Frame type="Label" name="DebugCheckboxLabel" template="DebugToolsTemplates/DebugLabelTemplate">
+		<Style val="DebugMenuCheckboxLabel"/>
+		<CollapseLayout val="true"/>
+	</Frame>
+
+	<Frame type="CheckBox" name="DebugCheckBoxMediumTemplate" template="DebugToolsTemplates/DebugCheckBoxTemplate">
+		<Width val="30"/>
+		<Height val="30"/>
+		<Frame type="Image" name="CheckImage">
+			<Alpha val="255"/>
+			<Frame type="Image" name="Left">
+				<Alpha val="0"/>
+			</Frame>
+			<Frame type="Image" name="Right">
+				<Alpha val="0"/>
+			</Frame>
+		</Frame>
+		<Frame type="Button" name="Button">
+			<!-- <ClickOnDown val="true"/> -->
+			<Width val="30"/>
+			<Height val="30"/>
+			<Frame type="Frame" name="Border">
+				<Frame type="Image" name="BorderTop">
+					<Height val="#Greybox_Size_Border_Small"/>
+					<SubpixelRendering val="true"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderBottom">
+					<Height val="#Greybox_Size_Border_Small"/>
+					<SubpixelRendering val="true"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderLeft">
+					<Width val="#Greybox_Size_Border_Small"/>
+					<SubpixelRendering val="true"/>
+				</Frame>
+				
+				<Frame type="Image" name="BorderRight">
+					<Width val="#Greybox_Size_Border_Small"/>
+					<SubpixelRendering val="true"/>
+				</Frame>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Frame type="Slider" name="DebugSliderTemplate" template="DebugToolsTemplates/SliderTemplate">
+		<StepValue val="1"/>
+
+		<Frame type="Button" name="Forward">
+			<Visible val="true"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Width val="0"/>
+			<Height val="0"/>
+		</Frame>
+
+		<Frame type="Button" name="Reverse">
+			<Visible val="true"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Width val="0"/>
+			<Height val="0"/>
+		</Frame>
+
+		<Frame type="Button" name="PrevBookmark">
+			<Visible val="true"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Width val="0"/>
+			<Height val="0"/>
+		</Frame>
+
+		<Frame type="Button" name="NextBookmark">
+			<Visible val="true"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Width val="0"/>
+			<Height val="0"/>
+		</Frame>
+
+		<Frame type="Image" name="Background">
+			<Height val="22"/>
+		</Frame>
+
+		<Frame type="Frame" name="FillContainer">
+			<Height val="22"/>
+		</Frame>
+
+		<Frame type="Image" name="FillImage">
+			<AdjustmentColor val="#DebugColor"/>
+			<ColorAdjustMode val="Colorize"/>
+		</Frame>
+
+		<Frame type="TextFormatFrame" name="ConvertToText">
+			<Anchor relative="$parent"/>
+			<FormatText val="%0%"/>
+			<Replacement index="0" val="{$parent/@Value}"/>
+		</Frame>
+
+		<Frame type="Button" name="Button">
+			<Label val="Time"/>
+			<Text val="{$parent/ConvertToText/@Text}"/>
+			<Frame type="Label" name="Time" template="DebugToolsTemplates/DebugLabelTemplate">
+				<Anchor side="Top" relative="$parent" pos="Max" offset="-15"/>
+				<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+				<Width val="0"/>
+				<Height val="0"/>
+				<Unclipped val="true"/>
+				<Alpha val="0"/>
+				<Animation name="MouseOver">
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent"/>
+					<Controller type="Fade" end="Pause" frame="$this">
+						<Key type="Curve" time="0.0" value="0"/>
+						<Key type="Curve" time="0.125" value="255"/>
+					</Controller>
+				</Animation>
+			</Frame>
+			<Frame type="Image" name="NormalImage">
+				<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+				<Unclipped val="true"/>
+				<AdjustmentColor val="#DebugColor"/>
+				<ColorAdjustMode val="Colorize"/>
+				<TextureType val="Normal"/>
+				<StateCount val="1"/>
+				<LayerCount val="2"/>
+				<AutoSizeLayer val="1"/>
+				<TextureCoords val="-0.5, -0.5, 1.5, 1.5" layer="0"/>
+				<TextureCoords val="0, 0, 1, 1" layer="1"/>
+				<Texture val="Assets\Textures\storm_ui_ingame_button_style_circle_mask.dds" layer="0"/>
+				<Texture val="Assets\Textures\ui_genericglow64.dds" layer="1"/>
+				<Alpha val="0"/>
+				<Width val="24"/>
+				<Height val="24"/>
+				<Animation name="MouseOver">
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent"/>
+					<Controller type="Dimension" end="Pause" frame="$this" dimension="Height" relative="false" percentage="true">
+						<Key type="Curve" time="0.0" value="100"/>
+						<Key type="Curve" time="0.125" value="100"/>
+						<Key type="Curve" time="0.25" value="130"/>
+					</Controller>
+					<Controller type="Dimension" end="Pause" frame="$this" dimension="Width" relative="false" percentage="True">
+						<Key type="Curve" time="0.0" value="100"/>
+						<Key type="Curve" time="0.125" value="100"/>
+						<Key type="Curve" time="0.25" value="130"/>
+					</Controller>
+					<Controller type="Fade" end="Pause" frame="$this">
+						<Key type="Curve" time="0.0" value="0"/>
+						<Key type="Curve" time="0.125" value="255"/>
+					</Controller>
+				</Animation>
+			</Frame>
+			<Frame type="Image" name="HoverImage">
+				<Unclipped val="true"/>
+				<AdjustmentColor val="#DebugColor"/>
+				<ColorAdjustMode val="Colorize"/>
+				<TextureType val="Normal"/>
+				<StateCount val="1"/>
+				<LayerCount val="2"/>
+				<AutoSizeLayer val="1"/>
+				<TextureCoords val="-0.5, -0.5, 1.5, 1.5" layer="0"/>
+				<TextureCoords val="0, 0, 1, 1" layer="1"/>
+				<Texture val="Assets\Textures\storm_ui_ingame_button_style_circle_mask.dds" layer="0"/>
+				<Texture val="Assets\Textures\ui_genericglow64.dds" layer="1"/>
+				<Alpha val="0"/>
+				<Width val="24"/>
+				<Height val="24"/>
+				<Animation name="MouseOver">
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/$parent"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent/$parent/TimelineHitbox"/>
+					<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/$parent"/>
+					<Controller type="Dimension" end="Pause" frame="$this" dimension="Height" relative="false" percentage="true">
+						<Key type="Curve" time="0.0" value="100"/>
+						<Key type="Curve" time="0.125" value="100"/>
+						<Key type="Curve" time="0.25" value="130"/>
+					</Controller>
+					<Controller type="Dimension" end="Pause" frame="$this" dimension="Width" relative="false" percentage="True">
+						<Key type="Curve" time="0.0" value="100"/>
+						<Key type="Curve" time="0.125" value="100"/>
+						<Key type="Curve" time="0.25" value="130"/>
+					</Controller>
+					<Controller type="Fade" end="Pause" frame="$this">
+						<Key type="Curve" time="0.0" value="0"/>
+						<Key type="Curve" time="0.125" value="255"/>
+					</Controller>
+				</Animation>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Frame type="EditBox" name="TickBoxTemplate">
+		<MaxCharacters val="7"/>
+		<Style val="AIPlayerButtonText"/>
+		<LoseFocusOnEnterOrEsc val="true"/>
+		<Frame type="Frame" name="LabelContainerFrame">
+			<Anchor relative="$parent"/>
+			<Frame type="Label" name="Label">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Options val="IgnoreFormatTags"/>
+			</Frame>
+		</Frame>
+		<StateGroup name="AnimToggle">
+			<DefaultState val="NotActive"/>
+		
+			<State name="NotActive">
+				<When type="Property" frame="$this" operator="Equal" Enabled="True"/>
+				<Action type="SetAnimationProperty" frame="$this" animation="MouseOver" enabled="False"/>
+				<Action type="SendEvent" frame="$this" event="FadeIn"/>
+			</State>
+		
+			<State name="Active">
+				<When type="Property" frame="$this" operator="Equal" Enabled="False"/>
+				<Action type="SetAnimationProperty" frame="$this" animation="MouseOver" enabled="True"/>
+				<Action type="SendEvent" frame="$this" event="FadeOut"/>
+			</State>
+		</StateGroup>
+		<Animation name="Fade">
+			<Event event="FadeOut" action="DirectionReverse,Play" frame="$this"/>
+			<Event event="FadeIn" action="DirectionForward,Play" frame="$this"/>
+			<Controller type="Fade" end="Pause" frame="$this">
+				<Key type="Curve" time="0.0" value="0"/>
+				<Key type="Curve" time="0.125" value="255"/>
+			</Controller>
+		</Animation>
+		<Animation name="MouseOver">
+			<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/TimelineHitbox"/>
+			<Event event="OnMouseEnter" action="DirectionForward,Play" frame="$parent/TimelineSlider"/>
+			<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/TimelineHitbox"/>
+			<Event event="OnMouseExit" action="DirectionReverse,Play" frame="$parent/TimelineSlider"/>
+			<Controller type="Fade" end="Pause" frame="$this">
+				<Key type="Curve" time="0.0" value="0"/>
+				<Key type="Curve" time="0.125" value="255"/>
+			</Controller>
+		</Animation>
+	</Frame>
+
+	<Frame type="EditBox" name="DummyBoxTemplate">
+		<Height val="20"/>
+		<Width val="20"/>
+		<AcceptsMouse val="false"/>
+		<RejectsFocus val="true"/>
+		<Style val="DebugTiny"/>
+		<Alpha val="0"/>
+	</Frame>
+
+	<Frame type="Label" name="DummyTextTemplate">
+		<Height val="20"/>
+		<Width val="20"/>
+		<AcceptsMouse val="false"/>
+		<RejectsFocus val="true"/>
+		<Style val="DebugTiny"/>
+		<Alpha val="0"/>
+	</Frame>
+	
+    <Frame type="Button" name="ScrollBarButtonTemplate">
+        <NormalImage val="NormalImage"/>
+        <HoverImage val="HoverImage"/>
+		<AcceptsMouse val="{$parent/@AcceptsMouse}"/>
+        <Frame type="Image" name="NormalImage">
+            <Color val="40,40,40"/>
+        </Frame>
+
+        <Frame type="Image" name="HoverImage">
+            <Color val="60,60,60"/>
+        </Frame>
+    </Frame>
+
+    <Frame type="ScrollBar" name="ScrollBarTemplate">
+        <Image val="$root/StandardGreyboxTemplates/StandardScrollBarBackgroundImage"/>
+        <Button val="$root/DebugToolsTemplates/ScrollBarButtonTemplate"/>
+        <Orientation val="Vertical"/>
+        <Width val="24"/>
+    </Frame>
+
+	<Frame type="Frame" name="HotkeyInfoTemplate">
+		<StateGroup name="HasHotkey">
+			<DefaultState val="False"/>
+			<State name="False">
+				<When type="AnimationState" frame="$this" operator="NotEqual" HasHotkey="True"/>
+				<Action type="SetProperty" frame="Pick" Visible="False"/>
+				<Action type="SetProperty" frame="Show" Visible="True"/>
+				<Action type="SetProperty" frame="Kill" Enabled="False"/>
+			</State>
+			<State name="True">
+				<When type="AnimationState" frame="$this" operator="Equal" HasHotkey="True"/>
+				<Action type="SetProperty" frame="Pick" Visible="True"/>
+				<Action type="SetProperty" frame="Show" Visible="False"/>
+				<Action type="SetProperty" frame="Kill" AcceptsMouse="False"/>
+				<Action type="SetProperty" frame="Kill" Enabled="True"/>
+			</State>
+		</StateGroup>
+
+		<StateGroup name="WaitingInput">
+			<DefaultState val="FalseNoHotkey"/>
+			<State name="FalseNoHotkey">
+				<When type="AnimationState" frame="$this" Picking="False"/>
+				<When type="StateGroup" frame="$this" HasHotkey="False"/>
+				<!--Action type="SetProperty" frame="Hint" Visible="False"/>
+				<Action type="SetProperty" frame="Pick" AcceptsMouse="True" undo="False"/-->
+				<Action type="SetProperty" frame="Pick" Visible="False" undo="False"/>
+				<Action type="SetProperty" frame="Pick" AcceptsMouse="True" undo="False"/>
+				<Action type="SetProperty" frame="Show" Visible="True" undo="False"/>
+				<Action type="SetProperty" frame="Hint" Visible="False"/>
+				<Action type="SetProperty" frame="$ancestor[@name=DebugTabControl]" AcceptsMouse="True"/>
+			</State>
+			<State name="FalseHasHotkey">
+				<When type="AnimationState" frame="$this" Picking="False"/>
+				<When type="StateGroup" frame="$this" HasHotkey="True"/>
+				<Action type="SetProperty" frame="Pick" AcceptsMouse="True" undo="False"/>
+				<Action type="SetProperty" frame="Hint" Visible="False"/>
+				<Action type="SetProperty" frame="Kill" AcceptsMouse="True"/>
+				<Action type="SetProperty" frame="Kill" Enabled="True"/>
+				<Action type="SetProperty" frame="$ancestor[@name=DebugTabControl]" AcceptsMouse="True"/>
+			</State>
+			<State name="True">
+				<When type="AnimationState" frame="$this" Picking="True"/>
+				<Action type="SetProperty" frame="Pick" Visible="True" undo="False"/>
+				<Action type="SetProperty" frame="Pick" AcceptsMouse="False" undo="False"/>
+				<Action type="SetProperty" frame="Show" Visible="False" undo="False"/>
+				<Action type="SetProperty" frame="Hint" Visible="True"/>
+				<Action type="SetProperty" frame="Kill" AcceptsMouse="False"/>
+				<Action type="SetProperty" frame="Kill" Enabled="False"/>
+				<Action type="SetProperty" frame="$ancestor[@name=DebugTabControl]" AcceptsMouse="False"/>
+			</State>
+		</StateGroup>
+
+		<Frame type="Button" name="Pick" template="StandardTemplates/StandardButtonSmallTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Height val="50"/>
+			<Style val="@@HotkeyDialogBindButtonSmall"/>
+			
+			<Visible val="false"/>
+
+			<Frame type="Image" name="NormalImage">
+				<Anchor relative="$parent"/>
+				<Texture val="@@UI/HotkeyDialogBindKeyBoundButtonNormal"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+				<DesaturateOnDisable val="false"/>
+				<DisabledAlpha val="60"/>
+			</Frame>
+			<Frame type="Image" name="HoverImage">
+				<Anchor relative="$parent"/>
+				<Texture val="@@UI/HotkeyDialogBindKeyBoundButtonHover"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+				<DesaturateOnDisable val="false"/>
+				<DisabledAlpha val="60"/>
+			</Frame>
+			<Frame type="Label" name="Label">
+				<Anchor side="Left" relative="$parent" pos="Min" offset="25"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-20"/>
+				<ScaleText val="true"/>
+				<Options val="ScaleToPreventTruncation"/>
+			</Frame>
+		</Frame>
+		
+		<Frame type="Label" name="Hint" template="HotkeyDialog/HotkeyLabelLeftTemplate">
+			<Anchor side="Left" relative="$parent/Pick" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Pick" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Pick" pos="Max" offset="0"/>
+			<Height val="25"/>
+			<Style val="@@HotkeyDialogBindHintSmall"/>
+			<Text val="@UI/PressDesiredKey"/>
+		</Frame>
+		
+		<Frame type="Button" name="Kill" template="StandardTemplates/StandardButtonSmallTemplate">
+			<Anchor side="Top" relative="$parent/Pick" pos="Min" offset="-1"/>
+			<Anchor side="Right" relative="$parent/Pick" pos="Max" offset="4"/>
+			<Tooltip val="@@UI/HotkeyDialogUnbindHotKey"/>
+
+			<Visible val="{$parent/Pick/@Visible}"/>
+
+			<Width val="34"/>
+			<Height val="27"/>
+
+			<Frame type="Image" name="NormalImage">
+				<Anchor relative="$parent"/>
+				<Texture val="@@UI/HotkeyDialogUnbindKeyButtonNormal"/>
+				<TextureType val="Normal"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+			</Frame>
+			<Frame type="Image" name="HoverImage">
+				<Anchor relative="$parent"/>
+				<Texture val="@@UI/HotkeyDialogUnbindKeyButtonHover"/>
+				<TextureType val="Normal"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+			</Frame>
+		</Frame>
+		
+		<Frame type="Button" name="Show" template="StandardTemplates/StandardButtonSmallTemplate">
+			<Anchor relative="$parent/Pick"/>
+			<Style val="@@HotkeyDialogBindButtonSmall"/>
+
+			<Visible val="True"/>
+
+			<Frame type="Image" name="NormalImage">
+				<Texture val="@@UI/HotkeyDialogBindKeyUnboundButtonNormal"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+				<DesaturateOnDisable val="false"/>
+				<DisabledAlpha val="60"/>
+			</Frame>
+			<Frame type="Image" name="HoverImage">
+				<Texture val="@@UI/HotkeyDialogBindKeyUnboundButtonHover"/>
+				<LayerColor val="##StandardBorderHotkey"/>
+				<DesaturateOnDisable val="false"/>
+				<DisabledAlpha val="60"/>
+			</Frame>
+			<Frame type="Label" name="Label">
+				<Anchor side="Left" relative="$parent" pos="Min" offset="25"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-20"/>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Frame type="Frame" name="HotkeyEditorConfigTemplate">
+		<Visible val="True"/>
+		
+		<Frame type="Label" name="Header">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="8"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-18"/>
+			<Height val="22"/>
+			<Text val="@UI/BindHotkey"/>
+			<Style val="@@HotkeyDialogBindWindowHeaderSmall"/>
+		</Frame>
+		
+		<Frame type="Label" name="Name" template="HotkeyDialog/HotkeyHeaderLeftLabelTemplate">
+			<Anchor side="Top" relative="$parent/Header" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="25"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Height val="24"/>
+			<Text val="NAME"/>
+			<Style val="@@HotkeyDialogHeaderLeftSmall"/>
+		</Frame>
+		
+		<Frame type="Label" name="Description" template="HotkeyDialog/HotkeyDescriptionLeftTemplate">
+			<Anchor side="Top" relative="$parent/Name" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/Name" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Name" pos="Max" offset="0"/>
+			<Height val="40"/>
+			<Text val="LOREM IPSUM DOLOR SIT AMET"/>
+			<Style val="@@HotkeyDialogConfigDescriptionSmall"/>
+		</Frame>
+		
+		<Frame type="Frame" name="Hotkey0" template="DebugToolsTemplates/HotkeyInfoTemplate">
+			<Anchor side="Top" relative="$parent/Description" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="-5"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-5"/>
+			<Width val="150"/>
+			
+			<Frame type="Button" name="Show">
+				<Text val="@UI/AddPrimary"/>
+			</Frame>
+
+			<StateGroup name="DisableOthers">
+				<State name="False">
+					<When type="AnimationState" frame="$this" operator="NotEqual" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling+1" Enabled="True"/>
+					<Action type="SetProperty" frame="$sibling+2" Enabled="True"/>
+				</State>
+				<State name="True">
+					<When type="AnimationState" frame="$this" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling+1" Enabled="False"/>
+					<Action type="SetProperty" frame="$sibling+2" Enabled="False"/>
+				</State>
+			</StateGroup>
+
+		</Frame>
+		
+		<Frame type="Frame" name="Hotkey1" template="DebugToolsTemplates/HotkeyInfoTemplate">
+			<Anchor side="Top" relative="$sibling-1" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$sibling-1" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-5"/>
+			<Width val="150"/>
+
+			<Frame type="Button" name="Show">
+				<Text val="@UI/AddSecondary"/>
+			</Frame>
+
+			<StateGroup name="Visible">
+				<DefaultState val="False"/>
+				<State name="True">
+					<When type="StateGroup" frame="$sibling-1" HasHotkey="True"/>
+					<Action type="SetProperty" frame="$this" Visible="True" />
+				</State>
+			
+				<State name="False">
+					<When type="StateGroup" frame="$sibling-1" HasHotkey="False"/>
+					<Action type="SetProperty" frame="$this" Visible="False" />
+				</State>
+			</StateGroup>
+
+			<StateGroup name="DisableOthers">
+				<State name="False">
+					<When type="AnimationState" frame="$this" operator="NotEqual" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling-1" Enabled="True"/>
+					<Action type="SetProperty" frame="$sibling+1" Enabled="True"/>
+				</State>
+				<State name="True">
+					<When type="AnimationState" frame="$this" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling-1" Enabled="False"/>
+					<Action type="SetProperty" frame="$sibling+1" Enabled="False"/>
+				</State>
+			</StateGroup>
+
+		</Frame>
+
+		<Frame type="Frame" name="Hotkey2" template="DebugToolsTemplates/HotkeyInfoTemplate">
+			<Anchor side="Top" relative="$sibling-1" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$sibling-1" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-5"/>
+			<Width val="150"/>
+			<Visible val="false"/>
+			
+			<Frame type="Button" name="Show">
+				<Text val="@UI/AddSecondary"/>
+			</Frame>
+
+			<StateGroup name="Visible">
+				<DefaultState val="False"/>
+				<State name="True">
+					<When type="StateGroup" frame="$sibling-1" HasHotkey="True"/>
+					<Action type="SetProperty" frame="$this" Visible="True" />
+				</State>
+			
+				<State name="False">
+					<When type="StateGroup" frame="$sibling-1" HasHotkey="False"/>
+					<Action type="SetProperty" frame="$this" Visible="False" />
+				</State>
+			</StateGroup>
+
+			<StateGroup name="DisableOthers">
+				<State name="False">
+					<When type="AnimationState" frame="$this" operator="NotEqual" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling-2" Enabled="True"/>
+					<Action type="SetProperty" frame="$sibling-1" Enabled="True"/>
+				</State>
+				<State name="True">
+					<When type="AnimationState" frame="$this" Picking="True"/>
+					<Action type="SetProperty" frame="$sibling-2" Enabled="False"/>
+					<Action type="SetProperty" frame="$sibling-1" Enabled="False"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+
+		<Frame type="Button" name="Undo" template="StandardBattlenetTemplates/StandardBattlenetMiniButtonTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Width val="150"/>
+			<Height val="42"/>
+			<Text val="@UI/Restore"/>
+			<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+		</Frame>
+		
+		<Frame type="Frame" name="Warning">
+			<Anchor side="Top" relative="$parent/Hotkey0" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Bottom" relative="$parent/Undo" pos="Max" offset="-10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Visible val="false"/>
+
+			<Frame type="Image" name="Icon">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Width val="38"/>
+				<Height val="38"/>
+				<Texture val="@@UI/HotkeyWarningIcon"/>
+			</Frame>
+			
+			<Frame type="Label" name="Text">
+				<Anchor side="Top" relative="$parent/Icon" pos="Min" offset="10"/>
+				<Anchor side="Left" relative="$parent/Icon" pos="Max" offset="-10"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Style val="@@HotkeyDialogConflictSmall"/>
+			</Frame>
+		</Frame>
+	</Frame>
+
+	<Constant name="HotkeyListItemSize" val="28"/>
+	<Constant name="HotkeyListLeftInset" val="25"/>
+	<Frame type="Button" name="HotkeyListItemTemplate">
+		<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		<Height val="#HotkeyListItemSize"/>
+		<Label val="Index"/>
+		<Text val="-1"/>
+		<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+		
+		<HitTestFrame val="Container"/>
+		
+		<StateGroup name="Selected">
+			<DefaultState val="False"/>
+			<State name="True">
+				<When type="Property" frame="IndexMatch" operator="Equal" ResultInt="0"/>
+			</State>
+		
+			<State name="False">
+			</State>
+		</StateGroup>
+
+		<Frame type="MathFrame" name="IndexMatch">
+			<Anchor relative="$parent"/>
+			<A val="{$parent/@Text}"/>
+			<B val="{$parent/$parent/SelectedIndex/@Text}"/>
+			<Operator val="Subtract"/>
+		</Frame>
+
+		<Frame type="Label" name="Index" template="DebugToolsTemplates/DummyTextTemplate">
+			<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
+		</Frame>
+
+		<StateGroup name="DisplayState">
+			<State name="Pushed">
+				<When type="Property" frame="$this" pushed="True"/>
+				<When type="Property" frame="$parent" enabled="True"/>
+			</State>
+			<State name="Hover">
+				<When type="Property" frame="$this" hovering="True"/>
+				<When type="Property" frame="$parent" enabled="True"/>
+			</State>
+			<State name="Toggled">
+				<When type="Property" frame="$this" toggled="True"/>
+				<When type="Property" frame="$parent" enabled="True"/>
+			</State>
+			<State name="Normal">
+				<When type="Property" frame="$this" enabled="True"/>
+			</State>
+			<State name="Disabled">
+				<When type="Property" frame="$this" enabled="False"/>
+			</State>
+		</StateGroup>
+
+		<Frame type="Frame" name="Container">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="#HotkeyListLeftInset"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		
+			<Frame type="Image" name="SelectedImage" template="StandardGreyboxTemplates/StandardPulldownMenuSelected">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<StateGroup name="Visible">
+					<DefaultState val="False"/>
+				
+					<State name="True">
+						<When type="StateGroup" frame="$ancestor[@type=Button]" Selected="True" />
+						<Action type="SetProperty" frame="$this" Visible="True"/>
+					</State>
+				
+					<State name="False">
+						<When type="StateGroup" frame="$ancestor[@type=Button]" Selected="False" />
+						<Action type="SetProperty" frame="$this" Visible="False"/>
+					</State>
+				</StateGroup>
+			</Frame>
+
+			<Frame type="Image" name="HoverImage" template="StandardGreyboxTemplates/StandardPulldownMenuHover">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Visible val="{$ancestor[@type=Button]/@Hovering}"/>
+			</Frame>
+
+			<Frame type="Label" name="NameLabel">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="3"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+				<Anchor side="Right" relative="$parent" pos="0.6" offset="0"/>
+				<Text val="NAME"/>
+				<Style val="@@Standard15"/>
+				<RenderPriority val="600"/>
+			</Frame>
+	
+			<Frame type="Label" name="KeysLabel">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="3"/>
+				<Anchor side="Left" relative="$parent/NameLabel" pos="Max" offset="10"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+				<Text val="HOTKEY"/>
+				<RenderPriority val="600"/>
+				<Style val="@@Standard15"/>
+			</Frame>
+
+			<Frame type="Image" name="BorderBottom">
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="2"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-2"/>
+				<Height val="2"/>
+				<DesaturateOnDisable val="False"/>
+				<Color val="255,15,15,15"/>
+				<SubpixelRendering val="False"/>
+				<BlendMode val="Add"/>
+				<AnchorUseDeviceOffset val="true"/>
+			</Frame>
+			
+			<Frame type="Image" name="BorderLeft">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Width val="2"/>
+				<DesaturateOnDisable val="False"/>
+				<Color val="255,15,15,15"/>
+				<SubpixelRendering val="False"/>
+				<BlendMode val="Add"/>
+				<AnchorUseDeviceOffset val="true"/>
+			</Frame>
+			
+			<Frame type="Image" name="BorderRight">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+				<Width val="2"/>
+				<DesaturateOnDisable val="False"/>
+				<Color val="255,15,15,15"/>
+				<SubpixelRendering val="False"/>
+				<BlendMode val="Add"/>
+				<AnchorUseDeviceOffset val="true"/>
+			</Frame>
+
+			<Frame type="Image" name="Divider">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="-1"/>
+				<Anchor side="Left" relative="$parent/NameLabel" pos="Max" offset="2"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="-2"/>
+				<!-- <Anchor side="Right" relative="$parent/$parent/KeysLabel" pos="Min" offset="0"/> -->
+				<RenderPriority val="601"/>
+				<Width val="2"/>
+				<Color val="255,15,15,15"/>
+				<!-- <Texture val="Assets\Textures\white32.dds"/> -->
+				<SubpixelRendering val="true"/>	
+				<BlendMode val="Add"/>
+				<AnchorUseDeviceOffset val="true"/>
+			</Frame>
+		</Frame>
+
+		<!-- <StateGroup name="Index">
+			<DefaultState val="00"/>
+			<State name="00">
+				<When type="StateGroup" frame="Num00" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="0" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="1" index="1"/>
+			</State>
+			<State name="01">
+				<When type="StateGroup" frame="Num01" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="0" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="2" index="1"/>
+			</State>
+			<State name="02">
+				<When type="StateGroup" frame="Num02" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="0" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="3" index="1"/>
+			</State>
+			<State name="03">
+				<When type="StateGroup" frame="Num03" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="0" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="4" index="1"/>
+			</State>
+
+			<State name="04">
+				<When type="StateGroup" frame="Num04" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="1" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="0" index="1"/>
+			</State>
+			<State name="05">
+				<When type="StateGroup" frame="Num05" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="1" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="2" index="1"/>
+			</State>
+			<State name="06">
+				<When type="StateGroup" frame="Num06" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="1" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="3" index="1"/>
+			</State>
+			<State name="07">
+				<When type="StateGroup" frame="Num07" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="1" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="4" index="1"/>
+			</State>
+
+			<State name="08">
+				<When type="StateGroup" frame="Num08" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="2" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="0" index="1"/>
+			</State>
+			<State name="09">
+				<When type="StateGroup" frame="Num09" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="2" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="1" index="1"/>
+			</State>
+			<State name="10">
+				<When type="StateGroup" frame="Num10" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="2" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="3" index="1"/>
+			</State>
+			<State name="11">
+				<When type="StateGroup" frame="Num11" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="2" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="4" index="1"/>
+			</State>
+
+			<State name="12">
+				<When type="StateGroup" frame="Num12" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="3" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="0" index="1"/>
+			</State>
+			<State name="13">
+				<When type="StateGroup" frame="Num13" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="3" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="1" index="1"/>
+			</State>
+			<State name="14">
+				<When type="StateGroup" frame="Num14" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="3" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="2" index="1"/>
+			</State>
+			<State name="15">
+				<When type="StateGroup" frame="Num15" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="3" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="4" index="1"/>
+			</State>
+
+			<State name="16">
+				<When type="StateGroup" frame="Num16" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="4" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="0" index="1"/>
+			</State>
+			<State name="17">
+				<When type="StateGroup" frame="Num17" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="4" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="1" index="1"/>
+			</State>
+			<State name="18">
+				<When type="StateGroup" frame="Num18" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="4" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="2" index="1"/>
+			</State>
+			<State name="19">
+				<When type="StateGroup" frame="Num19" Matched="True"/>
+				<Action type="SetProperty" frame="TextFormatName" Replacement="4" index="1"/>
+				<Action type="SetProperty" frame="TextFormatKeys" Replacement="3" index="1"/>
+			</State>
+		</StateGroup> -->
+	</Frame>
+	<Frame type="Frame" name="HotkeyListTemplate">
+		<!-- <ItemHeight val="28"/>
+		<ItemGap val="0"/>
+		<Insets top="0" left="35" bottom="0" right="0"/>
+		<HighlightInsets top="0" left="0" bottom="0" right="0"/>
+		<HighlightOnHover val="true"/>
+		<ItemDesc val="DebugToolsTemplates/HotkeyListBoxItemTemplate"/>
+		<UseScrollBar val="false"/> -->
+		<!-- <Style val="@@Standard15"/> -->
+		<CollapseLayout val="True"/>
+		<!-- <PreserveAnchorOffset val="true"/> -->
+		<!-- <SelectionToggleable val="false"/> -->
+		<AnimLogging val="true"/>
+		<!-- <StateGroup name="HasData">
+			<DefaultState val="False"/>
+			<State name="True">
+			</State>
+			<State name="False"/>
+		</StateGroup> -->
+
+		<StateGroup name="IsActiveSelection">
+			<DefaultState val="False"/>
+			<State name="True">
+				<When type="Property" frame="SelectedIndex" operator="NotEqual" Text="-2"/>
+				<Action type="SetProperty" frame="DummyFrame" Visible="False" />
+				<Action type="SendEvent" frame="$parent/$parent" event="Deselect"/>
+				<Action type="SetProperty" frame="DummyFrame" Visible="True" />
+			</State>
+			<State name="False"/>
+		</StateGroup>
+
+		<!-- <Animation name="DeselectForward">
+			<Event event="Deselect" action="Reset,Play" frame="$this"/>
+			<Event event="OnHidden" action="Reset,Play" frame="$this"/>
+			<Controller type="Event" end="Stop" frame="DummyFrame">
+				<Key type="Event" time="0.0" event="Deselect"/>
+			</Controller>
+		</Animation> -->
+
+		<Frame type="Frame" name="DummyFrame">
+			<Anchor relative="$parent"/>
+			<Alpha val="0"/>
+			<Visible val="True"/>
+			<Animation name="Deselect" flags="NoEventsWhileHidden">
+				<!-- <Event event="Deselect" action="Reset,Play" frame="$this"/> -->
+				<Event event="Deselect" action="Reset,Play" frame="$parent/$parent/$parent"/>
+				<Controller type="Property" end="Pause" frame="$parent/SelectedIndex" property="Text">
+					<Key type="Property" time="0.0" value="-2"/>
+				</Controller>
+			</Animation>	
+		</Frame>
+
+		<Frame type="CountdownLabel" name="IndexCounter">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<UseAlternateTime val="True"/>
+			<CountdownTime val="0"/>
+			<StartValue val="{$this/@CurrentValue}"/>
+			<TargetValue val="{Math/@ResultInt}"/>
+			<Style val="DebugTiny"/>
+			<CurrentValue val="0"/>
+			<Text val="0"/>
+			<Alpha val="0"/>
+
+			<Animation name="Counter">
+				<Event event="ItemAdded" action="Reset,Play" frame="$parent"/>
+				<Controller type="Counter" end="Pause" frame="$this">
+					<Key type="Curve" time="0.0" value="1.0"/>
+				</Controller>
+				<Controller type="Event" end="Stop" frame="$this">
+					<Key type="Event" time="0.0" event="CountdownLabelResetRequest"/>
+				</Controller>
+			</Animation>
+
+			<Frame type="MathFrame" name="Math">
+				<A val="{$parent/@StartValue}"/>
+				<B val="1"/>
+				<Operator val="Add"/>
+			</Frame>
+		</Frame>
+
+		<Frame type="EditBox" name="DataCount" template="DebugToolsTemplates/DummyBoxTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
+			<Text val="{$parent/IndexCounter/@CurrentValue}"/>
+		</Frame>
+		
+		<Frame type="EditBox" name="SelectedIndex" template="DebugToolsTemplates/DummyBoxTemplate">
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+			<Text val="-2"/>
+		</Frame>
+
+		<Height val="0"/>
+		<!-- <Height val="250"/> -->
+		<!-- <Frame type="MathFrame" name="Sizer">
+			<Anchor relative="$parent"/>
+			<A val="#HotkeyListItemSize"/>
+			<B val="{$parent/DataCount/@Text}"/>
+			<Operator val="Multiply"/>
+		</Frame> -->
+
+		<Frame type="Image" name="BackgroundImage">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="3"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Color val="30,30,30"/>
+			<RenderPriority val="508"/>
+			<Alpha val="255"/>
+		</Frame>
+		
+	</Frame>
+
+	<Frame type="Image" name="HotkeyGroupButtonNormal">
+		<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+		<Color val="40,40,40"/>
+		<RenderPriority val="508"/>
+		<Alpha val="255"/>
+	</Frame>
+
+	<Frame type="Image" name="HotkeyGroupButtonSelected">
+		<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+		<Color val="65,65,65"/>
+		<RenderPriority val="509"/>
+		<Tiled val="true"/>
+	</Frame>
+
+	<Frame type="Image" name="HotkeyGroupButtonHover">
+		<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+		<Color val="75,75,75"/>
+		<RenderPriority val="509"/>
+		<Alpha val="255"/>
+		<Tiled val="true"/>
+	</Frame>
+
+	<Frame type="Button" name="HotkeyGroupButtonTemplate">
+		<!-- <HitTestFrame val="HitTestFrame"/> -->
+		<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+		<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		<NormalImage val="NormalImage"/>
+		<HoverImage val="HoverImage"/>
+		<Style val="@@HotkeyGroupButtonStyle"/>
+		<Height val="28"/>
+		<Visible val="false"/>
+		<CollapseLayout val="true"/>
+		<AcceptsMouse val="{$ancestor[@name=DebugTabControl]/@AcceptsMouse}"/>
+
+		<Frame type="Image" name="NormalImage" template="DebugToolsTemplates/HotkeyGroupButtonNormal">
+		</Frame>
+		<Frame type="Image" name="HoverImage" template="DebugToolsTemplates/HotkeyGroupButtonHover">
+		</Frame>
+		<Frame type="Label" name="Label" template="StandardGreyboxTemplates/GenericButtonLabelTemplate">
+			<Anchor side="Left" relative="$parent/ExpandImage" pos="Max" offset="5"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="2"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="2"/>
+		</Frame>
+
+		<!-- <StateGroup name="Selected">
+			<DefaultState val="False"/>
+		
+			<State name="False">
+				<When type="Property" frame="$this" Toggled="False" />
+				<Action type="SetProperty" frame="$this" NormalImage="NormalImage"/>
+			</State>
+		
+			<State name="True">
+				<When type="Property" frame="$this" Toggled="True" />
+				<Action type="SetProperty" frame="$this" NormalImage="HoverImage"/>
+			</State>
+		</StateGroup> -->
+
+
+		<!-- <StateGroup name="Expanded">
+			<DefaultState val="False"/>
+		
+			<State name="False">
+				<When type="Property" frame="$this" Toggled="False" />
+				<Action type="SetProperty" frame="ExpandImage" StateIndex="0"/>
+			</State>
+		
+			<State name="True">
+				<When type="Property" frame="$this" Toggled="True" />
+				<Action type="SetProperty" frame="ExpandImage" StateIndex="1"/>
+			</State>
+		</StateGroup> -->
+
+		<Frame type="Image" name="ExpandImage">
+			<Width val="22"/>
+			<Height val="22"/>
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="6"/>
+			<Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/>
+
+			<!-- UI/HotkeyDialogTreeButtonNormal=Assets\Textures\ui_button_expandcollapselist_normalpressed.dds
+			UI/HotkeyDialogTreeButtonHover=Assets\Textures\ui_button_expandcollapselist_normaloverpressedover.dds -->
+
+			<LayerCount val="2"/>
+			<TextureCoords top="0.0" left="1.0" bottom="1.0" right="0.0" layer="0"/>
+			<TextureCoords top="1.0" left="1.0" bottom="0.0" right="0.0" layer="1"/>
+			<Texture val="@@UI/HotkeyDialogTreeButtonNormal" layer="0"/>
+			<Texture val="@@UI/HotkeyDialogTreeButtonNormal" layer="1"/>
+			<LayerVisible val="true" layer="0"/>
+			<LayerVisible val="false" layer="1"/>
+			<TextureType val="Normal" layer="0"/>
+			<TextureType val="Normal" layer="1"/>
+			<LayerColor val="##StandardBorderHotkey" layer="0"/>
+			<LayerColor val="##StandardBorderHotkey" layer="1"/>
+			<StateCount val="2" layer="0"/>
+			<StateCount val="2" layer="1"/>
+
+			<StateGroup name="Hovering">
+				<DefaultState val="False"/>
+			
+				<State name="False">
+					<When type="Property" frame="$parent" Hovering="False" />
+					<Action type="SetProperty" frame="$this" Texture="@@UI/HotkeyDialogTreeButtonNormal" index="0"/>
+					<Action type="SetProperty" frame="$this" Texture="@@UI/HotkeyDialogTreeButtonNormal" index="1"/>
+				</State>
+
+				<State name="True">
+					<When type="Property" frame="$parent" Hovering="True"/>
+					<Action type="SetProperty" frame="$this" Texture="@@UI/HotkeyDialogTreeButtonHover" index="0"/>
+					<Action type="SetProperty" frame="$this" Texture="@@UI/HotkeyDialogTreeButtonHover" index="1"/>
+				</State>
+			</StateGroup>
+
+			<StateGroup name="Toggled">
+				<DefaultState val="False"/>
+			
+				<State name="False">
+					<When type="Property" frame="$parent" Toggled="False" />
+					<Action type="SetProperty" frame="$this" LayerVisible="True" index="0"/>
+					<Action type="SetProperty" frame="$this" LayerVisible="False" index="1"/>
+				</State>
+
+				<State name="True">
+					<When type="Property" frame="$parent" Toggled="True"/>
+					<Action type="SetProperty" frame="$this" LayerVisible="False" index="0"/>
+					<Action type="SetProperty" frame="$this" LayerVisible="True" index="1"/>
+				</State>
+			</StateGroup>
+
+			<StateGroup name="Pushed">
+				<DefaultState val="False"/>
+			
+				<State name="False">
+					<When type="Property" frame="$parent" Pushed="False" />
+					<Action type="SetProperty" frame="$this" StateIndex="0" index="0"/>
+					<Action type="SetProperty" frame="$this" StateIndex="1" index="1"/>
+				</State>
+				
+				<State name="True">
+					<When type="Property" frame="$parent" Pushed="True" />
+					<Action type="SetProperty" frame="$this" StateIndex="1" index="0"/>
+					<Action type="SetProperty" frame="$this" StateIndex="0" index="1"/>
+				</State>
+
+			</StateGroup>
+
+		</Frame>
+
+		<Toggleable val="true"/>
+		<Toggled val="False"/>
+	</Frame>
+
+	<Frame type="Frame" name="HotkeyGroupFrameTemplate">
+		<Anchor side="Bottom" relative="List" pos="Max" offset="0"/>
+		<CollapseLayout val="true"/>
+		<Visible val="{List/@Visible}"/>
+		<Frame type="Frame" name="List" template="DebugToolsTemplates/HotkeyListTemplate">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		</Frame>
+	</Frame>
+
+	<Frame type="Button" name="HotkeyListItemTemplate0" template="DebugToolsTemplates/HotkeyListItemTemplate"/>
+	<Frame type="Button" name="HotkeyListItemTemplate1" template="DebugToolsTemplates/HotkeyListItemTemplate0">
+		<Anchor side="Top" relative="$sibling-1" pos="Max" offset="0"/>
+	</Frame>
+	<Frame type="Button" name="HotkeyListItemTemplate2" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate3" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate4" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate5" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate6" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate7" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate8" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate9" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate10" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate11" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate12" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate13" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate14" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate15" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate16" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate17" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate18" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate19" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate20" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate21" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate22" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate23" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate24" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate25" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate26" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate27" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate28" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate29" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate30" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate31" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate32" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate33" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate34" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate35" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate36" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate37" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate38" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate39" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate40" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate41" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate42" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate43" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate44" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate45" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate46" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate47" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate48" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate49" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate50" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate51" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate52" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate53" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate54" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate55" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate56" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate57" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate58" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate59" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate60" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate61" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate62" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate63" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate64" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate65" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate66" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate67" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate68" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate69" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate70" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate71" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate72" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate73" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate74" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate75" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate76" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate77" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate78" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate79" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate80" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate81" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate82" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate83" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate84" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate85" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate86" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate87" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate88" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate89" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate90" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate91" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate92" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate93" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate94" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate95" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate96" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate97" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate98" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+	<Frame type="Button" name="HotkeyListItemTemplate99" template="DebugToolsTemplates/HotkeyListItemTemplate1"/>
+</Desc>

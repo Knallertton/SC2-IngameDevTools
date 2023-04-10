@@ -1,0 +1,961 @@
+include "Script/DebugTools/DebugUI_h"
+include "Script/DebugTools/KeyEventManager"
+
+const string c_hotkeyManagerUserType = "HotkeyManager";
+const string c_hotkeyManagerBankSection = "HotkeyManager";
+const fixed c_hotkeyManagerVersion = 1.0;
+//106
+const int c_hotkeyManagerInputCount = c_INPUT_KEY_COUNT + c_MOUSE_BUTTON_COUNT + 3;
+string [c_hotkeyManagerInputCount + 1] ge_Input;
+string [c_hotkeyManagerInputCount + 1] ge_InputName;
+const int c_hotkeyManagerInput_keyStart = 0;
+const int c_hotkeyManagerInput_keyEnd = 98;
+const int c_hotkeyManagerInput_buttonStart = 99;
+const int c_hotkeyManagerInput_buttonEnd = 103;
+const int c_hotkeyManagerInput_wheelStart = 104;
+const int c_hotkeyManagerInput_wheelEnd = 105;
+const int c_hotkeyManagerInput_mouseMoved = 106;
+// string [c_INPUT_KEY_COUNT + 1] ge_InputName;
+// string [c_MOUSE_BUTTON_COUNT + 1] ge_buttonInput;
+// string [c_MOUSE_BUTTON_COUNT + 1] ge_buttonInputName;
+// string [2] ge_wheelInput;
+// string [2] ge_wheelInputName;
+static const int c_hotkeyManager_MaxHotkeys = 64;
+
+int HotkeyManagerUserTypeCount;
+trigger HotkeyManagerHandler_t;
+
+struct HotkeyManagerHotkey{
+    string id;
+    int idIndex;
+    bool editable;
+    bool edited;
+    bool enabled;
+    string[3] input;
+    string[3] modifier;
+    int[3] eventType;
+    string inputType;
+    string function;
+    string genericEvent;
+    string activates;
+    bool childToggle;
+    int priority;
+    string[3] parameter;
+    bool modifierTriggers;
+    text name;
+    text desc;
+    text[3] hotkeyText;
+};
+
+struct HotkeyManager{
+    string userType;
+    int count;
+    int hotkeyCount;
+    HotkeyManagerHotkey[c_hotkeyManager_MaxHotkeys +1] hotkey;
+};
+
+HotkeyManager[c_MAX_PLAYER_COUNT] gv_HotkeyManager;
+
+text HotkeyManagerConstructHotkeyText(structref<HotkeyManagerHotkey> hotkey, int index);
+string HotkeyManagerCombineHotkeyText(structref<HotkeyManagerHotkey> hotkey);
+int InputTypeFromString(string inputType);
+string InputTypeStringFromType(int inputType);
+int EventTypeFromInput(string input, int start, int end);
+
+void HotkeyToggleChildren(structref<HotkeyManager> manager, structref<HotkeyManagerHotkey> hotkey){
+    int i;
+    int k;
+    string word;
+    hotkey.childToggle = !hotkey.childToggle;
+    while (true) {
+        i += 1;
+        word = StringWord(hotkey.activates , i);
+        if (word == "") { break; }
+        for (k = 0; k < manager.hotkeyCount; k += 1) {
+            if(word == manager.hotkey[k].id){
+                manager.hotkey[k].enabled = hotkey.childToggle;
+                // Dbg(libNtve_gf_ConvertBooleanToString(hotkey.childToggle)+">"+word);
+                continue;
+            }
+        }
+    }
+}
+
+void HotkeyManagerHotkeyClearEditable(structref<HotkeyManagerHotkey> hotkey, int index){
+    hotkey.eventType[index] = -1;
+    hotkey.inputType = null;
+    hotkey.input[index] = null;
+    hotkey.modifier[index] = null;
+    hotkey.hotkeyText[index] = null;
+}
+
+void HotkeyManagerStoreUserType(int player, structref<HotkeyManager> manager){
+    int count;
+    int index;
+    int i;
+    int hotkeyIndex;
+    string s;
+    structref<HotkeyManagerHotkey> hotkey;
+    string userType = c_hotkeyManagerUserType+IntToString(player);
+    string instance;
+
+    manager.userType = userType;
+    count = UserDataInstanceCount(userType);
+    if(count > c_hotkeyManager_MaxHotkeys){
+        Dbg("'HotkeyManagerStoreUserType' trying to store too many hotkeys, increase 'c_hotkeyManager_MaxHotkeys' constant");
+        count = MinI(count, c_hotkeyManager_MaxHotkeys);
+    }
+    manager.count = count;
+    hotkeyIndex = 0;
+    for (index = 1; index <= count; index += 1) {
+        instance = UserDataInstance(userType, index);
+        if(IntToBool((UserDataGetInt(userType, instance, "Exists", 1))) == false){
+            // If it disabled internally skip this one
+            continue;
+        }
+        hotkey = manager.hotkey[hotkeyIndex];
+        hotkey.id = instance;
+        hotkey.idIndex = index;
+        hotkey.enabled = IntToBool((UserDataGetInt(userType, instance, "Enabled", 1)));
+        hotkey.editable = IntToBool(UserDataGetInt(userType, instance, "Editable", 1));
+        hotkey.edited = false;
+        hotkey.priority = UserDataGetInt(userType, instance, "Priority", 1);
+        hotkey.inputType = UserDataGetString(userType, instance, "InputType", 1);
+        
+        for (i = 0; i <= 2; i += 1) {
+            hotkey.input[i] =  UserDataGetString(userType, instance, "Input", i + 1);
+            hotkey.eventType[i] = EventTypeFromInput(hotkey.input[i], 0, c_hotkeyManagerInputCount);
+            hotkey.modifier[i] =  UserDataGetString(userType, instance, "Modifier", i + 1);
+            hotkey.parameter[i] = UserDataGetString(userType, instance, "Parameters", i + 1);
+            if(hotkey.parameter[i] == "ModifierTriggers"){ hotkey.modifierTriggers = true; }
+
+            hotkey.hotkeyText[i] = HotkeyManagerConstructHotkeyText(hotkey, i);
+        }
+        
+        hotkey.name = UserDataGetText(userType, instance, "Name", 1);
+        hotkey.desc = UserDataGetText(userType, instance, "Description", 1);
+        hotkey.function = UserDataGetString(userType, instance, "Function", 1);
+        hotkey.genericEvent = UserDataGetString(userType, instance, "GenericEvent", 1);
+        hotkey.activates = UserDataGetString(userType, instance, "Activates", 1);
+
+
+        hotkeyIndex += 1;
+    }
+
+    manager.hotkeyCount = hotkeyIndex;
+}
+
+static void InitInputStrings(){
+    ge_Input[0]  = "Shift"           ; ge_InputName[0]  = "Shift"      ;
+    ge_Input[1]  = "Ctrl"            ; ge_InputName[1]  = "Control"    ;
+    ge_Input[2]  = "Alt"             ; ge_InputName[2]  = "Alt"        ;
+    ge_Input[3]  = "0"               ; ge_InputName[3]  = "0"          ;
+    ge_Input[4]  = "1"               ; ge_InputName[4]  = "1"          ;
+    ge_Input[5]  = "2"               ; ge_InputName[5]  = "2"          ;
+    ge_Input[6]  = "3"               ; ge_InputName[6]  = "3"          ;
+    ge_Input[7]  = "4"               ; ge_InputName[7]  = "4"          ;
+    ge_Input[8]  = "5"               ; ge_InputName[8]  = "5"          ;
+    ge_Input[9]  = "6"               ; ge_InputName[9]  = "6"          ;
+    ge_Input[10] = "7"               ; ge_InputName[10] = "7"          ;
+    ge_Input[11] = "8"               ; ge_InputName[11] = "8"          ;
+    ge_Input[12] = "9"               ; ge_InputName[12] = "9"          ;
+    ge_Input[13] = "A"               ; ge_InputName[13] = "A"          ;
+    ge_Input[14] = "B"               ; ge_InputName[14] = "B"          ;
+    ge_Input[15] = "C"               ; ge_InputName[15] = "C"          ;
+    ge_Input[16] = "D"               ; ge_InputName[16] = "D"          ;
+    ge_Input[17] = "E"               ; ge_InputName[17] = "E"          ;
+    ge_Input[18] = "F"               ; ge_InputName[18] = "F"          ;
+    ge_Input[19] = "G"               ; ge_InputName[19] = "G"          ;
+    ge_Input[20] = "H"               ; ge_InputName[20] = "H"          ;
+    ge_Input[21] = "I"               ; ge_InputName[21] = "I"          ;
+    ge_Input[22] = "J"               ; ge_InputName[22] = "J"          ;
+    ge_Input[23] = "K"               ; ge_InputName[23] = "K"          ;
+    ge_Input[24] = "L"               ; ge_InputName[24] = "L"          ;
+    ge_Input[25] = "M"               ; ge_InputName[25] = "M"          ;
+    ge_Input[26] = "N"               ; ge_InputName[26] = "N"          ;
+    ge_Input[27] = "O"               ; ge_InputName[27] = "O"          ;
+    ge_Input[28] = "P"               ; ge_InputName[28] = "P"          ;
+    ge_Input[29] = "Q"               ; ge_InputName[29] = "Q"          ;
+    ge_Input[30] = "R"               ; ge_InputName[30] = "R"          ;
+    ge_Input[31] = "S"               ; ge_InputName[31] = "S"          ;
+    ge_Input[32] = "T"               ; ge_InputName[32] = "T"          ;
+    ge_Input[33] = "U"               ; ge_InputName[33] = "U"          ;
+    ge_Input[34] = "V"               ; ge_InputName[34] = "V"          ;
+    ge_Input[35] = "W"               ; ge_InputName[35] = "W"          ;
+    ge_Input[36] = "X"               ; ge_InputName[36] = "X"          ;
+    ge_Input[37] = "Y"               ; ge_InputName[37] = "Y"          ;
+    ge_Input[38] = "Z"               ; ge_InputName[38] = "Z"          ;
+    ge_Input[39] = "Space"           ; ge_InputName[39] = "Space"      ;
+    ge_Input[40] = "Grave"           ; ge_InputName[40] = "Grave"      ;
+    ge_Input[41] = "Numpad0"         ; ge_InputName[41] = "Num Pad 0"    ;
+    ge_Input[42] = "Numpad1"         ; ge_InputName[42] = "Num Pad 1"    ;
+    ge_Input[43] = "Numpad2"         ; ge_InputName[43] = "Num Pad 2"    ;
+    ge_Input[44] = "Numpad3"         ; ge_InputName[44] = "Num Pad 3"    ;
+    ge_Input[45] = "Numpad4"         ; ge_InputName[45] = "Num Pad 4"    ;
+    ge_Input[46] = "Numpad5"         ; ge_InputName[46] = "Num Pad 5"    ;
+    ge_Input[47] = "Numpad6"         ; ge_InputName[47] = "Num Pad 6"    ;
+    ge_Input[48] = "Numpad7"         ; ge_InputName[48] = "Num Pad 7"    ;
+    ge_Input[49] = "Numpad8"         ; ge_InputName[49] = "Num Pad 8"    ;
+    ge_Input[50] = "Numpad9"         ; ge_InputName[50] = "Num Pad 9"    ;
+    ge_Input[51] = "NumpadAdd"       ; ge_InputName[51] = "Num Pad Plus" ;
+    ge_Input[52] = "NumpadSub"       ; ge_InputName[52] = "Num Pad Minus";
+    ge_Input[53] = "NumpadMult"      ; ge_InputName[53] = "Num Pad Multiply";
+    ge_Input[54] = "NumpadDiv"       ; ge_InputName[54] = "Num Pad Divide";
+    ge_Input[55] = "NumpadDot"       ; ge_InputName[55] = "Num Pad Decimal";
+    ge_Input[56] = "Equals"          ; ge_InputName[56] = "Equals"     ;
+    ge_Input[57] = "Minus"           ; ge_InputName[57] = "Minus"      ;
+    ge_Input[58] = "BracketOpen"     ; ge_InputName[58] = "BracketOpen";
+    ge_Input[59] = "BracketClose"    ; ge_InputName[59] = "BracketClose";
+    ge_Input[60] = "BackSlash"       ; ge_InputName[60] = "BackSlash"  ;
+    ge_Input[61] = "SemiColon"       ; ge_InputName[61] = "SemiColon"  ;
+    ge_Input[62] = "Apostrophe"      ; ge_InputName[62] = "Apostrophe" ;
+    ge_Input[63] = "Comma"           ; ge_InputName[63] = "Comma"      ;
+    ge_Input[64] = "Period"          ; ge_InputName[64] = "Period"     ;
+    ge_Input[65] = "Slash"           ; ge_InputName[65] = "Slash"      ;
+    ge_Input[66] = "Esc"             ; ge_InputName[66] = "Escape"     ;
+    ge_Input[67] = "Enter"           ; ge_InputName[67] = "Enter"      ;
+    ge_Input[68] = "Backspace"       ; ge_InputName[68] = "Backspace"  ;
+    ge_Input[69] = "Tab"             ; ge_InputName[69] = "Tab"        ;
+    ge_Input[70] = "Left"            ; ge_InputName[70] = "Left"       ;
+    ge_Input[71] = "Up"              ; ge_InputName[71] = "Up"         ;
+    ge_Input[72] = "Right"           ; ge_InputName[72] = "Right"      ;
+    ge_Input[73] = "Down"            ; ge_InputName[73] = "Down"       ;
+    ge_Input[74] = "Insert"          ; ge_InputName[74] = "Insert"     ;
+    ge_Input[75] = "Delete"          ; ge_InputName[75] = "Delete"     ;
+    ge_Input[76] = "Home"            ; ge_InputName[76] = "Home"       ;
+    ge_Input[77] = "End"             ; ge_InputName[77] = "End"        ;
+    ge_Input[78] = "PgUp"            ; ge_InputName[78] = "Page Up"     ;
+    ge_Input[79] = "PgDn"            ; ge_InputName[79] = "Page Down"   ;
+    ge_Input[80] = "CapsLock"        ; ge_InputName[80] = "Caps Lock"   ;
+    ge_Input[81] = "NumLock"         ; ge_InputName[81] = "Num Lock"    ;
+    ge_Input[82] = "ScrollLock"      ; ge_InputName[82] = "Scroll Lock" ;
+    ge_Input[83] = "Pause"           ; ge_InputName[83] = "Pause"      ;
+    ge_Input[84] = "PrintScreen"     ; ge_InputName[84] = "Print Screen";
+    ge_Input[85] = "NextTrack"       ; ge_InputName[85] = "Next Track"  ;
+    ge_Input[86] = "PrevTrack"       ; ge_InputName[86] = "Prev Track"  ;
+    ge_Input[87] = "F1"              ; ge_InputName[87] = "F1"         ;
+    ge_Input[88] = "F2"              ; ge_InputName[88] = "F2"         ;
+    ge_Input[89] = "F3"              ; ge_InputName[89] = "F3"         ;
+    ge_Input[90] = "F4"              ; ge_InputName[90] = "F4"         ;
+    ge_Input[91] = "F5"              ; ge_InputName[91] = "F5"         ;
+    ge_Input[92] = "F6"              ; ge_InputName[92] = "F6"         ;
+    ge_Input[93] = "F7"              ; ge_InputName[93] = "F7"         ;
+    ge_Input[94] = "F8"              ; ge_InputName[94] = "F8"         ;
+    ge_Input[95] = "F9"              ; ge_InputName[95] = "F9"         ;
+    ge_Input[96] = "F10"             ; ge_InputName[96] = "F10"        ;
+    ge_Input[97] = "F11"             ; ge_InputName[97] = "F11"        ;
+    ge_Input[98] = "F12"             ; ge_InputName[98] = "F12"        ;
+    ge_Input[99] = "LButton"         ; ge_InputName[99] = "Left Mouse Button";
+    ge_Input[100] = "MButton"        ; ge_InputName[100] = "Middle Mouse Button";
+    ge_Input[101] = "RButton"        ; ge_InputName[101] = "Right Mouse Button";
+    ge_Input[102] = "XButton1"       ; ge_InputName[102] = "Back Mouse Button";
+    ge_Input[103] = "XButton2"       ; ge_InputName[103] = "Forward Mouse Button";
+    ge_Input[104] = "WheelDown"      ; ge_InputName[104] = "Mouse Wheel Down";
+    ge_Input[105] = "WheelUp"        ; ge_InputName[105] = "Mouse Wheel Up";
+    ge_Input[106] = "MouseMove"      ; ge_InputName[106] = "Mouse Move";
+}
+
+int EventTypeFromInput(string input, int start, int end){
+    int i;
+    if(!StringIsValid(input)){ return -1; }
+    if(StringContains(input, "Any",c_stringAnywhere, c_stringNoCase)){
+        // Dbg("Contained Any");
+        if(input == "AnyKey"){
+            return ge_Tracking_KeyPressed;
+        }
+        else if(input == "AnyButton"){
+            return ge_Tracking_MouseClicked;
+        }
+        else if(input == "AnyWheel"){
+            return ge_Tracking_MouseWheel;
+        }
+    }
+    for (i = start; i <= end; i += 1) {
+        if(input == ge_Input[i]){
+
+            if(i >= c_hotkeyManagerInput_keyStart && i <= c_hotkeyManagerInput_keyEnd){
+                // Return keyIndex 0 to 98
+                // Dbg("LastKey>"+IntToString(i));
+                DataTableSetInt(false, "$INTERNAL_LastReturnedInput", i);
+                return ge_Tracking_KeyPressed;
+            }
+            else if(i >= c_hotkeyManagerInput_buttonStart && i <= c_hotkeyManagerInput_buttonEnd){
+                // Return buttonIndex 1 to 5
+                // Dbg("Input>"+input+"|"+ge_Input[i]);
+                // Dbg("LastButton>"+IntToString(i - c_hotkeyManagerInput_buttonStart + 1));
+                DataTableSetInt(false, "$INTERNAL_LastReturnedInput", i - c_hotkeyManagerInput_buttonStart + 1);
+                return ge_Tracking_MouseClicked;
+            }
+            else if(i >= c_hotkeyManagerInput_wheelStart && i <= c_hotkeyManagerInput_wheelEnd){
+                // Return "wheelIndex" 0 to 1
+                // Dbg("LastWheel>"+IntToString(i - c_hotkeyManagerInput_wheelStart));
+                DataTableSetInt(false, "$INTERNAL_LastReturnedInput", i - c_hotkeyManagerInput_wheelStart);
+                return ge_Tracking_MouseWheel;
+            }
+            else if(i == c_hotkeyManagerInput_mouseMoved){
+                // Dbg("WAS MOUSE MOVED");
+                DataTableSetInt(false, "$INTERNAL_LastReturnedInput", i - c_hotkeyManagerInput_mouseMoved);
+                return ge_Tracking_MouseMoved;
+            }
+        }
+    }
+    return -1;
+}
+
+int InputTypeFromString(string inputType){
+    if(!StringIsValid(inputType)){ return -1; }
+    if(StringContains(inputType, "up", c_stringAnywhere, false)){
+        return ge_InputType_Up;
+    }
+    else if(StringContains(inputType, "down", c_stringAnywhere, false)){
+        return ge_InputType_Down;
+    }
+    else if(StringContains(inputType, "repeat", c_stringAnywhere, false)){
+        return ge_InputType_Repeat;
+    }
+    else{}
+    return -1;
+}
+
+string InputTypeStringFromType(int inputType){
+    if(inputType == ge_InputType_Up){
+        return "Up";
+    }
+    else if(inputType == ge_InputType_Down){
+        return "Down";
+    }
+    else if(inputType == ge_InputType_Repeat){
+        return "Repeat";
+    }
+    else{}
+    return "";
+}
+
+
+static string InputNameFromInput(string input, int start, int end){
+    int i;
+    for (i = start; i <= end; i += 1) {
+        if(input == ge_Input[i]){
+            return ge_InputName[i];
+        }
+    }
+    return "";
+}
+
+static int LastReturnedInput(){
+    return DataTableGetInt(false, "$INTERNAL_LastReturnedInput");
+}
+
+int InputIndexFromInput(int type, string input){
+    int i;
+    int start;
+    int end;
+    int offset;
+    // Dbg("Event>"+IntToString(type));
+    if(type == ge_Tracking_KeyPressed){
+        start = c_hotkeyManagerInput_keyStart;
+        end = c_hotkeyManagerInput_keyEnd;
+        offset = 0;
+    }
+    else if(type == ge_Tracking_MouseClicked){
+        start = c_hotkeyManagerInput_buttonStart;
+        end = c_hotkeyManagerInput_buttonEnd;
+        offset = c_hotkeyManagerInput_keyStart;
+    }
+    else{
+        return -1;
+    }
+
+    for (i = start; i <= end; i += 1) {
+        if(input == ge_Input[i]){
+            return i - offset;
+        }
+    }
+    return -1;
+}
+
+text HotkeyManagerConstructHotkeyText(structref<HotkeyManagerHotkey> hotkey, int index){
+    int wordCount;
+    int k;
+    string word;
+    string hotkeyString;
+    string inputName;
+    bool matched = false;
+    if(hotkey.eventType[index] == -1){ return null; }
+    while (true) {
+        wordCount += 1;
+        word = StringWord(hotkey.modifier[index], wordCount);
+        if (word == "") { break; }
+        inputName = InputNameFromInput(word, 0, c_hotkeyManagerInputCount);
+
+        if(!StringIsValid(hotkeyString)){
+            // Dbg(inputName);
+            hotkeyString = inputName;
+        }
+        else{
+            hotkeyString = hotkeyString + " + " + inputName;
+        }
+    }
+    if(hotkey.modifier[index] == UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "Modifier", index + 1)){
+        matched = true;
+    }
+    if(matched){
+        if(hotkey.input[index] != UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "Input", index + 1)){
+            matched = false;
+        }
+    }
+
+    inputName = InputNameFromInput(hotkey.input[index], 0, c_hotkeyManagerInputCount);
+    if(!StringIsValid(hotkeyString)){
+        hotkeyString = inputName;
+    }
+    else{
+        hotkeyString = hotkeyString + " + " + inputName;
+    }
+
+    if(matched == false){
+       return TextWithColor(StringToText(hotkeyString), Color(36, 240, 235));
+    }
+    return StringToText(hotkeyString);
+}
+
+string HotkeyManagerCombineHotkeyText(structref<HotkeyManagerHotkey> hotkey){
+    string combineText;
+    int i;
+    combineText = null;
+    for (i = 0; i <= 2; i += 1) {
+        if(hotkey.hotkeyText[i] != null){
+            if(!StringIsValid(combineText)){
+                combineText = TextToString(hotkey.hotkeyText[i]);
+            }
+            else{
+                combineText = combineText+ ", "+TextToString(hotkey.hotkeyText[i]);
+            }
+        }
+    }
+    return combineText;
+}
+
+// string GetInputName(int input){
+//     return ge_InputName[input];
+// }
+
+// int StringToKeyInput(string s){
+//     return -1;
+// }
+
+// string ButtonInputToString(int input){
+//     return ge_buttonInputString[input];
+// }
+
+// int StringToButtonInput(string s){
+//     return -1;
+// }
+
+void HotkeyManagerLoadBank(int p){
+    plyr_BankRestore(c_plyrBankName, p);
+}
+
+int GetLastHotkeyIndex (int player) {
+    return DataTableGetInt(true, "$INTERNAL_LastHotkeyIndex"+IntToString(player));
+}
+
+void HotkeyManagerSaveBank(int p){
+    BankSave(gv_plyr[p].Bank);
+    DataTableSetInt(false, TriggerEventParamName(c_plyrBankBackupEvent, "Player"), p);
+    TriggerSendEvent(c_plyrBankBackupEvent);
+}
+
+bool HotkeyManagerLoadPlayerProfile(int player){
+    bank b;
+    int count;
+    int i;
+    string section;
+    
+    HotkeyManagerLoadBank(player);
+    if(BankSectionExists(gv_plyr[player].Bank, c_hotkeyManagerBankSection)){
+        if(BankValueGetAsFixed(gv_plyr[player].Bank, c_hotkeyManagerBankSection, "Version") == c_hotkeyManagerVersion){
+            UserDataLoadType(c_hotkeyManagerUserType+IntToString(player), gv_plyr[player].Bank, c_hotkeyManagerBankSection);
+            return true;
+        }
+    }
+    BankSectionRemove(gv_plyr[player].Bank, c_hotkeyManagerBankSection);
+    BankValueSetFromFixed(gv_plyr[player].Bank, c_hotkeyManagerBankSection, "Version", c_hotkeyManagerVersion);
+    
+    HotkeyManagerSaveBank(player);
+    return false;
+}
+
+static bool HotkeyManagerInitialized;
+void HotkeyManagerInitialize(){
+    int i;
+    string instance;
+    if(!HotkeyManagerInitialized){
+        HotkeyManagerInitialized = true;
+        InitInputStrings();
+
+        for (i = 1; i <= UserDataInstanceCount(c_hotkeyManagerUserType); i += 1) {
+            instance = UserDataInstance(c_hotkeyManagerUserType, i);
+            if(UserDataGetInt(c_hotkeyManagerUserType, instance, "Exists", 1) == 1){
+                HotkeyManagerUserTypeCount += 1;
+            }
+        }
+
+        HotkeyManagerHandler_t = TriggerCreate("HotkeyManagerHandler_Func");
+        TriggerAddEventGeneric(HotkeyManagerHandler_t, ge_Tracking_MouseClicked_String);
+        TriggerAddEventGeneric(HotkeyManagerHandler_t, ge_Tracking_KeyPressed_String);
+        TriggerAddEventGeneric(HotkeyManagerHandler_t, ge_Tracking_MouseWheel_String);
+        TriggerAddEventGeneric(HotkeyManagerHandler_t, ge_Tracking_MouseMoved_String);
+        TriggerEnable(HotkeyManagerHandler_t, false);
+
+        TriggerAddEventTimeElapsed(TriggerCreate("HotkeyManagerDelayedInit_Func"), 0.0, c_timeGame);
+    }
+}
+
+
+int HotkeyManagerGetListItem(int player, int group, int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(group)+"_"+IntToString(player)+"_Item"+IntToString(index));
+}
+
+int HotkeyManagerGetListItemName(int player, int group, int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(group)+"_"+IntToString(player)+"_Item"+IntToString(index)+"_Name");
+}
+
+int HotkeyManagerGetListItemKeys(int player, int group, int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(group)+"_"+IntToString(player)+"_Item"+IntToString(index)+"_Keys");
+}
+
+
+void HotkeyManagerEditorPopulateListBox(int player){
+    structref<HotkeyManager> manager;
+    playergroup pg = PlayerGroupSingle(player);
+    string userType = c_hotkeyManagerUserType+IntToString(player);
+    int i;
+    int k;
+    int list;
+    int control;
+    string hotkeyGroup;
+    int hotkeyGroupIndex;
+    int hotkeyGroupCount;
+    string dataTable;
+    string dT2;
+    bool resume;
+    string test;
+    string combineText;
+    // DialogControlHookupStandard(c_triggerControlTypeListBox, "$TestHookup");
+    // DialogControlSetPropertyAsInt(DialogControlLastCreated(), c_triggerControlPropertyAlpha, pg, 150);
+
+    manager = gv_HotkeyManager[player-1];
+    for (i = 0; i < manager.hotkeyCount; i += 1) {
+        resume = true;
+        for (k = 1; k <= UserDataInstanceCount("HotkeyGroup"); k += 1) {
+            hotkeyGroup = UserDataInstance("HotkeyGroup", k);
+            test = UserDataGetUserInstance(userType, manager.hotkey[i].id, "HotkeyGroup", 1);
+            if(!StringIsValid(test) || test == "[Default]"){ resume = false; break; }
+            hotkeyGroupIndex = k-1;
+            
+            if(hotkeyGroup == test){
+                break;
+            }
+        }
+        if(!resume){ continue; }
+        list = HotkeyGroupGetList(k-1);
+
+        dataTable = "$INTERNAL_HotkeyGroup_"+IntToString(hotkeyGroupIndex)+"_"+IntToString(player)+"_Count";
+        if(!DataTableValueExists(true, dataTable)){
+            hotkeyGroupCount = 1;
+            DataTableSetInt(true, dataTable, hotkeyGroupCount);
+        }else{
+            hotkeyGroupCount = DataTableGetInt(true, dataTable) + 1;
+            if(hotkeyGroupCount-1 > 99){ Dbg("HotkeyManagerEditorPopulateListBox: Trying to add too many hotkeys"); break; }
+            DataTableSetInt(true, dataTable, hotkeyGroupCount);
+        }
+
+        // Create Item
+        DialogControlCreateInPanelFromTemplate(list, c_triggerControlTypeButton, "DebugToolsTemplates/HotkeyListItemTemplate"+IntToString(hotkeyGroupCount-1));
+
+        control = DialogControlLastCreated();
+        DataTableSetInt(false, hotkeyGroup+"_ControlLast", control);
+
+        TriggerAddEventDialogControl(HotkeyEditorListResponses_t, player, control, c_triggerControlEventTypeClick);
+        DialogControlSetPropertyAsText(control, c_triggerControlPropertyText, pg, IntToText(hotkeyGroupCount));
+        dataTable = "$INTERNAL_HotkeyGroup_"+IntToString(hotkeyGroupIndex)+"_"+IntToString(player)+"_Item"+IntToString(hotkeyGroupCount);
+        DataTableSetInt(true, dataTable, DialogControlLastCreated());
+
+        // Hookup Name label
+        DialogControlHookup(control, c_triggerControlTypeLabel, "Container/NameLabel");
+        dT2 = dataTable+"_Name";
+        DataTableSetInt(true, dT2, DialogControlLastCreated());
+        DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, UserDataGetText(userType, manager.hotkey[i].id, "Name", 1));
+
+        // Hookup Keys label
+        DialogControlHookup(control, c_triggerControlTypeLabel, "Container/KeysLabel");
+        dT2 = dataTable+"_Keys";
+        DataTableSetInt(true, dT2, DialogControlLastCreated());
+
+        combineText = HotkeyManagerCombineHotkeyText(manager.hotkey[i]);
+        if(combineText == null) {
+            combineText = "";
+        }
+        DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, StringToText(combineText));
+        
+        // DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, UserDataGetText(userType, manager.hotkey[i].id, "Hotkeys", 1));
+
+        DialogControlSendAnimationEvent(list, pg, "ItemAdded");
+        DialogControlSetSize(list, pg, 0, 28 * hotkeyGroupCount);
+        // DialogControlSendAnimationEvent(list, pg, "Counter");
+
+        // Dbg(dataTable+">"+IntToString(hotkeyGroupCount));
+        dataTable = "$INTERNAL_HotkeyGroup_"+IntToString(hotkeyGroupIndex)+"_"+IntToString(player)+"_Hotkey"+IntToString(hotkeyGroupCount);
+        DataTableSetInt(true, dataTable, i);
+
+        // break;
+    }   
+}
+
+void HotkeyManagerSaveSettings(int player){
+    int index;
+    int i;
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+    structref<HotkeyManagerHotkey> hotkey;
+    bool save = false;
+    HotkeyManagerLoadBank(player);
+    for (index = 0; index < manager.hotkeyCount; index += 1) {
+        hotkey = manager.hotkey[index];
+        save = false;
+        if(hotkey.editable && hotkey.edited){
+            BankKeyRemove(gv_plyr[player].Bank, c_hotkeyManagerBankSection, c_hotkeyManagerUserType+IntToString(player)+"."+hotkey.id);
+            if(UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "InputType", 1) != hotkey.inputType){
+                // Dbg("type>"+UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "InputType", 1)+"|"+hotkey.inputType);
+                save = true;
+            }
+            for (i = 0; i <= 2; i += 1) {
+                if(UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "Input", i+1) != hotkey.input[i]){ save = true; break; }
+                if(UserDataGetString(c_hotkeyManagerUserType, hotkey.id, "Modifier", i+1) != hotkey.modifier[i]){ save = true; break; }
+            }
+            if(save){
+                // Dbg("Saving>"+hotkey.id);
+                UserDataSaveInstance(c_hotkeyManagerUserType+IntToString(player), hotkey.id, gv_plyr[player].Bank, c_hotkeyManagerBankSection);
+            }
+        }
+        else{
+            // Dbg("Checking deletion?");
+            if(BankKeyExists(gv_plyr[player].Bank, c_hotkeyManagerBankSection, c_hotkeyManagerUserType+IntToString(player)+"."+hotkey.id)){
+                BankKeyRemove(gv_plyr[player].Bank, c_hotkeyManagerBankSection, c_hotkeyManagerUserType+IntToString(player)+"."+hotkey.id);
+            }
+        }
+    }
+    // UserDataSaveInstance(c_hotkeyManagerUserType+IntToString(p), "FreeCamToggle", gv_plyr[p].Bank, c_hotkeyManagerBankSection);
+    // HotkeyManagerStoreUserType(p, gv_HotkeyManager[p-1]);
+    HotkeyManagerSaveBank(player);
+}
+
+void HotkeyManagerModifyHotkeyText(int player, int index, string name){
+    structref<HotkeyManager> manager;
+    string userType = c_hotkeyManagerUserType+IntToString(player);
+    int i;
+    int idIndex;
+    string s;
+    string field;
+
+    manager = gv_HotkeyManager[player-1];
+    idIndex = manager.hotkey[index].idIndex;
+    for (i = 0; i < CatalogFieldValueCount(c_gameCatalogUser, userType, "Instances[" + IntToString(idIndex) + "]"+".Text", player); i += 1) {
+        // Dbg(">"+IntToString(k));
+        s= CatalogFieldValueGet(c_gameCatalogUser, userType, "Instances[" + IntToString(idIndex) + "]"+".Text[" + IntToString(i) + "].Field.Id", player);
+        // Dbg(s);
+        // if(s == "Name"){
+        //     nameIndex = k;
+        // }
+        if(s == "Hotkeys"){
+            field = "Instances[" + IntToString(idIndex) + "]"+".Text[" + IntToString(i) + "].Text";
+            // Dbg(TextToString(StringExternal(CatalogFieldValueGet(c_gameCatalogUser, userType, field, player))));
+            // Dbg(TextToString(CatalogFieldValueGet(c_gameCatalogUser, userType, field, 0)));
+            // CatalogFieldValueSet(c_gameCatalogUser, userType, field, player, name);
+        }
+
+        // Dbg(s);
+    }
+}
+
+void HotkeyManagerTurnOnOff(int player, bool onOff){
+    int i;
+    bool b;
+    plyr_OptionsBankSaveValue(player, c_plyrBankKey_DebugCheatsEnabled, IntToString(BoolToInt(onOff)));
+    gv_DebugCheats[player].isEnabled = onOff;
+    if(onOff){
+        if(TriggerIsEnabled(HotkeyManagerHandler_t) == false){
+            TriggerEnable(HotkeyManagerHandler_t, true);
+        }
+    }else{
+        for (i = 1; i <= c_MAX_PLAYER_COUNT; i += 1) {
+            if(gv_DebugCheats[i].isEnabled){
+                b = true;
+                break;
+            }
+        }
+        if(b == true){
+            TriggerEnable(HotkeyManagerHandler_t, false);
+        }
+    }
+
+    // Is playerInputHandler Enabled?
+    if(gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_plyrInputHandler]){
+        plyr_TrackingTrigger_OnOff(player, ge_TrackType_Keyboard, onOff);
+        plyr_TrackingTrigger_OnOff(player, ge_TrackType_MouseClick, onOff);
+        plyr_TrackingTrigger_OnOff(player, ge_TrackType_MouseMove, onOff);
+        plyr_TrackingTrigger_OnOff(player, ge_TrackType_MouseWheel, onOff);
+        TriggerEnable(HotkeyEditorConfigResponses_t, onOff);
+        DialogControlSetPropertyAsBool(HotkeyEditorConfig, c_triggerControlPropertyEnabled, PlayerGroupSingle(player), onOff);
+    }
+}
+
+int HotkeyIndexFromId(structref<HotkeyManager> manager, string id){
+    int i;
+    if(manager.hotkeyCount <= 0){ Dbg("HotkeyIndexFromId: manager hotkeyCount was invalid"); return -1;}
+    for (i = 0; i < manager.hotkeyCount; i += 1) {
+        if(id == manager.hotkey[i].id){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void HotkeyManagerIdEnabledOnOff(structref<HotkeyManager> manager, string id, bool onOff){
+    manager.hotkey[HotkeyIndexFromId(manager, id)].enabled = onOff;
+    return;
+}
+
+void HotkeyGroupSetSelectedGroup(int player, int value){
+    DataTableSetInt(true, "$INTERNAL_SelectedHotkeyGroup"+IntToString(player), value);
+    return;
+}
+
+int HotkeyGroupGetSelectedGroup(int player){
+    return DataTableGetInt(true, "$INTERNAL_SelectedHotkeyGroup"+IntToString(player));
+}
+
+void HotkeyGroupSetSelectedItem(int player, int value){
+    DataTableSetInt(true, "$INTERNAL_SelectedHotkeyGroupItem"+IntToString(player), value);
+    return;
+}
+
+int HotkeyGroupGetSelectedItem(int player){
+    return DataTableGetInt(true, "$INTERNAL_SelectedHotkeyGroupItem"+IntToString(player));
+}
+
+int HotkeyIndexFromSelectedListItem(int player, int hotkeyGroup, int selectedItem){
+    string dataTable = "$INTERNAL_HotkeyGroup_"+IntToString(hotkeyGroup)+"_"+IntToString(player)+"_Hotkey"+IntToString(selectedItem);
+    if(DataTableValueExists(true, dataTable)){
+        return DataTableGetInt(true, dataTable);
+    }
+    return -1;
+}
+
+void HotkeyManagerHotkeySaveEditable(int player, structref<HotkeyManagerHotkey> hotkey, int index){
+    string user;
+    UserDataSetString(c_hotkeyManagerUserType+IntToString(player), hotkey.id, "InputType", 1, hotkey.inputType);
+    UserDataSetString(c_hotkeyManagerUserType+IntToString(player), hotkey.id, "Input", index+1, hotkey.input[index]);
+    UserDataSetString(c_hotkeyManagerUserType+IntToString(player), hotkey.id, "Modifier", index+1, hotkey.modifier[index]);
+    hotkey.edited = true;
+}
+
+
+bool HotkeyManagerDelayedInit_Func(bool test_conds, bool run_actions){
+    int player;
+    for (player = 1; player <= c_MAX_PLAYER_COUNT; player += 1) {
+        // Dbg("Player>"+IntToString(p));
+        if(HotkeyManagerLoadPlayerProfile(player)){
+        }
+
+        // UserDataSetInt(c_hotkeyManagerUserType+IntToString(player), "FreeCamToggle", "KeyInput", 1, 92);
+        // Dbg(TextToString(UserDataGetText(c_hotkeyManagerUserType+IntToString(player), "FreeCamToggle", "Hotkeys", 1)));
+        // UserDataSetText(c_hotkeyManagerUserType+IntToString(player), "FreeCamToggle", "Hotkeys", 1, StringToText("Ctrl + F6"));
+
+        // Dbg(TextToString(UserDataGetText(c_hotkeyManagerUserType+IntToString(player), "FreeCamToggle", "Hotkeys", 1)));
+        // Cat(c_hotkeyManagerUserType+IntToString(p), "FreeCamToggle", "Hotkeys", 1, StringToText("Ctrl + F6"));
+        HotkeyManagerStoreUserType(player, gv_HotkeyManager[player-1]);
+        // HotkeyManagerSaveSettings(player);
+        // HotkeyManagerModifyHotkeyText(player, HotkeyIndexFromId(gv_HotkeyManager[player-1], "FreeCamToggle"), "Ctrl + F6");
+        HotkeyManagerEditorPopulateListBox(player);
+    }
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+bool HotkeyManagerHandler_Func (bool testConds, bool runActions) {
+    int event = ConvertStringToTrackingType(EventGenericName());
+    int key = GenericEventKey();
+    int button = GenericEventMouseButton();
+    int state = GenericEventInputState();
+    int player = GenericEventPlayer();
+    fixed spin = GenericEventWheelSpin();
+    int index;
+    int i;
+    int k;
+    int count;
+    bool resume;
+    bool eventIsStateBased = (event == ge_Tracking_KeyPressed || event == ge_Tracking_MouseClicked);
+    structref<gs_Player> plyr = gv_plyr[player];
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+    structref<HotkeyManagerHotkey> hotkey;
+    string foundHotkeys = "";
+    int foundCount = 0;
+    int bestPriority = -10000;
+    int type;
+    int input;
+    if(!DEBUG_MODE){ return false; }
+    
+
+    for (index = 0; index < manager.hotkeyCount; index += 1) {
+        hotkey = manager.hotkey[index];
+        if(!hotkey.enabled){ continue; }
+        if(hotkey.priority < bestPriority){ continue; }
+        resume = false;
+        for (i = 0; i <= 2; i += 1) {
+            if(hotkey.eventType[i] == -1){ break; }
+
+            if(event == hotkey.eventType[i]){ 
+                resume = true;
+                break; }
+        }
+        if(!resume){ continue; }
+        if(eventIsStateBased){
+            resume = false;
+            if(StringIsValid(hotkey.inputType)){
+                if(StringContains(hotkey.inputType, InputTypeStringFromType(state), c_stringAnywhere, false)){
+                    resume = true;
+                }
+            }
+            if(!resume){ continue; }
+        }
+        // Check if player is holding down modifiers.
+        for (i = 0; i <= 2; i += 1) {
+            resume = false;
+            if(hotkey.eventType[i] == -1){ continue; }
+            if(!StringIsValid(hotkey.modifier[i]) || StringContains(hotkey.modifier[i], "Any", c_stringAnywhere, c_stringNoCase)){
+                resume = true;
+            }
+            else{
+                for (k = 1; k <= WordCount(hotkey.modifier[i]); k += 1) {
+                    type = EventTypeFromInput(StringWord(hotkey.modifier[i], k), c_hotkeyManagerInput_keyStart, c_hotkeyManagerInput_buttonEnd);
+                    input = LastReturnedInput();
+                    // input = InputIndexFromInput(hotkey.modifier[i]);
+                    if(type == ge_Tracking_KeyPressed){
+                        resume = plyr.keyDown[input];
+                    }
+                    else if(type == ge_Tracking_MouseClicked){
+                        resume = plyr.mouseButtonDown[input];
+                    }
+                    if(!resume){ break; }
+                }
+            }
+            if(!resume){ continue; }
+            resume = false;
+
+            if(!StringIsValid(hotkey.input[i]) ){
+                resume = false;
+                break;
+            }
+            
+            if(StringContains(hotkey.input[i], "Any", c_stringAnywhere, c_stringNoCase)){
+                resume = true;
+                break;
+            }
+
+            if(eventIsStateBased){
+                type = EventTypeFromInput(hotkey.input[i], c_hotkeyManagerInput_keyStart, c_hotkeyManagerInput_buttonEnd);
+                input = LastReturnedInput();
+                if(event != type){ continue; }
+
+                // Dbg("Type>"+IntToString(event)+"|"+IntToString(type));
+                if(event == ge_Tracking_KeyPressed){
+                    if(key == input){
+                        resume = true;
+                        break;
+                    }
+                }
+                else if(event == ge_Tracking_MouseClicked){
+                    if(button == input){
+                        resume = true;
+                        break;
+                    }
+                }
+            }
+            else{
+                type = EventTypeFromInput(hotkey.input[i], c_hotkeyManagerInput_wheelStart, c_hotkeyManagerInput_mouseMoved);
+                input = LastReturnedInput();
+                // Dbg(hotkey.input[i]);
+                if(event != type){ continue; }
+
+                if(event == ge_Tracking_MouseWheel){
+                    if((hotkey.input[i] == "WheelUp" && spin > 0.0) || (hotkey.input[i] == "WheelDown" && spin < 0.0)){
+                        resume = true;
+                        break;
+                    }
+                }
+                else if(event == ge_Tracking_MouseMoved){
+                    // Dbg(hotkey.input[i]);
+                    if(hotkey.input[i] == "MouseMove"){
+                        resume = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!resume){ continue; }
+        // if(doDebug){ Dbg("PAssedAT "+IntToString(i)); }
+        if(hotkey.priority >= bestPriority){
+            if(hotkey.priority > bestPriority){
+                foundCount = 0;
+                foundHotkeys = "";
+                bestPriority = hotkey.priority;
+            }
+            foundCount += 1;
+            foundHotkeys = foundHotkeys + IntToString(index) + " ";
+        }
+    }
+
+    if(foundCount == 0){ return false; }
+
+    for (i = 1; i <= foundCount; i += 1) {
+        index = StringToInt(StringWord(foundHotkeys, i));
+        hotkey = manager.hotkey[index];
+        // We made it here so we can execute specified functions or send generic event
+        DataTableSetInt(true, "$INTERNAL_LastHotkeyIndex"+IntToString(player), index);
+        if(StringIsValid(hotkey.function)){
+            // Executing triggers retains the GenericEvent Parameters we entered this trigger with
+            // ------------------
+            //      int event = ConvertStringToTrackingType(EventGenericName());
+            //      int key = GenericEventKey();
+            //      int button = GenericEventMouseButton();
+            //      int state = GenericEventInputState();
+            //      int player = GenericEventPlayer();
+            // ------------------
+            count = WordCount(hotkey.function);
+            if(count > 1){
+                for (i = 1; i <= count; i += 1) {
+                    TriggerExecute(TriggerCreate(StringWord(hotkey.function, i)), false, false);
+                }
+            }
+            else{
+                TriggerExecute(TriggerCreate(hotkey.function), false, false);
+            }
+        }
+        if(StringIsValid(hotkey.genericEvent)){
+            DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "Event"), event);
+            DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "Player"), player);
+            DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "Key"), key);
+            DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "Button"), button);
+            DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "State"), state);
+            DataTableSetFixed(false, TriggerEventParamName(hotkey.genericEvent, "Spin"), spin);
+            // DataTableSetInt(false, TriggerEventParamName(hotkey.genericEvent, "HotkeyIndex"), index);
+            TriggerSendEvent(hotkey.genericEvent);
+        }
+        if (StringIsValid(hotkey.activates)) {
+            HotkeyToggleChildren(manager, hotkey);
+        }
+    }
+    return true;
+}

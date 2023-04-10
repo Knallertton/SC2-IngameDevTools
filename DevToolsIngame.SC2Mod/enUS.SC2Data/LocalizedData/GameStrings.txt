@@ -22,3 +22,150 @@ UI/MiscManager/ShowCatalogValueManager=Catalog Value Editor
 UI/MiscManager/ShowCameraManager=Camera Editor
 UI/MiscManager/ShowCatalogLinkManager=Catalog Link Editor
 UI/MiscManager/ShowFogManager=Fog Editor
+UserData/HotkeyGroup/ChatRecorder_Name=Chat Recorder
+UserData/HotkeyGroup/ConsoleCommands_Name=Console Commands
+UserData/HotkeyGroup/FreeCam_Name=Free Camera
+UserData/HotkeyGroup/MeasuringTool_Name=Measuring Tool
+UserData/HotkeyGroup/UnitCheats_Name=Unit Cheats
+UserData/HotkeyManager/ActorInfoDisplay_Hotkeys=Ctrl + Alt + G
+UserData/HotkeyManager/ActorInfoDisplay_Name=Toggle Actor Info Display
+UserData/HotkeyManager/ChatRecorderHistoryDown_Hotkeys=Ctrl + Alt + Down
+UserData/HotkeyManager/ChatRecorderHistoryDown_Name=Chat History Down
+UserData/HotkeyManager/ChatRecorderHistoryEnter_Hotkeys=Enter
+UserData/HotkeyManager/ChatRecorderHistoryEnter_Name=Chat History Enter
+UserData/HotkeyManager/ChatRecorderHistoryExit_Hotkeys=Enter, Escape
+UserData/HotkeyManager/ChatRecorderHistoryExit_Name=Chat History Exit
+UserData/HotkeyManager/ChatRecorderHistoryToggle_Hotkeys=Ctrl + H
+UserData/HotkeyManager/ChatRecorderHistoryToggle_Name=Chat History Toggle
+UserData/HotkeyManager/ChatRecorderHistoryUp_Hotkeys=Up
+UserData/HotkeyManager/ChatRecorderHistoryUp_Name=Chat History Up
+UserData/HotkeyManager/FreeCamFocusLocation_Hotkeys=Back Mouse Button
+UserData/HotkeyManager/FreeCamFocusLocation_Name=Focus Location
+UserData/HotkeyManager/FreeCamMouseMove_Hotkeys=Mouse Move
+UserData/HotkeyManager/FreeCamMouseMove_Name=Free Camera Adjust
+UserData/HotkeyManager/FreeCamMouseScroll_Hotkeys=Mouse Wheel Scroll
+UserData/HotkeyManager/FreeCamMouseScroll_Name=Free Camera Zoom
+UserData/HotkeyManager/FreeCamToggle_Hotkeys=Ctrl + F8
+UserData/HotkeyManager/FreeCamToggle_Name=Toggle Free Camera
+UserData/HotkeyManager/MeasuringToolSetPos_Hotkeys=Left Mouse Button
+UserData/HotkeyManager/MeasuringToolSetPos_Name=Set Measuring Position
+UserData/HotkeyManager/MeasuringToolToggle_Hotkeys=Alt + M
+UserData/HotkeyManager/MeasuringToolToggle_Name=Toggle Measuring Tool
+UserData/HotkeyManager/TrigDebug_Hotkeys=Ctrl + Shift + Tab
+UserData/HotkeyManager/TrigDebug_Name=Open Trigger Debug Window
+UserData/HotkeyManager/UnitCopy_Hotkeys=Ctrl + C
+UserData/HotkeyManager/UnitCopy_Name=Copy Unit Selection
+UserData/HotkeyManager/UnitCut_Hotkeys=Ctrl + X
+UserData/HotkeyManager/UnitCut_Name=Cut Unit Selection
+UserData/HotkeyManager/UnitHeight_Hotkeys=Shift + Alt + Forward Mouse Button
+UserData/HotkeyManager/UnitHeight_Name=Adjust Selection Height
+UserData/HotkeyManager/UnitKillAcid_Hotkeys=Ctrl + NumPad 2
+UserData/HotkeyManager/UnitKillAcid_Name=Kill type set to 'Acid'
+UserData/HotkeyManager/UnitKillBlast_Hotkeys=Ctrl + NumPad 3
+UserData/HotkeyManager/UnitKillBlast_Name=Kill type set to 'Blast'
+UserData/HotkeyManager/UnitKillEviscerate_Hotkeys=Ctrl + NumPad 4
+UserData/HotkeyManager/UnitKillEviscerate_Name=Kill type set to 'Eviscerate'
+UserData/HotkeyManager/UnitKillFire_Hotkeys=Ctrl + NumPad 5
+UserData/HotkeyManager/UnitKillFire_Name=Kill type set to 'Fire'
+UserData/HotkeyManager/UnitKillNone_Hotkeys=Ctrl + NumPad 0
+UserData/HotkeyManager/UnitKillNone_Name=Kill type set to None
+UserData/HotkeyManager/UnitKillNormal_Hotkeys=Ctrl + NumPad 1
+UserData/HotkeyManager/UnitKillNormal_Name=Kill type set to 'Normal'
+UserData/HotkeyManager/UnitKillPhysics_Hotkeys=Ctrl + NumPad 6
+UserData/HotkeyManager/UnitKillPhysics_Name=Kill type set to 'Physics'
+UserData/HotkeyManager/UnitKill_Hotkeys=Shift + X
+UserData/HotkeyManager/UnitKill_Name=Kill Selected Units
+UserData/HotkeyManager/UnitMoving_Hotkeys=Ctrl + Shift + Forward Mouse Button
+UserData/HotkeyManager/UnitMoving_Name=Move Selected Units
+UserData/HotkeyManager/UnitPaste_Hotkeys=Ctrl + V
+UserData/HotkeyManager/UnitPaste_Name=Unit Paste
+UserData/HotkeyManager/UnitTurningMode_Hotkeys=Ctrl + F7
+UserData/HotkeyManager/UnitTurningMode_Name=Toggle Turning Mode
+UserData/HotkeyManager/UnitTurning_Hotkeys=Ctrl + Alt + Forward Mouse Button
+UserData/HotkeyManager/UnitTurning_Name=Turn Selected Units
+UserData/HotkeyManager/[Default]_Description= 
+UserData/HotkeyManager/[Default]_Hotkeys= 
+UserData/HotkeyManager/[Default]_Name= 
+UserData/DebugCommands/(Un)Pause Units_Description=Pauses or unpauses selected or all units in map if <c val="00FFFF"><all></c> field is set specified.<n/>If field <c val="00FFFF"><player></c> is specified then the command only works on that players units.<n/><n/>(EX. "-pause all 2" pauses all units in the map by player 2 | "-unpause" unpauses selected units.)
+UserData/DebugCommands/(Un)Pause Units_Error=No units found.
+UserData/DebugCommands/(Un)Pause Units_Error_001=Parse error on field <c val="00FFFF"><player></c> | Correct value is an integer between <c val="00FFFF">0-15</c>
+UserData/DebugCommands/(Un)Pause Units_Error_002=Parse error on field <c val="00FFFF"><all></c> | Correct value is "all"
+UserData/DebugCommands/(Un)Pause Units_Message=Paused all units in map.
+UserData/DebugCommands/(Un)Pause Units_Message_001=Unpaused all units in map.
+UserData/DebugCommands/(Un)Pause Units_Name=-pause; -unpause <c val="00FFFF"><all></c> <c val="00FFFF"><player></c>
+UserData/DebugCommands/Aspect_Description=Aspects: <c val="00FFFF">control</c>, <c val="00FFFF">agression</c>, <c val="00FFFF">vision</c>, <c val="00FFFF">pushable</c><n/>   (EX."asp c 2" lets you control player 2's units ) (If <c val="00FFFF"><target></c> is not given, triggering player gets defaulted)
+UserData/DebugCommands/Aspect_Error=Error encountered on <c val="00FFFF"><aspect></c> syntaxing, proper syntaxing<n/>Shared Control: <c val="00FFFF">c, <c val="00FFFF"></c>control</c> | Non-Aggression: <c val="00FFFF">a, <c val="00FFFF"></c>agression</c><n/>Shared Vision: <c val="00FFFF">v, <c val="00FFFF"></c>vision</c> | Pushable: <c val="00FFFF">p, <c val="00FFFF"></c>pushable</c>
+UserData/DebugCommands/Aspect_Error_001=Error encountered on <c val="00FFFF"><source></c> syntaxing, proper syntaxing is to give an integer between <c val="00FFFF">0 - <c val="00FFFF"></c>15</c>
+UserData/DebugCommands/Aspect_Error_002=Error encountered on <c val="00FFFF"><target></c> syntaxing, proper syntaxing is to give an integer between <c val="00FFFF">0 - <c val="00FFFF"></c>15</c>
+UserData/DebugCommands/Aspect_Name=-aspect <c val="00FFFF"><aspect> <source> <target></c>
+UserData/DebugCommands/Blizzard_Description=Lists all blizzard debug commands.
+UserData/DebugCommands/Blizzard_Message=Ally - Changes all alliance states between the selected players. By default, if you just type Ally, then all players share all alliance states with you.<n/>AllianceDefeat - Changes the Defeat alliance state between the selected players. By default, if you just type AllianceDefeat, all players will share defeat with you.<n/>AllianceControl - Changes the Control alliance state between the selected players. By default, if you just type AllianceControl, then all players share control with you.<n/>AllianceGiveHelp - Changes the GiveHelp alliance state between the selected players. By default, if you just type AllianceGiveHelp, all players will respond to calls for help from your units.<n/>AlliancePassive - Changes the Passive alliance state between the selected players. Players that you are not passive with will be considered hostile for attacking purposes.<n/>AlliancePushable - Changes the Pushable alliance state between the selected players. This controls whether a player's units will move through another player's units, pushing them out of the way.<n/>AllianceSeekHelp - Changes the SeekHelp alliance state between the selected players. Controls whether a player's units call for help to the specified target player. The target player can choose to respond or not, depending on its GiveHelp alliance setting.<n/>AllianceSpend - Changes the Spend alliance state between the selected players. Players that you are sharing resources with are allowed to spend your money to purchase things.<n/>AllianceTrade - Changes the Trade alliance state between the selected players. Players that you are trading with can be sent resources.<n/>AllianceVision - Changes the Vision alliance state between the selected players.<n/>BehaviorAdd - Adds the requested behavior to the selected units.<n/>BehaviorDuration - Sets the duration of the requested behavior.<n/>BehaviorRemove - Removes the requested behavior from the selected units.<n/>Charges - Toggles spell charge validation.<n/>Cooldown - Toggles spell cooldown validation.<n/>Creep - Adds creep at the cursor position given the requested radius.<n/>DamageDealt - Multiplies the amount of damage dealt by a player's units by the specified value. By default, this will multiply the damage dealt by 10 for the cheating player.<n/>DamageTaken - Multiplies the amount of damage taken by a player's units by the specified value. By default, this will reduce all damage taken to 0 for the cheating player.<n/>DeathAll -- Kills all units on the map.<n/>DeathExcept - Kills all units on the map except the selected units.<n/>DeathSide - Kills all units owned by the selected player.<n/>DeathUnit - Kills the selected units. The type of death can be specified as a parameter.<n/>Defeat - Ends the game in defeat for the selected player.<n/>DestroyPersistent - Destroys all persistent effects within the specified radius of the cursor.<n/>Effect - Executes the requested effect from the selected units.<n/>FastBuild - Toggles fast building, research, and training times.<n/>FastHeal - Toggles fast healing times.<n/>Fidget - Forces selected units to perform the specified fidget type.<n/>Food - Toggles food usage validation.<n/>Free - Toggles resource cost validation and expenditure.<n/>God - Turns on god mode for the selected player. Units owned by players that are in god mode will deal amplified damage, and take no damage.<n/>Loot - Drops a type of loot for the specified player.<n/>MakeUnit - Creates N units for the specified player. Units will be created around the cursor position, or in the center of the map if the cursor position is invalid.<n/>Minerals - Adds the specified amount of minerals to the selected player.<n/>Move - Moves the selected units to the cursor position.<n/>NoDefeat - Disables defeat conditions.<n/>NoVictory - Disables victory conditions.<n/>Order - Orders the selected units to use an ability.<n/>Owner - Changes ownership for the selected units to the selected player.<n/>ResourceCustom - Adds the specified amount of a custom resource to the selected player.<n/>SetAll - Sets the life, shields, and energy of the selected units to the specified value. By default, this will set these values to the maximum amount.<n/>SetLife -- Sets the life of the selected units to the specified value.<n/>SetEnergy - Sets the energy of the selected units to the specified value.<n/>SetLife - Sets the life of the selected units to the specified value.<n/>SetShields - Sets the shields of the selected units to the specified value.<n/>SetResource - Sets the harvestable resources contained by the selected units to the specified value.<n/>ShowMap - Toggles fog of war display and validation.<n/>TechTree - Toggles tech tree dependency validation.<n/>Terrazine - Adds the specified amount of terrazine to the specified player.<n/>Tie - Marks all undecided players with the tie result.<n/>TimeOfDay - Sets the time of day to the specified time.<n/>TimeOfDayRate -- Sets the rate that the time of day changes to the specified value.<n/>TrigDebug - Opens the trigger debug window.<n/>TrigRun - Runs the specified trigger.<n/>Uncreep - Removes creep at the cursor position given the requested radius.<n/>Undecided - Marks the selected player's result as undecided.<n/>Upgrade - Applies the selected upgrade to the selected player.<n/>Vespene - Adds the specified amount of vespene gas to the specified player.<n/>Victory - Ends the game in defeat for all players that don't share the defeat alliance state with the selected player.<n/>XP - Adds a relative amount of XP to the selected units. This can be used to change veterancy levels.
+UserData/DebugCommands/Blizzard_Name=-blizz
+UserData/DebugCommands/Bounds_Description=Changes camera or map bounds to entire map. Type: <c val="00FFFF">camera</c>, <c val="00FFFF">map</c>
+UserData/DebugCommands/Bounds_Error=Error on <c val="00FFFF"><type></c> syntaxing! | Type: <c val="00FFFF">camera</c>, <c val="00FFFF">map</c>
+UserData/DebugCommands/Bounds_Message=Set camera bounds to entire map.
+UserData/DebugCommands/Bounds_Message_001=Set playable map area to entire map.
+UserData/DebugCommands/Bounds_Name=-bounds <c val="00FFFF"><type></c>
+UserData/DebugCommands/Change Map_Description=Changes the current map. Avoid giving invalid paths, this can't check if the path is correct.
+UserData/DebugCommands/Change Map_Error=No map path provided.
+UserData/DebugCommands/Change Map_Message=Changing the map to:
+UserData/DebugCommands/Change Map_Message_001=Press ESC to cancel map change!
+UserData/DebugCommands/Change Map_Name=-changemap <c val="00FFFF"><map></c>||<c val="00FFFF"><path></c>
+UserData/DebugCommands/Clear Chat_Description=Clears chat messages from a specific area (default chat) (-error, -debug -subtitle -objective etc.) 
+UserData/DebugCommands/Clear Chat_Message=Cleared 
+UserData/DebugCommands/Clear Chat_Message_001= messages.
+UserData/DebugCommands/Clear Chat_Name=-clear <c val="00FFFF"><messageArea></c>
+UserData/DebugCommands/Controls_Description=Print out all debug hotkeys.
+UserData/DebugCommands/Controls_Name=-controls
+UserData/DebugCommands/Cooldowns_Description=Refreshes selected units cooldowns.
+UserData/DebugCommands/Cooldowns_Error=No units selected.
+UserData/DebugCommands/Cooldowns_Name=-cd
+UserData/DebugCommands/Damage Dealt_Description=Sets players damage dealt percentage. Value between 0.0 - 1.0, defaults to triggering player
+UserData/DebugCommands/Damage Dealt_Error=Error parsing real value
+UserData/DebugCommands/Damage Dealt_Error_001=Error parsing player
+UserData/DebugCommands/Damage Dealt_Message=Set damage dealt percentage to
+UserData/DebugCommands/Damage Dealt_Name=-dd <c val="00FFFF"><real> <player></c>
+UserData/DebugCommands/Damage Taken_Description=Sets players damage taken percentage. Value between 0.0 - 1.0, defaults to triggering player
+UserData/DebugCommands/Damage Taken_Error=Error parsing real value
+UserData/DebugCommands/Damage Taken_Error_001=Error parsing player
+UserData/DebugCommands/Damage Taken_Message=Set damage taken percentage
+UserData/DebugCommands/Damage Taken_Name=-dt <c val="00FFFF"><real> <player></c>
+UserData/DebugCommands/Debug_Description=Enables/Disables debug mode
+UserData/DebugCommands/Debug_Error=Error parsing <c val="00FFFF"><bool></c>  | Accepted values:<c val="00FFFF"> true, false, 1, 0, enabled, disabled</c>
+UserData/DebugCommands/Debug_Message=debug mode.
+UserData/DebugCommands/Debug_Name=-debug <c val="00FFFF"><bool></c> (ignore bool for toggle)
+UserData/DebugCommands/FreeCam_Description=Unlocks the camera and allows camera manipulation.
+UserData/DebugCommands/FreeCam_Message=Unlocked camera input..
+UserData/DebugCommands/FreeCam_Message_001=Locked camera input..
+UserData/DebugCommands/FreeCam_Message_002=Restored default Game Camera
+UserData/DebugCommands/FreeCam_Name=-freecamera
+UserData/DebugCommands/Help_Description=Displays this message.
+UserData/DebugCommands/Help_Name=-help <c val="00FFFF"><page></c>
+UserData/DebugCommands/List Maps_Description=Lists all the Antioch ep3 map names and paths.
+UserData/DebugCommands/List Maps_Name=-listmaps
+UserData/DebugCommands/Map Path_Description=Gets the current map path.
+UserData/DebugCommands/Map Path_Message=Current map path is:
+UserData/DebugCommands/Map Path_Name=-mappath
+UserData/DebugCommands/Set Speed_Description=Sets selected units movement speed.
+UserData/DebugCommands/Set Speed_Error=No units selected.
+UserData/DebugCommands/Set Speed_Error_001=Invalid movement speed value
+UserData/DebugCommands/Set Speed_Name=-setspeed <c val="00FFFF"><real></c>
+UserData/DebugCommands/Show/Hide Doodads_Description=Shows/Hides all doodads or by specific ID in the entire map.<n/>Ex. "-doodads hide AgriaTree"
+UserData/DebugCommands/Show/Hide Doodads_Error=Error parsing field <c val="00FFFF"><show/hide></c> | Types: <c val="00FFFF">show</c>, <c val="00FFFF">hide</c>
+UserData/DebugCommands/Show/Hide Doodads_Error_001=Error parsing field <c val="00FFFF"><type></c> | Doodad ID name required. Ex. "<c val="00FFFF">AgriaTree</c>"
+UserData/DebugCommands/Show/Hide Doodads_Message=all doodads in map.
+UserData/DebugCommands/Show/Hide Doodads_Message_001=specific doodads by ID: 
+UserData/DebugCommands/Show/Hide Doodads_Name=-doodads <c val="00FFFF"><show/hide></c> <c val="00FFFF"><type></c>
+UserData/DebugCommands/Show/Hide Terrain_Description=Shows/hides terrain cells in the entire map.
+UserData/DebugCommands/Show/Hide Terrain_Error=Error parsing field <c val="00FFFF"><show/hide></c> | Types: <c val="00FFFF">show</c>, <c val="00FFFF">hide</c>
+UserData/DebugCommands/Show/Hide Terrain_Message=all terrain cells.
+UserData/DebugCommands/Show/Hide Terrain_Name=-terrain <c val="00FFFF"><show/hide></c>
+UserData/DebugCommands/Toggle Fog_Description=Enables/Disables terrain fog.
+UserData/DebugCommands/Toggle Fog_Error=Error parsing <c val="00FFFF"><bool></c>  | Accepted values:<c val="00FFFF"> true, false, 1, 0, enabled, disabled</c>
+UserData/DebugCommands/Toggle Fog_Message=terrain fog.
+UserData/DebugCommands/Toggle Fog_Name=-fog <c val="00FFFF"><bool></c>
+UserData/DebugCommands/Toggle Terrain_Description=Shows/hides terrain cells in the entire map.
+UserData/DebugCommands/Toggle Terrain_Error=Error parsing field <c val="00FFFF"><show/hide></c> | Types: <c val="00FFFF">show</c>, <c val="00FFFF">hide</c>
+UserData/DebugCommands/Toggle Terrain_Message=all terrain cells.
+UserData/DebugCommands/Toggle Terrain_Name=-terrain <c val="00FFFF"><show/hide></c>
+UserData/DebugCommands/[Default]_Description=NULL

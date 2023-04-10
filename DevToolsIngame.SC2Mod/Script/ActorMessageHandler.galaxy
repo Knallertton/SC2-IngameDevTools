@@ -29,9 +29,19 @@ static actor ActorMessageContainerTarget(){
 bool ActorMessageContainerSendHandler(bool a, bool b){
     bool trigRan = true;
     string val = DialogControlGetPropertyAsString(ActorMessageContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
-    actor unitactor = ActorMessageContainerTarget();
+    // actor unitactor = ActorMessageContainerTarget();
+    actor unitactor;
+    unit tmp_unit;
+    int i;
+	unitgroup group = UnitGroupSelected(EventPlayer());
     string target =DialogControlGetPropertyAsString(ActorMessageContainer.targetBox,c_triggerControlPropertyEditText,EventPlayer());//"::Main";
-    ActorSendTo(unitactor, target, val);
+    for (i = 1; i <= UnitGroupCount(group, c_unitCountAll); i += 1) {
+        tmp_unit = UnitGroupUnit(group, i);
+        unitactor = libNtve_gf_MainActorofUnit(tmp_unit);
+        if(UnitIsValid(tmp_unit)){
+            ActorSendTo(unitactor, target, val);
+        }
+    }
     ActorCreate(null,"","","","");
     //ActorSend(unitactor,val);
     //ConsoleCommand(val,true,true);

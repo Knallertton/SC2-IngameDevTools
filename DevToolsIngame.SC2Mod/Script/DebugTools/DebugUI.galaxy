@@ -1,0 +1,758 @@
+
+include "Script/StringSupport"
+include "Script/DebugTools/DebugUI_h"
+include "Script/DebugTools/DebugCheats"
+// include "Script/math/Vector2f"
+
+// -------------- Debug -------------------
+void DebugMenuShowHide(bool showHide){
+    DialogControlSetPropertyAsBool(StoryDebugMenu, c_triggerControlPropertyVisible, PlayerGroupSingle(EventPlayer()), showHide);
+    TriggerEnable(StoryDebugMapResponses_t, showHide);
+    TriggerEnable(StoryDebugCheatsResponses_t, showHide);
+    TriggerEnable(HotkeyEditorListResponses_t, showHide);
+    TriggerEnable(HotkeyEditorConfigResponses_t, showHide);
+    // TriggerEnable(StoryDebugUnlocksResponses, showHide);
+    return;
+}
+
+bool DebugMenuToggle_Func(bool test_conds, bool run_actions){
+    DebugMenuShowHide(!DialogControlIsVisible(StoryDebugMenu, EventPlayer()));
+    return true;
+}
+
+int HotkeyGroupGetList(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyGroup_List"+IntToString(index));
+}
+
+int HotkeyGroupGetButton(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyGroup_Button"+IntToString(index));
+}
+
+static int HotkeyEditorConfigGetControl(){
+    return HotkeyEditorConfig;
+}
+
+static int HotkeyEditorConfigGetName(){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Name");
+}
+
+static int HotkeyEditorConfigGetDesc(){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Description");
+}
+
+static int HotkeyEditorGetConfigUndo(){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Undo");
+}
+
+static int HotkeyEditorGetConfigInputCheckBox(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_InputCheckBox"+IntToString(index));
+}
+
+static int HotkeyEditorGetConfigWarning(){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Warning");
+}
+
+static int HotkeyEditorGetConfigWarningLabel(){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Warning_Text");
+}
+
+static int HotkeyEditorGetConfigHotkey(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Hotkey"+IntToString(index));
+}
+
+static int HotkeyEditorGetConfigHotkeyShow(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Hotkey"+IntToString(index)+"_Show");
+}
+
+static int HotkeyEditorGetConfigHotkeyPick(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Hotkey"+IntToString(index)+"_Pick");
+}
+
+static int HotkeyEditorGetConfigHotkeyKill(int index){
+    return DataTableGetInt(true, "$INTERNAL_HotkeyEditorConfig_Hotkey"+IntToString(index)+"_Kill");
+}
+
+void DebugCreateUI(){
+    int i;
+    int k;
+    playergroup pg = PlayerGroupActive();
+    int p;
+    bool enabled;
+    bool b;
+    int dummy;
+    string dataTable;
+    string inString;
+    // if(!DEBUG_MODE) { Dbg("Debug mode is not on"); return; } 
+
+    if(StoryDebugMenu == c_invalidDialogControlId){
+
+        StoryDebugMenu = DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer/FullscreenUpperContainer"), c_triggerControlTypePanel, "DebugMenu");
+        DialogControlSetPropertyAsBool(StoryDebugMenu, c_triggerControlPropertyVisible, pg, false);
+        // Toggle Menu Button
+        StoryDebugMenuToggle_t = TriggerCreate("DebugMenuToggle_Func");
+        TriggerAddEventChatMessage(StoryDebugMenuToggle_t, c_playerAny, "DebugTools", false);
+        // Toggle Buttons
+        StoryDebugToggleButton[0] = DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer/FullscreenUpperContainer"), c_triggerControlTypeButton, "MenuBar/DebugButton");
+        TriggerAddEventDialogControl(StoryDebugMenuToggle_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+
+        //---------------------------------------- Debug TAB ---------------------------------------- //
+            StoryDebugCheatsResponses_t = TriggerCreate("DebugCheatsMenuResponses_Func");
+            TriggerEnable(StoryDebugCheatsResponses_t, false);
+
+            StoryDebugCheatsToggle = DialogControlHookup(StoryDebugMenu, c_triggerControlTypeCheckBox, "DebugTabControl/PanelContainer/DebugCheatsTab/DebugCheckbox");
+            TriggerAddEventDialogControl(StoryDebugCheatsResponses_t, c_playerAny, StoryDebugCheatsToggle, c_triggerControlEventTypeChecked);
+
+            for (i = 0; i < c_StoryDebugCheatsArraySize; i += 1) {
+                StoryDebugCheatsItems[i] = DialogControlHookup(StoryDebugMenu, c_triggerControlTypeCheckBox, "DebugTabControl/PanelContainer/DebugCheatsTab/CheckBox_" + IntToStringDoubleDigit(i));
+                TriggerAddEventDialogControl(StoryDebugCheatsResponses_t, c_playerAny, StoryDebugCheatsItems[i], c_triggerControlEventTypeChecked);
+            }
+
+            TriggerEnable(StoryDebugCheatsResponses_t, true);
+            for (i = 1; i <= PlayerGroupCount(pg); i += 1) {
+                p = PlayerGroupPlayer(pg, i);
+                enabled = false;
+                if((p > 0 && p <= c_MAX_PLAYER_COUNT) && (PlayerStatus(p) == c_playerStatusActive)){
+
+                    enabled = plyr_OptionsBankLoadValueAsBool(p, c_plyrBankKey_DebugCheatsEnabled);
+                    gv_DebugCheats[p].isEnabled = enabled;
+
+                    for (i = 0; i < c_StoryDebugCheatsArraySize; i += 1) {
+                        enabled = false;
+                        if(BankSectionExists(gv_plyr[p].Bank, c_plyrOptionBankSection)){
+                            if(BankKeyExists(gv_plyr[p].Bank, c_plyrOptionBankSection, c_plyrBankKey_DebugCheatsModule+IntToString(i))){
+                                enabled = IntToBool(StringToInt(BankValueGetAsString(gv_plyr[p].Bank, c_plyrOptionBankSection, c_plyrBankKey_DebugCheatsModule+IntToString(i))));
+                            }
+                        }
+
+                        if(enabled == false){
+                            TriggerEnable(StoryDebugCheatsResponses_t, false);
+                            // Check disabled modules so we can trigger Unchecked event.
+                            DialogControlSetPropertyAsBool(StoryDebugCheatsItems[i], c_triggerControlPropertyChecked, PlayerGroupSingle(p), true);
+                            TriggerEnable(StoryDebugCheatsResponses_t, true);
+                        }
+                        DialogControlSetPropertyAsBool(StoryDebugCheatsItems[i], c_triggerControlPropertyChecked, PlayerGroupSingle(p), enabled);
+                        gv_DebugCheats[p].moduleEnabled[i] = enabled;
+                    }
+
+                    if(gv_DebugCheats[p].isEnabled == false){
+                        TriggerEnable(StoryDebugCheatsResponses_t, false);
+                        // Check disabled modules so we can trigger Unchecked event.
+                        DialogControlSetPropertyAsBool(StoryDebugCheatsToggle, c_triggerControlPropertyChecked, PlayerGroupSingle(p), true);
+                        TriggerEnable(StoryDebugCheatsResponses_t, true);
+                    }
+                    DialogControlSetPropertyAsBool(StoryDebugCheatsToggle, c_triggerControlPropertyChecked, PlayerGroupSingle(p), gv_DebugCheats[p].isEnabled);
+                }  
+            }
+
+        // ------------------------------------------------------------------------------------------ //
+
+        //---------------------------------------- Hotkey TAB ---------------------------------------- //
+            HotkeyEditorListResponses_t = TriggerCreate("HotkeyEditorListResponses_Func");
+            TriggerEnable(HotkeyEditorListResponses_t, true);
+            HotkeyEditorContainer = DialogControlHookup(StoryDebugMenu, c_triggerControlTypePanel, "$HotkeyEditorContainer");
+
+            dataTable = "HotkeyGroup";
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Count", UserDataInstanceCount(dataTable));
+            for (i = 0; i < UserDataInstanceCount(dataTable); i += 1) {
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_List"+IntToString(i), DialogControlHookup(HotkeyEditorContainer, c_triggerControlTypePanel, "HotkeyGroup"+IntToString(i)+"/List"));
+                //SelectedIndex EditBox
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_List"+IntToString(i)+"_SelectedIndex", DialogControlHookup(HotkeyEditorContainer, c_triggerControlTypeEditBox, "HotkeyGroup"+IntToString(i)+"/List/SelectedIndex"));
+                DialogControlSetPropertyAsString(DialogControlLastCreated(), c_triggerControlPropertyEditText, pg, IntToString(-2));
+
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Button"+IntToString(i), DialogControlHookup(HotkeyEditorContainer, c_triggerControlTypeButton, "HotkeyGroup"+IntToString(i)+"Button"));
+                DialogControlSetPropertyAsBool(DialogControlLastCreated(), c_triggerControlPropertyVisible, pg, true);
+                DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, UserDataGetText(dataTable, UserDataInstance(dataTable, i+1), "Name", 1));
+                TriggerAddEventDialogControl(HotkeyEditorListResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+            }
+
+            // HotkeyEditorFrame
+            dataTable = "HotkeyEditorConfig";
+            HotkeyEditorConfigResponses_t = TriggerCreate("HotkeyEditorConfigResponses_Func");
+            TriggerEnable(HotkeyEditorConfigResponses_t, false);
+            HotkeyEditorConfig = DialogControlHookup(StoryDebugMenu, c_triggerControlTypePanel, "$HotkeyEditorConfig");
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Name", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeLabel, "Name"));
+            DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, StringToText("HOOKEDUP"));
+
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Description", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeLabel, "Description"));
+            DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, StringToText("HOOKEDUP_DESC"));
+
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Undo", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeButton, "Undo"));
+            TriggerAddEventDialogControl(HotkeyEditorConfigResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Warning", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypePanel, "Warning"));
+            DataTableSetInt(true, "$INTERNAL_"+dataTable+"_Warning_Text", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeLabel, "Warning/Text"));
+
+            for (i = 0; i <= 2; i += 1) {
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_InputCheckBox"+IntToString(i), DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeCheckBox, "CheckBox_"+IntToString(i)));
+                TriggerAddEventDialogControl(HotkeyEditorConfigResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeChecked);
+                DialogControlSetPropertyAsBool(DialogControlLastCreated(), c_triggerControlPropertyChecked, pg, false);
+            }
+
+            for (i = 0; i <= 2; i += 1) {
+                inString = "Hotkey"+IntToString(i);
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_"+inString, DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypePanel, inString));
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_"+inString+"_Show", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeButton, inString+"/Show"));
+                TriggerAddEventDialogControl(HotkeyEditorConfigResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_"+inString+"_Pick", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeButton, inString+"/Pick"));
+                TriggerAddEventDialogControl(HotkeyEditorConfigResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+                DataTableSetInt(true, "$INTERNAL_"+dataTable+"_"+inString+"_Kill", DialogControlHookup(HotkeyEditorConfig, c_triggerControlTypeButton, inString+"/Kill"));
+                TriggerAddEventDialogControl(HotkeyEditorConfigResponses_t, c_playerAny, DialogControlLastCreated(), c_triggerControlEventTypeClick);
+            }
+
+            // DialogControlSetPropertyAsText(DialogControlLastCreated(), c_triggerControlPropertyText, pg, StringToText("HOOKEDUP_DESC"));
+
+            // TriggerAddEventDialogControl(HotkeyEditorResponses_t, c_playerAny, HotkeyEditorListBox, c_triggerControlEventTypeSelectionChanged);
+
+            // for (i = 0; i <= 9; i += 1) {
+            //     StoryDebugCheatsItems[i] = DialogControlHookup(StoryDebugMenu, c_triggerControlTypeCheckBox, "DebugTabControl/PanelContainer/DebugCheatsTab/CheckBox_" + IntToStringDoubleDigit(i));
+            //     TriggerAddEventDialogControl(HotkeyEditorResponses_t, c_playerAny, StoryDebugCheatsItems[i], c_triggerControlEventTypeChecked);
+            // }
+
+
+            // for (i = 1; i <= PlayerGroupCount(pg); i += 1) {
+            //     p = PlayerGroupPlayer(pg, i);
+            //     if((p > 0 && p <= c_MAX_PLAYER_COUNT) && (PlayerStatus(p) == c_playerStatusActive)){
+            //         TriggerEnable(StoryDebugCheatsResponses_t, true);
+
+            //         enabled = plyr_OptionsBankLoadValueAsBool(p, c_plyrBankKey_DebugCheatsEnabled);
+            //         gv_DebugCheats[p].isEnabled = enabled;
+
+            //         DialogControlSetPropertyAsBool(StoryDebugCheatsToggle, c_triggerControlPropertyChecked, PlayerGroupSingle(p), enabled);
+
+            //         for (i = 0; i < c_StoryDebugCheatsArraySize; i += 1) {
+            //             enabled = false;
+            //             if(BankSectionExists(gv_plyr[p].Bank, c_plyrOptionBankSection)){
+            //                 if(BankKeyExists(gv_plyr[p].Bank, c_plyrOptionBankSection, c_plyrBankKey_DebugCheatsModule+IntToString(i))){
+            //                     enabled = IntToBool(StringToInt(BankValueGetAsString(gv_plyr[p].Bank, c_plyrOptionBankSection, c_plyrBankKey_DebugCheatsModule+IntToString(i))));
+            //                 }
+            //             }
+            //             DialogControlSetPropertyAsBool(StoryDebugCheatsItems[i], c_triggerControlPropertyChecked, PlayerGroupSingle(p), enabled);
+            //             gv_DebugCheats[p].moduleEnabled[i] = enabled;
+            //         }
+            //     }  
+            // }
+
+        // ------------------------------------------------------------------------------------------ //
+
+        TriggerDebugOutput(c_DEBUG_TYPE_MAIN, StringToText("Created Debug UI"), false );
+        return;
+    }
+    TriggerDebugOutput(c_DEBUG_TYPE_MAIN, StringToText("Debug UI already exists"), false );
+    return;
+
+}
+
+bool DebugMapMenuResponses_Func(bool test_conds, bool run_actions){
+    int index;
+    int i;
+    int lv_p = EventPlayer();
+    playergroup pg = PlayerGroupSingle(lv_p);
+    // for (index = 0; index <= 9; index += 1) {
+    //     if(EventDialogControl() == StoryDebugMapItems[index]){
+    //         break;
+    //     }
+    // }
+
+    if((EventDialogControl() == StoryDebugMapConfirm) && (EventDialogControlEventType() == c_triggerControlEventTypeClick)){
+        DialogControlSetEnabled(StoryDebugMapConfirm, pg, false);
+        // for (i = 0; i < 10; i += 1) {
+        //     UserDataSetInt(c_StoryMaps_UserType, UserDataInstance(c_StoryMaps_UserType, i + 1), "Completed", 1, BoolToInt(DialogControlGetPropertyAsBool(StoryDebugMapItems[i], c_triggerControlPropertyChecked, lv_p)));
+        //     SaveMapToBank(i + 1);
+        // }
+        DialogControlSetEnabled(StoryDebugMapConfirm, pg, true);
+
+    }
+
+    if((EventDialogControl() == StoryDebugMapPulldown) && (EventDialogControlEventType() == c_triggerControlEventTypeSelectionChanged)){
+        DialogControlSetEnabled(StoryDebugMapPulldown, pg, false);
+        StoryDebugCurrentMap = DialogControlGetPropertyAsInt(EventDialogControl(), c_triggerControlPropertySelectionIndex, lv_p);
+        DialogControlSetEnabled(StoryDebugMapPulldown, pg, true);
+    }
+
+    return true;
+}
+
+bool DebugCheatsMenuResponses_Func(bool test_conds, bool run_actions){
+    int index;
+    int i;
+    int p = EventPlayer();
+    playergroup pg = PlayerGroupSingle(p);
+    int eventControl = EventDialogControl();
+    bool checked;
+    int module = -1;
+    structref<HotkeyManager> manager = gv_HotkeyManager[p-1];
+    if(EventDialogControlEventType() == c_triggerControlEventTypeChecked){
+        checked = DialogControlGetPropertyAsBool(eventControl, c_triggerControlPropertyChecked, p);
+        if(eventControl == StoryDebugCheatsToggle){
+            HotkeyManagerTurnOnOff(p, checked);
+        }
+        // 0 - playerInputHandler
+        else if(eventControl == StoryDebugCheatsItems[0]){
+            plyr_TrackingTrigger_OnOff(p, ge_TrackType_Keyboard, checked);
+            plyr_TrackingTrigger_OnOff(p, ge_TrackType_MouseClick, checked);
+            plyr_TrackingTrigger_OnOff(p, ge_TrackType_MouseMove, checked);
+            plyr_TrackingTrigger_OnOff(p, ge_TrackType_MouseWheel, checked);
+            TriggerEnable(HotkeyEditorConfigResponses_t, checked);
+            DialogControlSetPropertyAsBool(HotkeyEditorConfig, c_triggerControlPropertyEnabled, pg, checked);
+            module = 0;
+        }
+        // 1 - chatRecorder
+        else if(eventControl == StoryDebugCheatsItems[1]){
+            if(DebugChatRecorder_Active[p]){
+                DebugChatRecorder_Active[p] = false;
+            }
+            index = HotkeyIndexFromId(manager, "ChatRecorderHistoryToggle");
+            if(manager.hotkey[index].childToggle){
+                HotkeyToggleChildren(manager, manager.hotkey[index]);
+            }
+            HotkeyManagerIdEnabledOnOff(manager, "ChatRecorderHistoryToggle", checked);
+            module = 1;
+        }
+        // 2 - freeCam
+        else if(eventControl == StoryDebugCheatsItems[2]){
+            if(FreeCam_Active[p]){
+                FreeCam_Deactivate(p);
+            }   
+            index = HotkeyIndexFromId(manager, "FreeCamToggle");
+            if(manager.hotkey[index].childToggle){
+                HotkeyToggleChildren(manager, manager.hotkey[index]);
+            }
+            HotkeyManagerIdEnabledOnOff(manager, "FreeCamToggle", checked);
+            module = 2;
+        }
+        // 3 - measuringTool
+        else if(eventControl == StoryDebugCheatsItems[3]){
+            if(MeasuringTool_Active[p]){
+                MeasuringTool_Active[p] = false;
+            }   
+            index = HotkeyIndexFromId(manager, "MeasuringToolToggle");
+            if(manager.hotkey[index].childToggle){
+                HotkeyToggleChildren(manager, manager.hotkey[index]);
+            }
+            HotkeyManagerIdEnabledOnOff(manager, "MeasuringToolToggle", checked);
+            module = 3;
+        }
+        // 4 - unitCheats
+        else if(eventControl == StoryDebugCheatsItems[4]){
+            module = 4;
+        }
+        // // 5 - chatRecorder
+        // else if(StoryDebugCheatsItems[5]){
+        //     gv_DebugCheats[p].chatRecorderEnabled = checked;
+        // }
+        else{
+            module = -1;
+        }
+
+        if(module != -1){
+            gv_DebugCheats[p].moduleEnabled[module] = checked;
+            plyr_OptionsBankSaveValue(p, c_plyrBankKey_DebugCheatsModule+IntToString(module), IntToString(BoolToInt(checked)));
+        }
+    }
+
+
+    // if(checked == StoryDebugMapPulldown && EventDialogControlEventType() == c_triggerControlEventTypeSelectionChanged){
+    //     DialogControlSetEnabled(StoryDebugMapPulldown, pg, false);
+    //     StoryDebugCurrentMap = DialogControlGetPropertyAsInt(EventDialogControl(), c_triggerControlPropertySelectionIndex, lv_p);
+    //     DialogControlSetEnabled(StoryDebugMapPulldown, pg, true);
+    // }
+
+    return true;
+}
+
+bool HotkeyEditorListResponses_Func(bool test_conds, bool run_actions){
+    int i;
+    int k;
+    int j;
+    int player = EventPlayer();
+    playergroup pg = PlayerGroupSingle(player);
+    int eventControl = EventDialogControl();
+    int selectedItem;
+    int count;
+    int itemCount;
+    int di;
+    int index = -1;
+    string dataTable;
+    int hotkeyIndex;
+    bool wasEnabled;
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+
+    if(EventDialogControlEventType() == c_triggerControlEventTypeClick){
+        count = DataTableGetInt(true, "$INTERNAL_HotkeyGroup_Count");
+        for (i = 0; i < count; i += 1) {
+            if(DataTableValueExists(true, "$INTERNAL_HotkeyGroup_Button"+IntToString(i))){
+                di = DataTableGetInt(true , "$INTERNAL_HotkeyGroup_Button"+IntToString(i));
+                if(di == eventControl){
+                    di = DataTableGetInt(true , "$INTERNAL_HotkeyGroup_List"+IntToString(i)+"_SelectedIndex");
+                    if(DialogControlGetPropertyAsString(di, c_triggerControlPropertyEditText, player) != IntToString(-2)){
+                        HotkeyGroupSetSelectedGroup(player, -2);
+                        HotkeyGroupSetSelectedItem(player, -2);
+                        DialogControlSetPropertyAsText(HotkeyEditorConfigGetName(), c_triggerControlPropertyText, pg, StringToText(""));
+                        DialogControlSetPropertyAsText(HotkeyEditorConfigGetDesc(), c_triggerControlPropertyText, pg, StringToText(""));
+                        DialogControlSetPropertyAsBool(HotkeyEditorConfig, c_triggerControlPropertyVisible, pg, false);
+
+                    }
+                    DialogControlSetPropertyAsString(di, c_triggerControlPropertyEditText, pg, IntToString(-2));
+                    return true;
+                }
+            }
+            itemCount = DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(i)+"_"+IntToString(player)+"_Count");
+            for (k = 1; k <= itemCount; k += 1) {
+                dataTable = "$INTERNAL_HotkeyGroup_"+IntToString(i)+"_"+IntToString(player)+"_Item"+IntToString(k);
+                if(DataTableValueExists(true, dataTable)){
+                    di = DataTableGetInt(true , dataTable);
+                    if(di == eventControl){
+                        di = DataTableGetInt(true , "$INTERNAL_HotkeyGroup_List"+IntToString(i)+"_SelectedIndex");
+                        DialogControlSetPropertyAsString(di, c_triggerControlPropertyEditText, pg, IntToString(k));
+
+                        HotkeyGroupSetSelectedGroup(player, i);
+                        HotkeyGroupSetSelectedItem(player, k);
+
+                        hotkeyIndex = HotkeyIndexFromSelectedListItem(player, i, k);
+                        // hotkeyIndex = DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(i)+"_"+IntToString(player)+"_Hotkey"+IntToString(k));
+                        DialogControlSetPropertyAsBool(HotkeyEditorConfig, c_triggerControlPropertyVisible, pg, true);
+                        DialogControlSetPropertyAsText(HotkeyEditorConfigGetName(), c_triggerControlPropertyText, pg, manager.hotkey[hotkeyIndex].name);
+                        DialogControlSetPropertyAsText(HotkeyEditorConfigGetDesc(), c_triggerControlPropertyText, pg, manager.hotkey[hotkeyIndex].desc);
+
+                        for (j = 0; j <= 2; j += 1) {
+
+                            wasEnabled = TriggerIsEnabled(HotkeyEditorConfigResponses_t);
+                            if(wasEnabled){ TriggerEnable(HotkeyEditorConfigResponses_t, false); }
+                            DialogControlSetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(j), c_triggerControlPropertyChecked, pg, false);
+                            if(StringContains(manager.hotkey[hotkeyIndex].inputType, InputTypeStringFromType(j), c_stringAnywhere, false)){
+                                DialogControlSetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(j), c_triggerControlPropertyChecked, pg, true);
+
+                            }
+                            if(wasEnabled){ TriggerEnable(HotkeyEditorConfigResponses_t, true); }
+                            
+                            if(manager.hotkey[hotkeyIndex].eventType[j] != -1){
+                                DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(j), pg, "HasHotkey", "True");
+                                DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(j), c_triggerControlPropertyText, pg, manager.hotkey[hotkeyIndex].hotkeyText[j]);
+                            }else{ 
+                                DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(j), pg, "HasHotkey", "False");
+                                DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(j), c_triggerControlPropertyText, pg, StringToText(""));
+                            }
+                            DialogControlSetPropertyAsBool(HotkeyEditorConfig, c_triggerControlPropertyEnabled, pg, manager.hotkey[hotkeyIndex].editable);
+                        }
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool HotkeyEditorConfigResponses_Func(bool test_conds, bool run_actions){
+    int i;
+    int k;
+    int eventControl = EventDialogControl();
+    int player = EventPlayer();
+    int index;
+    playergroup pg = PlayerGroupSingle(player);
+    bool edited;
+    string combineText = null;
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+    structref<HotkeyManagerHotkey> hotkey;
+    string userType = c_hotkeyManagerUserType;
+    string instance;
+    string type;
+    bool wasEnabled;
+
+    if(!gv_DebugCheats[player].moduleEnabled[ge_DebugCheatsModule_plyrInputHandler]){ return false; }
+
+    if(EventDialogControlEventType() == c_triggerControlEventTypeClick){
+
+        if(eventControl == HotkeyEditorGetConfigUndo()){
+            //Undo
+            index = HotkeyIndexFromSelectedListItem(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+            if(index == -1){ return false; }
+            hotkey = manager.hotkey[index];
+            instance = hotkey.id;
+            hotkey.inputType = UserDataGetString(userType, instance, "InputType", 1);
+            hotkey.edited = false;
+            for (i = 0; i <= 2; i += 1) {
+                hotkey.input[i] = UserDataGetString(userType, instance, "Input", i + 1);
+                hotkey.eventType[i] = EventTypeFromInput(hotkey.input[i], 0, c_hotkeyManagerInputCount);
+                hotkey.modifier[i] =  UserDataGetString(userType, instance, "Modifier", i + 1);
+                hotkey.hotkeyText[i] = HotkeyManagerConstructHotkeyText(hotkey, i);
+
+                DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(i), c_triggerControlPropertyText, pg, hotkey.hotkeyText[i]);
+                if(hotkey.eventType[i] == -1){
+                    DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(i), pg, "HasHotkey", "False");
+
+                }else{
+                    DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(i), pg, "HasHotkey", "True");
+                }
+
+                wasEnabled = TriggerIsEnabled(HotkeyEditorConfigResponses_t);
+                if(wasEnabled){ TriggerEnable(HotkeyEditorConfigResponses_t, false); }
+                DialogControlSetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(i), c_triggerControlPropertyChecked, pg, false); 
+                if(StringContains(hotkey.inputType, InputTypeStringFromType(i), c_stringAnywhere, false)){
+                    DialogControlSetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(i), c_triggerControlPropertyChecked, pg, true);
+                }
+                if(wasEnabled){ TriggerEnable(HotkeyEditorConfigResponses_t, true); }
+
+                HotkeyManagerHotkeySaveEditable(player, manager.hotkey[index], i);
+            }
+            
+            HotkeyManagerSaveSettings(player);
+            
+            combineText = HotkeyManagerCombineHotkeyText(hotkey);
+            if(combineText == null) {
+                combineText = "";
+            }
+            k = HotkeyManagerGetListItemKeys(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+            DialogControlSetPropertyAsText(k, c_triggerControlPropertyText, pg, StringToText(combineText));
+
+            // HotkeyManagerSaveSettings(player);
+            return true;
+        }
+
+        for (i = 0; i <= 2; i += 1) {
+            if(eventControl == HotkeyEditorGetConfigHotkeyPick(i)){
+                // Dbg("Pick");
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputState", true);
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorModifier", true);
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputStateless", true);
+                DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(i), pg, "Picking", "True");
+                DataTableSetInt(true, "$INTERNAL_HotkeyEditorConfig_WaitingIndex"+IntToString(player), i);
+                plyr_clearInputs(player);
+                return true;
+            }
+            else if(eventControl == HotkeyEditorGetConfigHotkeyShow(i)){
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputState", true);
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorModifier", true);
+                HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputStateless", true);
+                DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(i), pg, "Picking", "True");
+                DataTableSetInt(true, "$INTERNAL_HotkeyEditorConfig_WaitingIndex"+IntToString(player), i);
+                plyr_clearInputs(player);
+                return true;
+            }
+            else if(eventControl == HotkeyEditorGetConfigHotkeyKill(i)){
+                // Dbg("Kill")
+                index = HotkeyIndexFromSelectedListItem(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+                if(index == -1){ return false; }
+
+                edited = false;
+                if(i != 2){
+                    for (k = i; k <= 1; k += 1) {
+                        if(manager.hotkey[index].eventType[k+1] != -1){
+                            manager.hotkey[index].eventType[k] = manager.hotkey[index].eventType[k+1];
+                            manager.hotkey[index].input[k] = manager.hotkey[index].input[k+1];
+                            manager.hotkey[index].modifier[k] = manager.hotkey[index].modifier[k+1];
+                            manager.hotkey[index].hotkeyText[k] = manager.hotkey[index].hotkeyText[k+1];
+                            manager.hotkey[index].hotkeyText[k+1] = null;
+                            manager.hotkey[index].eventType[k+1] = -1;
+                            manager.hotkey[index].input[k+1] = null;
+                            manager.hotkey[index].modifier[k+1] = null;
+                            DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(k+1), pg, "HasHotkey", "False");
+                            DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(k), pg, "HasHotkey", "True");
+                            DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(k), c_triggerControlPropertyText, pg, manager.hotkey[index].hotkeyText[k]);
+                            DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(k+1), c_triggerControlPropertyText, pg, StringToText(""));
+
+                            HotkeyManagerHotkeySaveEditable(player, manager.hotkey[index], k);
+                            HotkeyManagerHotkeySaveEditable(player, manager.hotkey[index], k+1);
+                            edited = true;
+                        }
+                    }
+                    HotkeyManagerSaveSettings(player);
+                }
+                if(edited == false){
+                    HotkeyManagerHotkeyClearEditable(manager.hotkey[index], i);
+                    DialogControlSetAnimationState(HotkeyEditorGetConfigHotkey(i), pg, "HasHotkey", "False");
+                    DialogControlSetPropertyAsText(HotkeyEditorGetConfigHotkeyPick(i), c_triggerControlPropertyText, pg, StringToText(""));
+
+                    HotkeyManagerHotkeySaveEditable(player, manager.hotkey[index], i);
+                    HotkeyManagerSaveSettings(player);
+                }
+
+                combineText = HotkeyManagerCombineHotkeyText(manager.hotkey[index]);
+                if(combineText == null) {
+                    combineText = "";
+                }
+                k = HotkeyManagerGetListItemKeys(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+                DialogControlSetPropertyAsText(k, c_triggerControlPropertyText, pg, StringToText(combineText));
+
+                // hotkeyIndex = DataTableGetInt(true, "$INTERNAL_HotkeyGroup_"+IntToString(i)+"_"+IntToString(player)+"_Hotkey"+IntToString(k));
+                // manager.hotkey[0].input[i] = "";
+  
+                return true;
+            }
+        }
+    }
+    else if(EventDialogControlEventType() == c_triggerControlEventTypeChecked){
+        for (i = 0; i <= 2; i += 1) {
+            if(eventControl == HotkeyEditorGetConfigInputCheckBox(i)){
+                index = HotkeyIndexFromSelectedListItem(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+                if(index == -1){ return false; }
+                hotkey = manager.hotkey[index];
+
+                hotkey.inputType = "";
+                for (k = 0; k <= 2; k += 1) {
+                    if(DialogControlGetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(k), c_triggerControlPropertyChecked, player)){
+                        if(k == 0){ type = "Up"; }
+                        else if( k == 1){type = "Down"; }
+                        else if( k == 2){type = "Repeat"; }
+                    } else{ type = ""; }
+                    if(StringIsValid(type)){
+                        if(StringIsValid(hotkey.inputType)){
+                            hotkey.inputType = hotkey.inputType + " " +type;
+                        } else{ hotkey.inputType = type; }
+                    }
+                }
+
+                UserDataSetString(c_hotkeyManagerUserType+IntToString(player), hotkey.id, "InputType", 1, hotkey.inputType);
+                HotkeyManagerSaveSettings(player);
+                hotkey.edited = true;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool HotkeyManagerEditorReceiver(bool test_conds, bool run_actions) {
+    int player = GenericEventPlayer();
+    playergroup pg = PlayerGroupSingle(player);
+    int event = ConvertStringToTrackingType(EventGenericName());
+    int key = GenericEventKey();
+    int button = GenericEventMouseButton();
+    int state = GenericEventInputState();
+    fixed spin = GenericEventWheelSpin();
+    int i;
+    int index;
+    string parameter;
+    structref<gs_Player> plyr;
+    string dataTable;
+    string modifierList = "";
+    string inputString = "";
+    int modifierCount;
+    int control;
+    int controlIndex;
+    int input;
+    bool resume;
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+    string combineText;
+    parameter = manager.hotkey[GetLastHotkeyIndex(player)].parameter[0];
+    index = HotkeyIndexFromSelectedListItem(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+    if(index == -1){ TriggerDestroy(TriggerGetCurrent()); return false; }
+    // Dbg("INPUT RECEIVED >" +IntToString(index));
+    // Dbg("Parameter>"+parameter);
+    if(parameter == "InputState" || parameter == "InputStateless"){
+
+        plyr = gv_plyr[player];
+        for (i = 0; i <= c_INPUT_KEY_COUNT; i += 1) {
+            if(modifierCount > 2){ break; }
+            if(plyr.keyDown[i]){
+                modifierCount += 1;
+                if(StringIsValid(modifierList)){
+                    modifierList = modifierList + " " + ge_Input[i];
+                }
+                else{
+                    modifierList = ge_Input[i];
+                }
+            }
+        }
+        for (i = 1; i <= c_MOUSE_BUTTON_COUNT; i += 1) {
+            if(modifierCount > 2){ break; }
+            if(plyr.mouseButtonDown[i]){
+                modifierCount += 1;
+                if(StringIsValid(modifierList)){
+                    modifierList = modifierList + " " + ge_Input[c_hotkeyManagerInput_keyEnd + i];
+                }
+                else{
+                    modifierList = ge_Input[c_hotkeyManagerInput_keyEnd + i];
+                }
+            }
+        }
+
+        if(event == ge_Tracking_KeyPressed){
+            inputString = ge_Input[key];
+        }
+        else if(event == ge_Tracking_MouseClicked){
+            inputString = ge_Input[c_hotkeyManagerInput_keyEnd + button];
+        }
+        else if(event == ge_Tracking_MouseWheel){
+            // if((hotkey.input[i] == "WheelUp" && spin > 0.0) || (hotkey.input[i] == "WheelDown" && spin < 0.0)){
+            if(spin < 0.0){
+                inputString = ge_Input[c_hotkeyManagerInput_wheelStart];
+            }
+            else if(spin > 0.0){
+                inputString = ge_Input[c_hotkeyManagerInput_wheelEnd];
+            }
+            else{
+                TriggerDestroy(TriggerGetCurrent());
+                return false;
+            }
+        }
+        else if(event == ge_Tracking_MouseMoved){
+            // DbgF(Vector2f_getVectorMag(plyr.mouseUI_MoveVector), c_fixedPrecisionAny);
+            
+            if(Vector2f_getVectorMag(plyr.mouseUI_MoveVector) > 280){
+                inputString = ge_Input[c_hotkeyManagerInput_mouseMoved];
+            }else{
+                TriggerDestroy(TriggerGetCurrent());
+                return false;
+            }
+        }
+
+        HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputState", false);
+        HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorModifier", false);
+        HotkeyManagerIdEnabledOnOff(manager, "HotkeyEditorInputStateless", false);
+
+        // Dbg("mod>"+modifierList);
+        // Dbg("input>"+inputString);
+        dataTable = "$INTERNAL_HotkeyEditorConfig_WaitingIndex"+IntToString(player);
+        controlIndex = DataTableGetInt(true, dataTable);
+        control = HotkeyEditorGetConfigHotkey(controlIndex); 
+        DialogControlSetAnimationState(control, pg, "Picking", "False");
+        DialogControlSetAnimationState(control, pg, "HasHotkey", "True");
+        DataTableValueRemove(true, dataTable);
+
+        if(parameter == "InputState"){
+            if(!StringIsValid(manager.hotkey[index].inputType)){
+                manager.hotkey[index].inputType = "Down";
+                UserDataSetString(c_hotkeyManagerUserType+IntToString(player), manager.hotkey[index].id, "InputType", 1, manager.hotkey[index].inputType);
+                DialogControlSetPropertyAsBool(HotkeyEditorGetConfigInputCheckBox(1), c_triggerControlPropertyChecked, pg, true);
+            }
+        }
+        else if(parameter == "InputStateless"){
+
+        }
+
+        manager.hotkey[index].eventType[controlIndex] = event;
+        if(StringIsValid(modifierList)){
+            manager.hotkey[index].modifier[controlIndex] = modifierList;
+        } else{
+            manager.hotkey[index].modifier[controlIndex] = "";
+        }
+        manager.hotkey[index].input[controlIndex] = inputString;
+        manager.hotkey[index].hotkeyText[controlIndex] = HotkeyManagerConstructHotkeyText(manager.hotkey[index], controlIndex);
+        control = HotkeyEditorGetConfigHotkeyPick(controlIndex);
+        DialogControlSetPropertyAsText(control, c_triggerControlPropertyText, pg, manager.hotkey[index].hotkeyText[controlIndex]);
+
+        combineText = HotkeyManagerCombineHotkeyText(manager.hotkey[index]);
+        if(combineText == null) {
+            combineText = "";
+        }
+        control = HotkeyManagerGetListItemKeys(player, HotkeyGroupGetSelectedGroup(player), HotkeyGroupGetSelectedItem(player));
+        DialogControlSetPropertyAsText(control, c_triggerControlPropertyText, pg, StringToText(combineText));
+        
+        HotkeyManagerHotkeySaveEditable(player, manager.hotkey[index], controlIndex);
+        HotkeyManagerSaveSettings(player);
+        // Dbg(">"+IntToString(InputIndexFromInput(event, StringWord(inputString, i + 1))));
+
+
+    }
+    else if(parameter == "Modifier"){
+
+    }
+    else{
+
+    }
+
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}

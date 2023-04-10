@@ -1,0 +1,76 @@
+const string c_StoryMaps_UserType = "Story1Maps";
+const string c_StoryMaps_Directory = "Story/";
+const string c_StoryMaps_BankSection = "StoryMaps";
+const string c_plyrBankKey_DebugCheatsEnabled = "DebugCheatsEnabled";
+const string c_plyrBankKey_DebugCheatsModule = "Module";
+const int c_StoryDebugCheatsArraySize = 5;
+
+const int ge_DebugCheatsModule_plyrInputHandler = 0;
+const int ge_DebugCheatsModule_chatRecorder = 1;
+const int ge_DebugCheatsModule_freeCam = 2;
+const int ge_DebugCheatsModule_measuringTool = 3;
+const int ge_DebugCheatsModule_unitCheats = 4;
+// const int ge_DebugCheatsModule_unitCopy = 3;
+
+    // Debug Menu
+int StoryDebugMenu;
+int[2] StoryDebugToggleButton;
+int[10] StoryDebugMapItems;
+int StoryDebugMapConfirm;
+int StoryDebugMapReset;
+int StoryDebugMapPulldown;
+int StoryDebugCurrentMap = -1;
+int StoryDebugLastMap = -1;
+
+trigger StoryDebugMapResponses_t;
+trigger StoryDebugMenuToggle_t;
+
+
+trigger StoryDebugCheatsResponses_t;
+int StoryDebugCheatsToggle;
+int[c_StoryDebugCheatsArraySize] StoryDebugCheatsItems;
+
+
+struct gs_DebugCheats {
+    bool isEnabled;
+    bool[c_StoryDebugCheatsArraySize] moduleEnabled;
+};
+
+gs_DebugCheats[c_MAX_PLAYER_COUNT+1] gv_DebugCheats; 
+
+
+trigger HotkeyEditorListResponses_t;
+int HotkeyEditorContainer;
+
+trigger HotkeyEditorConfigResponses_t;
+int HotkeyEditorConfig;
+
+// int[c_StoryDebugCheatsArraySize] StoryDebugCheatsItems;
+
+
+int HotkeyGroupGetList(int index);
+int HotkeyGroupGetButton(int index);
+
+// trigger StoryDebugUnlocksResponses;
+// int [4] StoryDebugUnlocksControlButtons;
+// const int c_StoryDebugUnlocksCheckboxCount = 24;
+// int [c_StoryDebugUnlocksCheckboxCount][2] StoryDebugUnlocksControlItems;
+// string StoryDebugUnlocks_UserType;
+// string [c_StoryDebugUnlocksCheckboxCount] StoryDebugUnlocks_Instance;
+// bitmask [2] StoryDebugUnlocks_LastState;
+
+
+//Cutscene
+// int StoryDebugCutsceneListBox;
+// int StoryDebugCutsceneConfirm;
+// int StoryDebugCutsceneControls;
+// int StoryDebugCutscenePlayer;
+// int [10] StoryDebugCutsceneControlItems;
+
+// string StoryDebugLastHitBookmark;
+// string [64] StoryDebugCutscenes;
+
+// trigger StoryDebugCutsceneResponses;
+// trigger StoryDebugCutsceneControls_Trig;
+// trigger StoryDebugCutsceneKeyboardControls_Trig;
+// trigger StoryDebugLastBookmarkTracker_Trig;

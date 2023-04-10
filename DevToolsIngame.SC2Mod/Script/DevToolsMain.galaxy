@@ -19,11 +19,31 @@ include "Script/DataTableHandler";
 include "Script/DataEditorHandler";
 include "Script/CameraHandler";
 include "Script/FogHandler";
+include "Script/DebugTools/DebugToolsInit"
+
 //include "Script/PortView";
 //include "Script/libGalExe_init";
 
-void DevToolsMain_Init(){
+static int DevToolDelayBox;
+static trigger DevToolDelayBox_Trigger;
+static bool DevToolsDelay = true;
+
+bool DevToolDelayBox_Func(bool test_conds, bool run_actions){
+    DevToolsDelay = false;
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+bool DevToolsInit(bool test_conds, bool run_actions){
     
+    DevToolDelayBox = DialogControlHookupStandard(c_triggerControlTypeEditBox, "UIContainer/ConsoleUIContainer/DevToolsMenuContainer/EventHandler");
+    DevToolDelayBox_Trigger = TriggerCreate("DevToolDelayBox_Func");
+    TriggerAddEventDialogControl(DevToolDelayBox_Trigger, c_playerAny, DevToolDelayBox, c_triggerControlEventTypeTextChanged);
+
+    while(DevToolsDelay){
+        Wait(2.0, c_timeReal);
+    }
+
     ActorMessageHandler_Init();
     CatalogValueHandler_Init();
     CatalogLinkHandler_Init();
@@ -45,4 +65,15 @@ void DevToolsMain_Init(){
     FogHandler_Init();
     //PortView_Init();
 	//gt_libGalExe_Init();
+
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+void DevToolsMain_Init(){
+    trigger t;
+    DEBUG_MODE = true;
+    DebugToolsInit();
+    t = TriggerCreate("DevToolsInit");
+    TriggerExecute(t,false, false);
 }

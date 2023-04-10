@@ -1,0 +1,119 @@
+// Constants
+const int c_MAX_PLAYER_COUNT = 1;
+const int c_MAX_PLAYERS = 1;
+const int c_MOUSE_BUTTON_COUNT = 5;
+const int c_INPUT_KEY_COUNT = 98;
+const fixed c_KEY_REPEAT_DELAY = 0.1875;
+const fixed c_KEY_REPEAT_TICK = 0.02;
+const int c_TRACKING_TYPE_COUNT = 5;
+const bool c_EVENT_SUPPRESSION = true;
+const string  c_plyrBankName = "ZmgPVBdkxJ";
+const string  c_plyrBankBackupEvent = "PlayerBankBackup";
+const string  c_plyrOptionBankSection = "Options";
+const fixed c_plyrOptionsVersion = 1.0; 
+
+const int ge_MouseTrackType_World = 0;
+const int ge_MouseTrackType_UI = 1;
+const int ge_InputType_Up = 0;
+const int ge_InputType_Down = 1;
+const int ge_InputType_Repeat = 2;
+const int ge_Tracking_UnitSelect = 0;
+const int ge_Tracking_UnitDeselect = 1;
+const int ge_Tracking_KeyPressed = 2;
+const int ge_Tracking_MouseClicked = 3;
+const int ge_Tracking_MouseMoved = 4;
+const int ge_Tracking_MouseWheel = 5;
+
+const string ge_Tracking_UnitSelect_String = "UnitSelected";
+const string ge_Tracking_UnitDeselect_String = "UnitDeselected";
+const string ge_Tracking_KeyPressed_String = "KeyPressed";
+const string ge_Tracking_MouseClicked_String = "MouseClicked";
+const string ge_Tracking_MouseMoved_String = "MouseMoved";
+const string ge_Tracking_MouseWheel_String = "MouseWheel";
+
+const int ge_TrackType_MouseMove = 0;
+const int ge_TrackType_MouseClick = 1;
+const int ge_TrackType_Keyboard = 2;
+const int ge_TrackType_Selection = 3;
+const int ge_TrackType_MouseWheel = 4;
+
+struct gs_Player {
+    bool[c_TRACKING_TYPE_COUNT + 1] eventSuppression;
+    bool[c_TRACKING_TYPE_COUNT + 1] isTrackingType;
+    bool[c_TRACKING_TYPE_COUNT + 1] trackingForceAlwaysOn;
+    // Selection & Targeting
+    unit unitSelected;
+    trigger unitSelected_t;
+    trigger unitDeselected_t;
+    bool canSelect;
+
+    //Keys 
+    //Triggers are created for every key so we can do event suppression for keyboards with insane repeat rates and still retain fairly accurate key up detection
+    trigger[c_INPUT_KEY_COUNT + 1][2] keyPressed_t;
+    bool[c_INPUT_KEY_COUNT + 1] keyDown;
+    bool[c_INPUT_KEY_COUNT + 1] keyRepeating;
+    
+    // Mouse
+    trigger[c_MOUSE_BUTTON_COUNT + 1][2] mouseClicked_t;
+    trigger mouseMove_t;
+    trigger mouseWheel_t;
+    
+    bool reverseMouse;
+    fixed mouseSensitivity;
+    bool[c_MOUSE_BUTTON_COUNT + 1] mouseButtonDown;
+    bool[c_MOUSE_BUTTON_COUNT + 1] mouseButtonRepeating;
+    bool mouseTrack_WorldLoc;
+    bool mouseTrack_UILoc;
+
+    point mouseWorld_Move;
+    point mouseUI_Move;
+    point mouseWorld_MoveVector;
+
+    point mouseUI_MoveVector;
+    point[c_MOUSE_BUTTON_COUNT + 1] mouseWorld_Click;
+    point[c_MOUSE_BUTTON_COUNT + 1] mouseUI_Click;
+    
+    fixed lastMouseSpin;
+    bool cameraInputLocked;
+    bool cameraInputCanOverride;
+
+    bank Bank;
+};
+
+gs_Player[c_MAX_PLAYER_COUNT + 1] gv_plyr;
+int plyr_clearInputsTriggerBox;
+trigger plyr_clearInputs_t;
+
+int GenericTrackingTypeFromString();
+int GetTrackingTypeNameFromInt();
+int GenericEventPlayer();
+int GenericEventKey();
+int GenericEventMouseButton();
+int GenericEventInputState();
+fixed GenericEventWheelSpin();
+string ConvertTrackingTypeToString(int type);
+int ConvertStringToTrackingType(string s);
+
+void plyr_SetMouseTrackType (int p, int trackType, bool onOff);
+bool plyr_IsTracked (int p);
+point plyr_getMouseWorldPoint (int p);
+point plyr_getMouseClickPoint (int p, int button);
+bool plyr_CanSelect (int p);
+void plyr_Initialize (playergroup pg,   bool trackMouseMovement,
+                                    bool trackMouseClicks,
+                                    bool trackKeyboard,
+                                    bool trackSelection,
+                                    bool trackMouseWheel);
+
+bool plyr_InitPlayer (int player, string options);
+void plyr_InitGroup(playergroup players, string options);
+void plyr_CameraLockInput(int player, bool lock);
+void plyr_CameraLockInputSetOverride(int player, bool override);
+bool plyr_CameraLockInputGet(int player);
+void plyr_TrackingTrigger_OnOff(int player, int type, bool turnOnOff);
+void plyr_clearInputs(int player);
+bool plyr_clearInputs_Func(bool test_conds, bool run_actions);
+bool plyr_BankBackup_Func(bool test_conds, bool run_actions);
+void plyr_BankRestore(string name, int p);
+void plyr_OptionsBankSaveValue(int p, string key, string value);
+bool plyr_OptionsBankLoadValueAsBool(int p, string key);

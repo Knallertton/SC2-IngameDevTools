@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+    <CActorModel id="PointNormal">
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+        <FogVisibility value="Visible"/>
+    </CActorModel>
+    <CActorModel id="DebugSphere">
+        <On Terms="ActorCreation" Send="Create PointNormalName"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+        <Model value="ActorShapeSphere"/>
+    </CActorModel>
+    <CActorText id="PointNormalName">
+        <Aliases value="_Text"/>
+        <Inherits index="LocalTintColor" value="1"/>
+        <Inherits index="Opacity" value="1"/>
+        <Inherits index="Scale" value="1"/>
+        <Inherits index="TintColor" value="1"/>
+        <Inherits index="Visibility" value="1"/>
+        <FogVisibility value="Visible"/>
+        <Supporter Subject="::Creator"/>
+        <On Terms="SupporterDestruction" Send="Destroy"/>
+    </CActorText>
+    <CActorModel id="PointThreeD">
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+    </CActorModel>
+    <CActorText id="PointThreeDName">
+        <Aliases value="_Text"/>
+        <On Terms="ActorOrphan" Send="Destroy"/>
+    </CActorText>
+    <CEffectEnumArea id="DebugPointCircle">
+        <EditorCategories value=""/>
+        <DebugTrace value="1"/>
+        <AreaArray/>
+    </CEffectEnumArea>
+    <CEffectEnumArea id="DebugUnitRectangle">
+        <EditorCategories value=""/>
+        <DebugTrace value="1"/>
+        <AreaArray/>
+    </CEffectEnumArea>
+    <CUser id="DebugCommands">
+        <Fields Id="Trigger" Type="String"/>
+        <Fields Id="Name" Type="Text"/>
+        <Fields Id="Description" Type="Text"/>
+        <Fields Id="Message" Type="Text" Count="4"/>
+        <Fields Id="Error" Type="Text" Count="4"/>
+        <Fields Id="Enabled" Type="Int"/>
+        <Fields Id="Index" Type="Int"/>
+        <Instances Id="[Default]">
+            <Int Int="1">
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="-1">
+                <Field Id="Index"/>
+            </Int>
+            <Text Text="UserData/DebugCommands/[Default]_Description">
+                <Field Id="Description"/>
+            </Text>
+        </Instances>
+        <Instances Id="Help">
+            <Int>
+                <Field Id="Index"/>
+            </Int>
+            <String String="-h -help">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Help_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Help_Description">
+                <Field Id="Description"/>
+            </Text>
+        </Instances>
+        <Instances Id="Bounds">
+            <Int Int="1">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-bounds">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Bounds_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Bounds_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Bounds_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Bounds_Message_001">
+                <Field Id="Message" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Bounds_Error">
+                <Field Id="Error"/>
+            </Text>
+        </Instances>
+        <Instances Id="Aspect">
+            <Int Int="2">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-asp -aspect">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Aspect_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Aspect_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Aspect_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Aspect_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Aspect_Error_002">
+                <Field Id="Error" Index="2"/>
+            </Text>
+        </Instances>
+        <Instances Id="Map Path">
+            <Int Int="3">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-mappath">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Map Path_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Map Path_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Map Path_Message">
+                <Field Id="Message"/>
+            </Text>
+        </Instances>
+        <Instances Id="(Un)Pause Units">
+            <Int Int="4">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-pause -unpause">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/(Un)Pause Units_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/(Un)Pause Units_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/(Un)Pause Units_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/(Un)Pause Units_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/(Un)Pause Units_Error_002">
+                <Field Id="Error" Index="2"/>
+            </Text>
+        </Instances>
+        <Instances Id="Show/Hide Doodads">
+            <Int Int="5">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-doodads -doodad">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Message_001">
+                <Field Id="Message" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Show/Hide Doodads_Message">
+                <Field Id="Message"/>
+            </Text>
+        </Instances>
+        <Instances Id="Toggle Terrain">
+            <Int Int="6">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-terrain">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Toggle Terrain_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Terrain_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Terrain_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Terrain_Description">
+                <Field Id="Description"/>
+            </Text>
+        </Instances>
+        <Instances Id="Toggle Fog">
+            <Int Int="7">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-fog">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Toggle Fog_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Fog_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Fog_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Toggle Fog_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="Debug">
+            <Int Int="8">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-debug -dbg">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Debug_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Debug_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Debug_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Debug_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="Set Speed">
+            <Int Int="9">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-setspeed -sp -unitsetspeed">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Set Speed_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Set Speed_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Set Speed_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Set Speed_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+        </Instances>
+        <Instances Id="Cooldowns">
+            <Int Int="10">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-cd -cooldown -cooldowns">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Cooldowns_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Cooldowns_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Cooldowns_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="Controls">
+            <Int Int="11">
+                <Field Id="Index"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <String String="-controls">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Controls_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Controls_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="FreeCam">
+            <Int Int="12">
+                <Field Id="Index"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <String String="-fc -freecamera -freecam">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/FreeCam_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/FreeCam_Message_001">
+                <Field Id="Message" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/FreeCam_Message_002">
+                <Field Id="Message" Index="2"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/FreeCam_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="Clear Chat">
+            <Int Int="13">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-cc -clearchat -clear">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Clear Chat_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Clear Chat_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Clear Chat_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Clear Chat_Message_001">
+                <Field Id="Message" Index="1"/>
+            </Text>
+        </Instances>
+        <Instances Id="Damage Taken">
+            <Int Int="14">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-dt -damagetaken">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Damage Taken_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Taken_Name">
+                <Field Id="Name"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Taken_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Taken_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Taken_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+        </Instances>
+        <Instances Id="Damage Dealt">
+            <Int Int="15">
+                <Field Id="Index"/>
+            </Int>
+            <String String="-dd -damagedealt">
+                <Field Id="Trigger"/>
+            </String>
+            <Text Text="UserData/DebugCommands/Damage Dealt_Description">
+                <Field Id="Description"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Dealt_Error">
+                <Field Id="Error"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Dealt_Error_001">
+                <Field Id="Error" Index="1"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Dealt_Message">
+                <Field Id="Message"/>
+            </Text>
+            <Text Text="UserData/DebugCommands/Damage Dealt_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+    </CUser>
+    <CUser id="HotkeyGroup">
+        <Fields Id="Name" Type="Text"/>
+        <Instances Id="[Default]"/>
+        <Instances Id="FreeCam">
+            <Text Text="UserData/HotkeyGroup/FreeCam_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="MeasuringTool">
+            <Text Text="UserData/HotkeyGroup/MeasuringTool_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="ChatRecorder">
+            <Text Text="UserData/HotkeyGroup/ChatRecorder_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="UnitCheats">
+            <Text Text="UserData/HotkeyGroup/UnitCheats_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+        <Instances Id="ConsoleCommands">
+            <Text Text="UserData/HotkeyGroup/ConsoleCommands_Name">
+                <Field Id="Name"/>
+            </Text>
+        </Instances>
+    </CUser>
+    <CUser id="HotkeyManager">
+        <Fields>
+            <Id value="Modifier"/>
+            <Type value="String"/>
+            <Count value="3"/>
+            <EditorColumn value="7"/>
+            <EditorText value="Name"/>
+            <Flags index="Modifiable" value="1"/>
+        </Fields>
+        <Fields>
+            <Id value="Exists"/>
+            <Type value="Int"/>
+            <EditorColumn value="11"/>
+            <EditorText value="Name"/>
+        </Fields>
+        <Fields Id="InputType" Type="String" EditorColumn="5">
+            <Flags index="Modifiable" value="1"/>
+        </Fields>
+        <Fields Id="GenericEvent" Type="String" EditorColumn="7"/>
+        <Fields Id="Function" Type="String" EditorColumn="6"/>
+        <Fields Id="Editable" Type="Int" EditorColumn="1"/>
+        <Fields Id="Activates" Type="String" EditorColumn="2"/>
+        <Fields Id="Enabled" Type="Int" EditorColumn="1"/>
+        <Fields Id="Priority" Type="Int" EditorColumn="1"/>
+        <Fields>
+            <Id value="Parameters"/>
+            <Type value="String"/>
+            <Count value="3"/>
+            <EditorColumn value="2"/>
+        </Fields>
+        <Fields>
+            <Id value="Name"/>
+            <Type value="Text"/>
+            <EditorColumn value="8"/>
+            <EditorText value="Name"/>
+        </Fields>
+        <Fields>
+            <Id value="Description"/>
+            <Type value="Text"/>
+            <EditorColumn value="9"/>
+            <EditorText value="Name"/>
+        </Fields>
+        <Fields>
+            <Id value="HotkeyGroup"/>
+            <Type value="User"/>
+            <UserType value="HotkeyGroup"/>
+            <EditorColumn value="9"/>
+            <EditorText value="Name"/>
+        </Fields>
+        <Fields>
+            <Id value="Input"/>
+            <Type value="String"/>
+            <Count value="3"/>
+            <EditorColumn value="1"/>
+            <Flags index="Modifiable" value="1"/>
+        </Fields>
+        <Instances Id="[Default]">
+            <Int Int="1">
+                <Field Id="Exists"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Editable"/>
+            </Int>
+            <User Type="HotkeyGroup" Instance="[Default]">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="HotkeyEditorInputState">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="100">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="AnyKey">
+                <Field Id="Input"/>
+            </String>
+            <String String="AnyButton">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="HotkeyManagerEditorReceiver">
+                <Field Id="Function"/>
+            </String>
+            <String String="InputState">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Up">
+                <Field Id="InputType"/>
+            </String>
+        </Instances>
+        <Instances Id="HotkeyEditorModifier">
+            <Int Int="100">
+                <Field Id="Priority"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <String String="AnyKey">
+                <Field Id="Input"/>
+            </String>
+            <String String="AnyButton">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="HotkeyManagerEditorReceiver">
+                <Field Id="Function"/>
+            </String>
+            <String String="Modifier">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+        </Instances>
+        <Instances Id="HotkeyEditorInputStateless">
+            <Int Int="100">
+                <Field Id="Priority"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <String String="AnyWheel">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="HotkeyManagerEditorReceiver">
+                <Field Id="Function"/>
+            </String>
+            <String String="InputStateless">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="MouseMove">
+                <Field Id="Input"/>
+            </String>
+        </Instances>
+        <Instances Id="FreeCamToggle">
+            <String String="FreeCamToggle">
+                <Field Id="Function"/>
+            </String>
+            <String String="FreeCamMouseMove FreeCamMouseScroll FreeCamFocusLocation">
+                <Field Id="Activates"/>
+            </String>
+            <String String="F8">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/FreeCamToggle_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="FreeCam">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="FreeCamMouseMove">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="10">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="FreeCamHandleInput">
+                <Field Id="Function"/>
+            </String>
+            <String String="MouseMove">
+                <Field Id="Input"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/FreeCamMouseMove_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="FreeCam">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="FreeCamMouseScroll">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="10">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="FreeCamHandleInput">
+                <Field Id="Function"/>
+            </String>
+            <String String="WheelDown">
+                <Field Id="Input"/>
+            </String>
+            <String String="WheelUp">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/FreeCamMouseScroll_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="FreeCam">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="FreeCamFocusLocation">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int Int="10">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="FreeCamHandleInput">
+                <Field Id="Function"/>
+            </String>
+            <String String="XButton1">
+                <Field Id="Input"/>
+            </String>
+            <String String="Up">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/FreeCamFocusLocation_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="FreeCam">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="MeasuringToolToggle">
+            <String String="MeasuringToolSetPos">
+                <Field Id="Activates"/>
+            </String>
+            <String String="MeasuringToolToggle">
+                <Field Id="Function"/>
+            </String>
+            <String String="Alt">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="M">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/MeasuringToolToggle_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="MeasuringTool">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="MeasuringToolSetPos">
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <String String="MeasuringToolClickEvent">
+                <Field Id="Function"/>
+            </String>
+            <String String="LButton">
+                <Field Id="Input"/>
+            </String>
+            <String String="Up">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/MeasuringToolSetPos_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="MeasuringTool">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="ChatRecorderHistoryToggle">
+            <String String="ChatRecorderHistoryUp ChatRecorderHistoryDown ChatRecorderHistoryExit">
+                <Field Id="Activates"/>
+            </String>
+            <String String="DebugChatRecorderToggle">
+                <Field Id="Function"/>
+            </String>
+            <String String="H">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/ChatRecorderHistoryToggle_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ChatRecorder">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="ChatRecorderHistoryUp">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <String String="UIKeyManager DebugInsertChat">
+                <Field Id="Function"/>
+            </String>
+            <String String="Up">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Up">
+                <Field Id="Input"/>
+            </String>
+            <String String="PgUp">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="WheelUp">
+                <Field Id="Input" Index="2"/>
+            </String>
+            <String String="Down Repeat">
+                <Field Id="InputType"/>
+            </String>
+            <String String="Repeat">
+                <Field Id="InputType" Index="1"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/ChatRecorderHistoryUp_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ChatRecorder">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="ChatRecorderHistoryDown">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <String String="UIKeyManager DebugInsertChat">
+                <Field Id="Function"/>
+            </String>
+            <String String="Down">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="WheelDown">
+                <Field Id="Input" Index="2"/>
+            </String>
+            <String String="PgDn">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="Down">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down Repeat">
+                <Field Id="InputType"/>
+            </String>
+            <String String="Repeat">
+                <Field Id="InputType" Index="1"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/ChatRecorderHistoryDown_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ChatRecorder">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="ChatRecorderHistoryExit">
+            <Int>
+                <Field Id="Editable"/>
+            </Int>
+            <Int>
+                <Field Id="Enabled"/>
+            </Int>
+            <String String="UIKeyManager DebugInsertChat">
+                <Field Id="Function"/>
+            </String>
+            <String String="Exit">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Enter">
+                <Field Id="Input"/>
+            </String>
+            <String String="Esc">
+                <Field Id="Input" Index="1"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/ChatRecorderHistoryExit_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ChatRecorder">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitMoving">
+            <Int Int="8">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="DebugCheat_UnitMoving">
+                <Field Id="Function"/>
+            </String>
+            <String String="Ctrl Shift XButton2">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="MouseMove">
+                <Field Id="Input"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitMoving_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitTurning">
+            <Int Int="7">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="DebugCheat_UnitTurning">
+                <Field Id="Function"/>
+            </String>
+            <String String="Ctrl Alt XButton2">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="MouseMove">
+                <Field Id="Input"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitTurning_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitTurningMode">
+            <String String="DebugCheat_UnitTurningMode">
+                <Field Id="Function"/>
+            </String>
+            <String String="F7">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitTurningMode_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitHeight">
+            <Int Int="6">
+                <Field Id="Priority"/>
+            </Int>
+            <String String="DebugCheat_UnitHeight">
+                <Field Id="Function"/>
+            </String>
+            <String String="Shift Alt XButton2">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="MouseMove">
+                <Field Id="Input"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitHeight_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitCopy">
+            <String String="DebugCheat_UnitCopy">
+                <Field Id="Function"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="C">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitCopy_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitCut">
+            <Int Int="2">
+                <Field Id="Priority"/>
+            </Int>
+            <Int>
+                <Field Id="Exists"/>
+            </Int>
+            <String String="DebugCheat_UnitCut">
+                <Field Id="Function"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="X">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitCut_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitPaste">
+            <String String="DebugCheat_UnitPaste">
+                <Field Id="Function"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="V">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down Repeat">
+                <Field Id="InputType"/>
+            </String>
+            <String String="Repeat">
+                <Field Id="InputType" Index="1"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitPaste_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKill">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="X">
+                <Field Id="Input"/>
+            </String>
+            <String String="Shift">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKill_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillNone">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="None">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad0">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillNone_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillNormal">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamageNormal">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad1">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillNormal_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillAcid">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamageDisintegrate">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad2">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillAcid_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillBlast">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamageBlast">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad3">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillBlast_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillEviscerate">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamageEviscerate">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad4">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillEviscerate_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillFire">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamageFire">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad5">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillFire_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="UnitKillPhysics">
+            <String String="DebugCheat_UnitKill">
+                <Field Id="Function"/>
+            </String>
+            <String String="DamagePhysics">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Numpad6">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/UnitKillPhysics_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="UnitCheats">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="TrigDebug">
+            <String String="DebugCheat_ConsoleCommand">
+                <Field Id="Function"/>
+            </String>
+            <String String="TrigDebug">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="Ctrl Shift">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Tab">
+                <Field Id="Input"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/TrigDebug_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ConsoleCommands">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+        <Instances Id="ActorInfoDisplay">
+            <String String="DebugCheat_ConsoleCommand">
+                <Field Id="Function"/>
+            </String>
+            <String String="ActorInfoDisplay">
+                <Field Id="Parameters"/>
+            </String>
+            <String String="G">
+                <Field Id="Input"/>
+            </String>
+            <String String="Ctrl Alt">
+                <Field Id="Modifier"/>
+            </String>
+            <String String="Down">
+                <Field Id="InputType"/>
+            </String>
+            <Text Text="UserData/HotkeyManager/ActorInfoDisplay_Name">
+                <Field Id="Name"/>
+            </Text>
+            <User Type="HotkeyGroup" Instance="ConsoleCommands">
+                <Field Id="HotkeyGroup"/>
+            </User>
+        </Instances>
+    </CUser>
+    <CUser id="HotkeyManager0" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager1" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager2" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager3" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager4" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager5" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager6" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager7" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager8" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager9" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager10" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager11" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager12" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager13" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager14" parent="HotkeyManager"/>
+    <CUser id="HotkeyManager15" parent="HotkeyManager"/>
+</Catalog>

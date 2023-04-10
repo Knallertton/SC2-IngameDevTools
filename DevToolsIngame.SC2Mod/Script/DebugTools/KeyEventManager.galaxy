@@ -1,0 +1,81 @@
+include "Script/DebugTools/Player"
+
+static int UIKeyManagerUI;
+// trigger UIKeyManager_t;
+
+static int GlobalEventManagerUI;
+static trigger GlobalEventManager_t;
+
+// UIKeyManager 
+// void SetupUIKeyManager(){
+//     if (UIKeyManagerUI == c_invalidDialogControlId) {
+//         DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer"),c_triggerControlTypePanel, "KeyManager");
+//         UIKeyManagerUI = DialogControlLastCreated();
+//     }
+//     // if (UIKeyManager_t == null) { 
+//     //     UIKeyManager_t = TriggerCreate("UIKeyManager");
+//         // TriggerAddEventGeneric(UIKeyManager_t, ge_Tracking_KeyPressed_String);
+//         // TriggerEnable(UIKeyManager_t, true);
+//     }
+// }
+
+bool UIKeyManager (bool testConds, bool runActions) {
+    int player =    DataTableGetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Player"));
+    int key =       DataTableGetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Key"));
+    int state =     DataTableGetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "State"));
+    int di;
+    playergroup pg = PlayerGroupSingle(player);
+
+    // Dbg(IntToString(key));
+    if (UIKeyManagerUI == c_invalidDialogControlId) {
+        DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer"),c_triggerControlTypePanel, "KeyManager");
+        UIKeyManagerUI = DialogControlLastCreated();
+    }
+    DialogControlHookup(UIKeyManagerUI, c_triggerControlTypePanel, IntToString(key));
+    di = DialogControlLastCreated();
+    //Break Out if invalid keyhookup
+    if(di == c_invalidDialogControlId){ 
+        TriggerDestroy(TriggerGetCurrent());
+        return false;
+    }
+
+    if (state == ge_InputType_Up){
+        DialogControlSendAnimationEvent(di, pg, "KeyUp");
+    }
+    else if (state == ge_InputType_Down){
+        DialogControlSendAnimationEvent(di, pg, "KeyDown");
+    }
+    else if (state == ge_InputType_Repeat){
+        DialogControlSendAnimationEvent(di, pg, "KeyRepeat");
+    }
+    else {}
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+// GlobalEventManager 
+void SetupGlobalEventManager(){
+    if (GlobalEventManagerUI == c_invalidDialogControlId) {
+        DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer"), c_triggerControlTypeEditBox, "GlobalEventSender");
+        GlobalEventManagerUI = DialogControlLastCreated();
+    }
+    if (GlobalEventManager_t == null) { 
+        GlobalEventManager_t = TriggerCreate("GlobalEventManager");
+        TriggerAddEventDialogControl(GlobalEventManager_t, c_playerAny, GlobalEventManagerUI, c_triggerControlEventTypeTextChanged);
+        TriggerEnable(GlobalEventManager_t, true);
+    }
+}
+
+bool GlobalEventManager (bool testConds, bool runActions) {
+    // Listens to changes to editbox "GlobalEventSender" in "DebugTools.SC2Layout"
+    int player =  EventPlayer();
+    int udi = EventDialogControl();
+    playergroup pg = PlayerGroupSingle(player);
+    string editValue = DialogControlGetPropertyAsString(udi, c_triggerControlPropertyEditText, player);
+    if(StringIsValid(editValue)){
+        TriggerSendEvent(editValue);
+        Dbg("Sent ->\"" + editValue + "\"");
+        return true;
+    }
+    return false;
+}
