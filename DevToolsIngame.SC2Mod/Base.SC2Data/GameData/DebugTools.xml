@@ -43,6 +43,68 @@
         <DebugTrace value="1"/>
         <AreaArray/>
     </CEffectEnumArea>
+    <CEffectDamage id="DamagePhysics"/>
+    <CEffectDamage id="DamageNormal"/>
+    <CEffectDamage id="DamageBlast">
+        <Death value="Blast"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageCancel">
+        <Death value="Cancel"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageDisintegrate">
+        <Death value="Disintegrate"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageEat">
+        <Death value="Eat"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageElectrocute">
+        <Death value="Electrocute"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageEviscerate">
+        <Death value="Eviscerate"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageFire">
+        <Death value="Fire"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageFreeze">
+        <Death value="Freeze"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageImpact">
+        <Death value="Impact"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageMorph">
+        <Death value="Morph"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageReincarnation">
+        <Death value="Reincarnation"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageRemove">
+        <Death value="Remove"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageSalvage">
+        <Death value="Salvage"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageSilentkill">
+        <Death value="Silentkill"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageSquish">
+        <Death value="Squish"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageTimeout">
+        <Death value="Timeout"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageTrainingCancel">
+        <Death value="TrainingCancel"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageTrainingComplete">
+        <Death value="TrainingComplete"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageUnderConstruction">
+        <Death value="UnderConstruction"/>
+    </CEffectDamage>
+    <CEffectDamage id="DamageUnderUnlink">
+        <Death value="Unlink"/>
+    </CEffectDamage>
     <CUser id="DebugCommands">
         <Fields Id="Trigger" Type="String"/>
         <Fields Id="Name" Type="Text"/>
