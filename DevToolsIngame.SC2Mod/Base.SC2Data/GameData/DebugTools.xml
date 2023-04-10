@@ -33,6 +33,15 @@
         <Aliases value="_Text"/>
         <On Terms="ActorOrphan" Send="Destroy"/>
     </CActorText>
+    <CActorAction id="DamagePhysicsAttack" parent="GenericAttack" effectAttack="DamagePhysics">
+        <ImpactPhysics Name="PhysicsForce" MatchKeys="Basic" Physics="DamagePhysicsForce"/>
+    </CActorAction>
+    <CActorForceSphere id="DamagePhysicsForce" parent="DeathRagdollDetonationForce">
+        <On Terms="Effect.DamagePhysics.Start" Send="Create"/>
+        <HostSiteOps Ops="SOpTargetPoint" HoldPosition="0"/>
+        <Magnitude value="5.000000,2.000000"/>
+        <Radius value="1.000000,0.200000"/>
+    </CActorForceSphere>
     <CEffectEnumArea id="DebugPointCircle">
         <EditorCategories value=""/>
         <DebugTrace value="1"/>
