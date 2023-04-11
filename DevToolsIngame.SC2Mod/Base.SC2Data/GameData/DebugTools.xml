@@ -1296,4 +1296,7 @@
     <CUser id="HotkeyManager13" parent="HotkeyManager"/>
     <CUser id="HotkeyManager14" parent="HotkeyManager"/>
     <CUser id="HotkeyManager15" parent="HotkeyManager"/>
+    <CGameUI id="Dflt">
+        <FontStyleFileArray value="UI\DebugToolsStyles.SC2Style"/>
+    </CGameUI>
 </Catalog>
