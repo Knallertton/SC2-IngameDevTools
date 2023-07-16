@@ -81,6 +81,24 @@ void HotkeyToggleChildren(structref<HotkeyManager> manager, structref<HotkeyMana
     }
 }
 
+void HotkeyOnOffSpecific(int player, string hotkeyId, bool onOff){
+    int i;
+    int k;
+    string word;
+    structref<HotkeyManager> manager = gv_HotkeyManager[player-1];
+    while (true) {
+        i += 1;
+        word = StringWord(hotkeyId, i);
+        if (word == "") { break; }
+        for (k = 0; k < manager.hotkeyCount; k += 1) {
+            if(word == manager.hotkey[k].id){
+                manager.hotkey[k].enabled = onOff;
+                continue;
+            }
+        }
+    }
+}
+
 void HotkeyManagerHotkeyClearEditable(structref<HotkeyManagerHotkey> hotkey, int index){
     hotkey.eventType[index] = -1;
     hotkey.inputType = null;
@@ -89,7 +107,7 @@ void HotkeyManagerHotkeyClearEditable(structref<HotkeyManagerHotkey> hotkey, int
     hotkey.hotkeyText[index] = null;
 }
 
-void HotkeyManagerStoreUserType(int player, structref<HotkeyManager> manager){
+static void HotkeyManagerStoreUserType(int player, structref<HotkeyManager> manager){
     int count;
     int index;
     int i;
@@ -332,7 +350,7 @@ string InputTypeStringFromType(int inputType){
 }
 
 
-static string InputNameFromInput(string input, int start, int end){
+string InputNameFromInput(string input, int start, int end){
     int i;
     for (i = start; i <= end; i += 1) {
         if(input == ge_Input[i]){
@@ -346,7 +364,7 @@ static int LastReturnedInput(){
     return DataTableGetInt(false, "$INTERNAL_LastReturnedInput");
 }
 
-int InputIndexFromInput(int type, string input){
+static int InputIndexFromInput(int type, string input){
     int i;
     int start;
     int end;
@@ -452,7 +470,7 @@ string HotkeyManagerCombineHotkeyText(structref<HotkeyManagerHotkey> hotkey){
 //     return -1;
 // }
 
-void HotkeyManagerLoadBank(int p){
+static void HotkeyManagerLoadBank(int p){
     plyr_BankRestore(c_plyrBankName, p);
 }
 
@@ -460,7 +478,7 @@ int GetLastHotkeyIndex (int player) {
     return DataTableGetInt(true, "$INTERNAL_LastHotkeyIndex"+IntToString(player));
 }
 
-void HotkeyManagerSaveBank(int p){
+static void HotkeyManagerSaveBank(int p){
     BankSave(gv_plyr[p].Bank);
     DataTableSetInt(false, TriggerEventParamName(c_plyrBankBackupEvent, "Player"), p);
     TriggerSendEvent(c_plyrBankBackupEvent);
@@ -650,7 +668,7 @@ void HotkeyManagerSaveSettings(int player){
     HotkeyManagerSaveBank(player);
 }
 
-void HotkeyManagerModifyHotkeyText(int player, int index, string name){
+static void HotkeyManagerModifyHotkeyText(int player, int index, string name){
     structref<HotkeyManager> manager;
     string userType = c_hotkeyManagerUserType+IntToString(player);
     int i;

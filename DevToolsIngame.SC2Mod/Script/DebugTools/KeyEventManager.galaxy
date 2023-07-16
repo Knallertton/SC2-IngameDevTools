@@ -1,23 +1,23 @@
 include "Script/DebugTools/Player"
 
 static int UIKeyManagerUI;
-// trigger UIKeyManager_t;
+trigger UIKeyManager_t;
 
 static int GlobalEventManagerUI;
 static trigger GlobalEventManager_t;
 
 // UIKeyManager 
-// void SetupUIKeyManager(){
-//     if (UIKeyManagerUI == c_invalidDialogControlId) {
-//         DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer"),c_triggerControlTypePanel, "KeyManager");
-//         UIKeyManagerUI = DialogControlLastCreated();
-//     }
-//     // if (UIKeyManager_t == null) { 
-//     //     UIKeyManager_t = TriggerCreate("UIKeyManager");
-//         // TriggerAddEventGeneric(UIKeyManager_t, ge_Tracking_KeyPressed_String);
-//         // TriggerEnable(UIKeyManager_t, true);
-//     }
-// }
+void SetupUIKeyManager(){
+    if (UIKeyManagerUI == c_invalidDialogControlId) {
+        DialogControlHookup(DialogControlHookupStandard(c_triggerControlTypePanel, "UIContainer"),c_triggerControlTypePanel, "KeyManager");
+        UIKeyManagerUI = DialogControlLastCreated();
+    }
+    if (UIKeyManager_t == null) { 
+        UIKeyManager_t = TriggerCreate("UIKeyManager");
+        TriggerAddEventGeneric(UIKeyManager_t, ge_Tracking_KeyPressed_String);
+        TriggerEnable(UIKeyManager_t, true);
+    }
+}
 
 bool UIKeyManager (bool testConds, bool runActions) {
     int player =    DataTableGetInt(false, TriggerEventParamName(ge_Tracking_KeyPressed_String, "Player"));
@@ -34,8 +34,8 @@ bool UIKeyManager (bool testConds, bool runActions) {
     DialogControlHookup(UIKeyManagerUI, c_triggerControlTypePanel, IntToString(key));
     di = DialogControlLastCreated();
     //Break Out if invalid keyhookup
-    if(di == c_invalidDialogControlId){ 
-        TriggerDestroy(TriggerGetCurrent());
+    if(di == c_invalidDialogControlId){     
+        // TriggerDestroy(TriggerGetCurrent());
         return false;
     }
 
@@ -49,7 +49,7 @@ bool UIKeyManager (bool testConds, bool runActions) {
         DialogControlSendAnimationEvent(di, pg, "KeyRepeat");
     }
     else {}
-    TriggerDestroy(TriggerGetCurrent());
+    // TriggerDestroy(TriggerGetCurrent());
     return true;
 }
 

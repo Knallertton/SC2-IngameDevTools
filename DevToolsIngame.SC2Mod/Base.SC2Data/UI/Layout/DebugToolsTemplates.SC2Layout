@@ -51,7 +51,21 @@
 
 	<Frame type="Frame" name="KeyManagerKeyTemplate">
 		<Anchor relative="$parent"/>
-		<Visible val="false"/>
+		<Visible val="True"/>
+		<Alpha val="0"/>
+		
+		<!-- <Frame type="Button" name="Hotkey">
+			<Anchor relative="$parent"/>
+			<AnimLogging val="True"/>
+			<Visible val="{$parent/$parent/GameUIVisible/@Visible}"/>
+			<Animation name="Down" flags="Log">
+				<Event event="OnClick" action="Reset,Play" frame="$this"/>
+				<Controller type="Event" end="Stop" frame="$parent">
+					<Key type="Event" time="0.0" event="KeyDown"/>
+				</Controller>
+			</Animation>	
+		</Frame> -->
+
 		<!-- <Frame type="MathFrame" name="KeyIndex">
 			<Anchor relative="$parent"/>
 			<A val="-1"/>
@@ -64,107 +78,165 @@
 	
 	<Frame type="Frame" name="KeyManagerTemplate">
 		<Visible val="true"/>
-		<Batch val="true"/>
-		<Frame type="Frame" name="0" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyShift	-->
-		<Frame type="Frame" name="1" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyControl	-->
-		<Frame type="Frame" name="2" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_keyAlt	-->
-		<Frame type="Frame" name="3" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key0	-->
-		<Frame type="Frame" name="4" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key1	-->
-		<Frame type="Frame" name="5" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key2	-->
-		<Frame type="Frame" name="6" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key3	-->
-		<Frame type="Frame" name="7" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key4	-->
-		<Frame type="Frame" name="8" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key5	-->
-		<Frame type="Frame" name="9" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> 	<!--c_key6	-->
-		<Frame type="Frame" name="10" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key7	-->
-		<Frame type="Frame" name="11" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key8	-->
-		<Frame type="Frame" name="12" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key9	-->
-		<Frame type="Frame" name="13" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyA	-->
-		<Frame type="Frame" name="14" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyB	-->
-		<Frame type="Frame" name="15" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyC	-->
-		<Frame type="Frame" name="16" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyD	-->
-		<Frame type="Frame" name="17" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyE	-->
-		<Frame type="Frame" name="18" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF	-->
-		<Frame type="Frame" name="19" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyG	-->
-		<Frame type="Frame" name="20" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyH	-->
-		<Frame type="Frame" name="21" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyI	-->
-		<Frame type="Frame" name="22" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyJ	-->
-		<Frame type="Frame" name="23" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyK	-->
-		<Frame type="Frame" name="24" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyL	-->
-		<Frame type="Frame" name="25" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyM	-->
-		<Frame type="Frame" name="26" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyN	-->
-		<Frame type="Frame" name="27" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyO	-->
-		<Frame type="Frame" name="28" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyP	-->
-		<Frame type="Frame" name="29" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyQ	-->
-		<Frame type="Frame" name="30" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyR	-->
-		<Frame type="Frame" name="31" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyS	-->
-		<Frame type="Frame" name="32" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyT	-->
-		<Frame type="Frame" name="33" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyU	-->
-		<Frame type="Frame" name="34" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyV	-->
-		<Frame type="Frame" name="35" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyW	-->
-		<Frame type="Frame" name="36" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyX	-->
-		<Frame type="Frame" name="37" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyY	-->
-		<Frame type="Frame" name="38" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyZ	-->
-		<Frame type="Frame" name="39" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySpace	-->
-		<Frame type="Frame" name="40" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyGrave	-->
-		<Frame type="Frame" name="41" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad0	-->
-		<Frame type="Frame" name="42" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad1	-->
-		<Frame type="Frame" name="43" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad2	-->
-		<Frame type="Frame" name="44" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad3	-->
-		<Frame type="Frame" name="45" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad4	-->
-		<Frame type="Frame" name="46" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad5	-->
-		<Frame type="Frame" name="47" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad6	-->
-		<Frame type="Frame" name="48" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad7	-->
-		<Frame type="Frame" name="49" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad8	-->
-		<Frame type="Frame" name="50" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad9	-->
-		<Frame type="Frame" name="51" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadPlus	-->
-		<Frame type="Frame" name="52" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMinus	-->
-		<Frame type="Frame" name="53" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMultiply	-->
-		<Frame type="Frame" name="54" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDivide	-->
-		<Frame type="Frame" name="55" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDecimal	-->
-		<Frame type="Frame" name="56" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEquals	-->
-		<Frame type="Frame" name="57" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyMinus	-->
-		<Frame type="Frame" name="58" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketOpen	-->
-		<Frame type="Frame" name="59" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketClose	-->
-		<Frame type="Frame" name="60" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSlash	-->
-		<Frame type="Frame" name="61" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySemiColon	-->
-		<Frame type="Frame" name="62" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyApostrophe	-->
-		<Frame type="Frame" name="63" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyComma	-->
-		<Frame type="Frame" name="64" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPeriod	-->
-		<Frame type="Frame" name="65" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySlash	-->
-		<Frame type="Frame" name="66" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEscape	-->
-		<Frame type="Frame" name="67" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnter	-->
-		<Frame type="Frame" name="68" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSpace	-->
-		<Frame type="Frame" name="69" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyTab	-->
-		<Frame type="Frame" name="70" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyLeft	-->
-		<Frame type="Frame" name="71" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyUp	-->
-		<Frame type="Frame" name="72" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyRight	-->
-		<Frame type="Frame" name="73" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDown	-->
-		<Frame type="Frame" name="74" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyInsert	-->
-		<Frame type="Frame" name="75" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDelete	-->
-		<Frame type="Frame" name="76" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyHome	-->
-		<Frame type="Frame" name="77" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnd	-->
-		<Frame type="Frame" name="78" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageUp	-->
-		<Frame type="Frame" name="79" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageDown	-->
-		<Frame type="Frame" name="80" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyCapsLock	-->
-		<Frame type="Frame" name="81" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumLock	-->
-		<Frame type="Frame" name="82" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyScrollLock	-->
-		<Frame type="Frame" name="83" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPause	-->
-		<Frame type="Frame" name="84" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrintScreen	-->
-		<Frame type="Frame" name="85" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNextTrack	-->
-		<Frame type="Frame" name="86" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrevTrack	-->
-		<Frame type="Frame" name="87" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF1	-->
-		<Frame type="Frame" name="88" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF2	-->
-		<Frame type="Frame" name="89" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF3	-->
-		<Frame type="Frame" name="90" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF4	-->
-		<Frame type="Frame" name="91" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF5	-->
-		<Frame type="Frame" name="92" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF6	-->
-		<Frame type="Frame" name="93" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF7	-->
-		<Frame type="Frame" name="94" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF8	-->
-		<Frame type="Frame" name="95" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF9	-->
-		<Frame type="Frame" name="96" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF10	-->
-		<Frame type="Frame" name="97" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF11	-->
-		<Frame type="Frame" name="98" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF12	-->
-	</Frame>
+		<Batch val="False"/>
+		<Alpha val="0"/>
+
+		<!-- <Frame type="Frame" name="GameUIVisible">
+			<Anchor relative="$parent"/>
+			<Visible val="False"/>
+		</Frame>
+
+		<Frame type="EditBox" name="DummyBox">
+			<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+
+			<Height val="20"/>
+			<Width val="20"/>
+			<AcceptsMouse val="false"/>
+			<RejectsFocus val="true"/>
+			<Style val="DebugTiny"/>
+			<Alpha val="0"/>
+
+			<Text val="0"/>
+			<AnimLogging val="True"/>
+			<Animation name="Animation" flags="Log">
+				<Event event="OnFocusGained" frame="$GameUI" action="Restart,Play"/>
+				<Event event="OnFocusLost" frame="$GameUI" action="Restart,Play"/>
+				<Event event="ControlLoseFocusRequest" frame="$GameUI" action="Restart,Play"/>
+				<Event event="ControlTakeFocusRequest" frame="$GameUI" action="Restart,Play"/>
+				<Controller type="State" end="Stop" frame="$this" stateGroup="Flicker" forceSet="True">
+					<Key type="Identifier" time="0.0" value="Clear"/>
+					<Key type="Identifier" time="0.01" value="Default"/>
+				</Controller>
+			</Animation>
+
+			<StateGroup name="Flicker">
+				<DefaultState val="Default"/>
+			
+				<State name="Clear">
+					<Action type="SetProperty" frame="$this" Text="0"/>
+				</State>
+			
+				<State name="Default">
+					<Action type="SetProperty" frame="$this" Text="{$GameUI/@Focused}"/>
+				</State>
+			</StateGroup>
+		</Frame>
+
+		<StateGroup name="Visible">
+			<DefaultState val="False"/>
+		
+			<State name="False">
+				<When type="Property" frame="DummyBox" Text="0"/>
+				<Action type="SetProperty" frame="GameUIVisible" Visible="False"/>
+			</State>
+		
+			<State name="True">
+				<When type="Property" frame="DummyBox" Text="false"/>
+				<Action type="SetProperty" frame="GameUIVisible" Visible="True"/>
+			</State>
+		</StateGroup>	 -->
+
+		<Frame type="Frame" name="0" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_keyShift	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Shift"/></Frame></Frame> -->
+		<Frame type="Frame" name="1" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_keyControl	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Control"/></Frame></Frame> -->
+		<Frame type="Frame" name="2" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_keyAlt	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Alt"/></Frame></Frame> -->
+		<Frame type="Frame" name="3" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key0	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="0"/></Frame></Frame> -->
+		<Frame type="Frame" name="4" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key1	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="1"/></Frame></Frame> -->
+		<Frame type="Frame" name="5" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key2	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="2"/></Frame></Frame> -->
+		<Frame type="Frame" name="6" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key3	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="3"/></Frame></Frame> -->
+		<Frame type="Frame" name="7" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key4	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="4"/></Frame></Frame> -->
+		<Frame type="Frame" name="8" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key5	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="5"/></Frame></Frame> -->
+		<Frame type="Frame" name="9" template="DebugToolsTemplates/KeyManagerKeyTemplate"/>  <!--c_key6	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="6"/></Frame></Frame> -->
+		<Frame type="Frame" name="10" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key7	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="7"/></Frame></Frame> -->
+		<Frame type="Frame" name="11" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key8	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="8"/></Frame></Frame> -->
+		<Frame type="Frame" name="12" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_key9	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="9"/></Frame></Frame> -->
+		<Frame type="Frame" name="13" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyA	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="A"/></Frame></Frame> -->
+		<Frame type="Frame" name="14" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyB	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="B"/></Frame></Frame> -->
+		<Frame type="Frame" name="15" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyC	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="C"/></Frame></Frame> -->
+		<Frame type="Frame" name="16" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyD	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="D"/></Frame></Frame> -->
+		<Frame type="Frame" name="17" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyE	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="E"/></Frame></Frame> -->
+		<Frame type="Frame" name="18" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="F"/></Frame></Frame> -->
+		<Frame type="Frame" name="19" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyG	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="G"/></Frame></Frame> -->
+		<Frame type="Frame" name="20" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyH	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="H"/></Frame></Frame> -->
+		<Frame type="Frame" name="21" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyI	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="I"/></Frame></Frame> -->
+		<Frame type="Frame" name="22" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyJ	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="J"/></Frame></Frame> -->
+		<Frame type="Frame" name="23" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyK	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="K"/></Frame></Frame> -->
+		<Frame type="Frame" name="24" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyL	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="L"/></Frame></Frame> -->
+		<Frame type="Frame" name="25" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyM	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="M"/></Frame></Frame> -->
+		<Frame type="Frame" name="26" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyN	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="N"/></Frame></Frame> -->
+		<Frame type="Frame" name="27" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyO	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="O"/></Frame></Frame> -->
+		<Frame type="Frame" name="28" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyP	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="P"/></Frame></Frame> -->
+		<Frame type="Frame" name="29" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyQ	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="Q"/></Frame></Frame> -->
+		<Frame type="Frame" name="30" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyR	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="R"/></Frame></Frame> -->
+		<Frame type="Frame" name="31" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyS	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="S"/></Frame></Frame> -->
+		<Frame type="Frame" name="32" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyT	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="T"/></Frame></Frame> -->
+		<Frame type="Frame" name="33" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyU	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="U"/></Frame></Frame> -->
+		<Frame type="Frame" name="34" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyV	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="V"/></Frame></Frame> -->
+		<Frame type="Frame" name="35" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyW	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="W"/></Frame></Frame> -->
+		<Frame type="Frame" name="36" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyX	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="X"/></Frame></Frame> -->
+		<Frame type="Frame" name="37" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyY	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="Y"/></Frame></Frame> -->
+		<Frame type="Frame" name="38" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyZ	--> 			<!--Frame type="Button" name="Hotkey"><Shortcut val="Z"/></Frame></Frame> -->
+		<Frame type="Frame" name="39" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySpace	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Space"/></Frame></Frame> -->
+		<Frame type="Frame" name="40" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyGrave	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Grave"/></Frame></Frame> -->
+		<Frame type="Frame" name="41" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad0	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad0"/></Frame></Frame> -->
+		<Frame type="Frame" name="42" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad1	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad1"/></Frame></Frame> -->
+		<Frame type="Frame" name="43" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad2	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad2"/></Frame></Frame> -->
+		<Frame type="Frame" name="44" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad3	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad3"/></Frame></Frame> -->
+		<Frame type="Frame" name="45" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad4	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad4"/></Frame></Frame> -->
+		<Frame type="Frame" name="46" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad5	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad5"/></Frame></Frame> -->
+		<Frame type="Frame" name="47" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad6	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad6"/></Frame></Frame> -->
+		<Frame type="Frame" name="48" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad7	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad7"/></Frame></Frame> -->
+		<Frame type="Frame" name="49" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad8	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad8"/></Frame></Frame> -->
+		<Frame type="Frame" name="50" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPad9	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumPad9"/></Frame></Frame> -->
+		<Frame type="Frame" name="51" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadPlus	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="NumPadPlus"/></Frame></Frame> -->
+		<Frame type="Frame" name="52" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMinus	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="NumPadMinus"/></Frame></Frame> -->
+		<Frame type="Frame" name="53" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadMultiply--> <!--Frame type="Button" name="Hotkey"><Shortcut val="NumPadMultiply"/></Frame></Frame> -->
+		<Frame type="Frame" name="54" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDivide	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="NumPadDivide"/></Frame></Frame> -->
+		<Frame type="Frame" name="55" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumPadDecimal	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="NumPadDecimal"/></Frame></Frame> -->
+		<Frame type="Frame" name="56" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEquals	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Equals"/></Frame></Frame> -->
+		<Frame type="Frame" name="57" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyMinus	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Minus"/></Frame></Frame> -->
+		<Frame type="Frame" name="58" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketOpen	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="BracketOpen"/></Frame></Frame> -->
+		<Frame type="Frame" name="59" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBracketClose	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="BracketClose"/></Frame></Frame> -->
+		<Frame type="Frame" name="60" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSlash	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Backslash"/></Frame></Frame> -->
+		<Frame type="Frame" name="61" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySemiColon	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Semicolon"/></Frame></Frame> -->
+		<Frame type="Frame" name="62" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyApostrophe	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="Apostrophe"/></Frame></Frame> -->
+		<Frame type="Frame" name="63" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyComma	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Comma"/></Frame></Frame> -->
+		<Frame type="Frame" name="64" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPeriod	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Period"/></Frame></Frame> -->
+		<Frame type="Frame" name="65" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keySlash	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Slash"/></Frame></Frame> -->
+		<Frame type="Frame" name="66" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEscape	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Escape"/></Frame></Frame> -->
+		<Frame type="Frame" name="67" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnter	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Enter"/></Frame</Frame> -->
+		<Frame type="Frame" name="68" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyBackSpace	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Backspace"/></Frame></Frame> -->
+		<Frame type="Frame" name="69" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyTab	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Tab"/></Frame></Frame> -->
+		<Frame type="Frame" name="70" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyLeft	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Left"/></Frame></Frame> -->
+		<Frame type="Frame" name="71" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyUp	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Up"/></Frame></Frame> -->
+		<Frame type="Frame" name="72" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyRight	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Right"/></Frame></Frame> -->
+		<Frame type="Frame" name="73" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDown	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Down"/></Frame></Frame> -->
+		<Frame type="Frame" name="74" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyInsert	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Insert"/></Frame></Frame> -->
+		<Frame type="Frame" name="75" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyDelete	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="Delete"/></Frame></Frame> -->
+		<Frame type="Frame" name="76" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyHome	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Home"/></Frame></Frame> -->
+		<Frame type="Frame" name="77" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyEnd	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="End"/></Frame></Frame> -->
+		<Frame type="Frame" name="78" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageUp	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="PageUp"/></Frame></Frame> -->
+		<Frame type="Frame" name="79" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPageDown	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="PageDown"/></Frame></Frame> -->
+		<Frame type="Frame" name="80" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyCapsLock	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="CapsLock"/></Frame></Frame> -->
+		<Frame type="Frame" name="81" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNumLock	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NumLock"/></Frame></Frame> -->
+		<Frame type="Frame" name="82" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyScrollLock	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="ScrollLock"/></Frame></Frame> -->
+		<Frame type="Frame" name="83" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPause	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="Pause"/></Frame></Frame> -->
+		<Frame type="Frame" name="84" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrintScreen	--> <!--Frame type="Button" name="Hotkey"><Shortcut val="PrintScreen"/></Frame></Frame> -->
+		<Frame type="Frame" name="85" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyNextTrack	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="NexTrack"/></Frame></Frame> -->
+		<Frame type="Frame" name="86" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyPrevTrack	--> 	<!--Frame type="Button" name="Hotkey"><Shortcut val="PrevTrack"/></Frame></Frame> -->
+		<Frame type="Frame" name="87" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF1	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F1"/></Frame></Frame> -->
+		<Frame type="Frame" name="88" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF2	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F2"/></Frame></Frame> -->
+		<Frame type="Frame" name="89" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF3	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F3"/></Frame></Frame> -->
+		<Frame type="Frame" name="90" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF4	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F4"/></Frame></Frame> -->
+		<Frame type="Frame" name="91" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF5	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F5"/></Frame></Frame> -->
+		<Frame type="Frame" name="92" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF6	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F6"/></Frame></Frame> -->
+		<Frame type="Frame" name="93" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF7	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F7"/></Frame></Frame> -->
+		<Frame type="Frame" name="94" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF8	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F8"/></Frame></Frame> -->
+		<Frame type="Frame" name="95" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF9	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F9"/></Frame></Frame> -->
+		<Frame type="Frame" name="96" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF10	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F10"/></Frame></Frame> -->
+		<Frame type="Frame" name="97" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF11	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F11"/></Frame></Frame> -->
+		<Frame type="Frame" name="98" template="DebugToolsTemplates/KeyManagerKeyTemplate"/> <!--c_keyF12	--> 		<!--Frame type="Button" name="Hotkey"><Shortcut val="F12"/></Frame></Frame> -->
+	</Frame> -->
 
     <Frame type="Button" name="MenuBarButtonTemplate">
         <Width val="36"/>

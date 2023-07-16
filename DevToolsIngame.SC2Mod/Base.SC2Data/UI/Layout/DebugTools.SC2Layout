@@ -1284,8 +1284,8 @@
 				<Style val="DebugTiny"/>
 			</Frame>
 			<Frame type="Frame" name="KeyManager" template="DebugToolsTemplates/KeyManagerTemplate">
-				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
-				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Top" relative="$parent" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Max" offset="0"/>
 				<Width val="1"/>
 				<Height val="1"/>
 				<Handle val="KeyManager"/>
