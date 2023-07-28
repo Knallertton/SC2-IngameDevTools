@@ -1,5 +1,5 @@
 const string c_NUMBERS = "0123456789";
-const string c_HEXADECIMAL = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz/+";
+const string c_HEXADECIMAL = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
 
 string ConvertPointXYtoString (point p, int precision) {
     return (FixedToString(PointGetX(p), precision) + ", " + FixedToString(PointGetY(p), precision));
@@ -147,4 +147,14 @@ bool StringToBool(string s){
 
 string BoolToString(bool b){
     return libNtve_gf_ConvertBooleanToString(b); 
+}
+
+// Duplicates the input string n times
+string RepeatString(string s, int n) {
+    string result = "";
+    int i;
+    for(i = 0; i < n; i+=1) {
+        result += s;
+    }
+    return result;
 }
