@@ -5,6 +5,7 @@ include "Script/DebugTools/HotkeyManager"
 static bool plyr_Initialized;
 static trigger plyr_ClearKeys_t;
 static trigger plyr_BankBackup_t;
+static trigger BankBackupAny_t;
 
 void plyr_InitVariables(){
     int i;
@@ -30,6 +31,11 @@ void plyr_InitVariables(){
             TriggerAddEventGeneric(plyr_BankBackup_t, c_plyrBankBackupEvent);
         }
         
+        if(BankBackupAny_t == null){
+            BankBackupAny_t = TriggerCreate("BankBackupAny_Func");
+            TriggerAddEventGeneric(BankBackupAny_t, c_bankBackupAnyEvent);
+        }
+
         HotkeyManagerInitialize();
     }
 }
@@ -366,6 +372,43 @@ void plyr_BankRestore(string name, int p){
     BankLoad(name, p);
     gv_plyr[p].Bank = BankLastCreated();
     return;
+}
+
+bool BankBackupAny_Func(bool test_conds, bool run_actions){
+    int p = DataTableGetInt(false, TriggerEventParamName(EventGenericName(), "Player"));
+    bank Bank = DataTableGetBank(false, TriggerEventParamName(EventGenericName(), "Bank"));
+    BankBackupRemove(Bank, 0, p);
+    BankBackup(Bank, p);
+    return true;
+}
+
+bank BankRestoreAny(string name, int p){
+    bank b;
+    int i;
+    int count;
+    BankLoad(name, p);
+    b = BankLastCreated();
+    count = BankSectionCount(b);
+
+    // Dbg("Count>"+IntToString(count));
+    if(b != null){
+        for (i = 0; i < count; i += 1) {
+            // DbgI(i);
+            // Dbg(BankSectionName(b, 0));
+            BankSectionRemove(b, BankSectionName(b, 0));
+        }
+    }
+    BankSave(b);
+    BankRestore(b, p, 0);
+    BankSave(b);
+    BankLoad(name, p);
+    return BankLastCreated();
+}
+
+void BankBackupAnyEventSend(int player, bank b){
+    DataTableSetInt(false, TriggerEventParamName(c_bankBackupAnyEvent, "Player"), player);
+    DataTableSetBank(false, TriggerEventParamName(c_bankBackupAnyEvent, "Bank"), b);
+    TriggerSendEvent(c_bankBackupAnyEvent);
 }
 
 void plyr_OptionsBankSaveValue(int p, string key, string value){

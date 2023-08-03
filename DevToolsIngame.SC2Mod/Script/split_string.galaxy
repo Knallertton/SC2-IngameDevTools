@@ -1,4 +1,4 @@
-const int DATA_SPLIT_SEGMENT_MAX = 64;
+const int DATA_SPLIT_SEGMENT_MAX = 512;
 
 struct data_split_t {
     string[DATA_SPLIT_SEGMENT_MAX] data;
